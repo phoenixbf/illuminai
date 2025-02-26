@@ -18,12 +18,20 @@ APP.loadConfig = ()=>{
 
         APP.confdata = data;
 
-        ATON.fireEvent("APP_ConfigLoaded");
+        ATON.fire("APP_ConfigLoaded");
     });
 };
 
 APP.setup = ()=>{
 
+    ATON.realize();
+    ATON.UI.addBasicEvents();
+
+    APP.loadConfig();
+
+    ATON.ASCII.loadCSV(APP.basePath+"db/PoA_Ver5.1_Gruppo_40k_predicted_labels_v1.0_CorrectedwithAnnotations.csv", 5, (data)=>{
+        console.log(data);
+    });
 };
 
 // Run the App
