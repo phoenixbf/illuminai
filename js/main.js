@@ -37,9 +37,12 @@ APP.loadConfig = ()=>{
             for (let e in data.db){
                 const E = data.db[e];
 
+                let csv = E.file;
+                let pi  = E.primary;
+
                 if (!APP.db[e]) APP.db[e] = {};
 
-                ATON.ASCII.loadCSV(APP.basePath +"db/"+E, 2, (d)=>{
+                ATON.ASCII.loadCSV(APP.basePath +"db/"+csv, pi, (d)=>{
                     APP.db[e] = d;
                     dbloaded++;
 
@@ -109,7 +112,7 @@ APP.onReadyDB = ()=>{
     let count = 0;
     for (let e in APP.db["main"]){
 
-        if (count < 50){
+        if (count < 200){
             let P = new APP.Item(e, "main");
             P.setClusterOrigin(C.position);
 
