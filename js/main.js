@@ -126,8 +126,12 @@ APP.onReadyDB = ()=>{
     let spiral = (N,i)=>{
         let y = 0.3 + (i * 0.03);
 
-        let x = 2.0 * Math.cos(i*0.3);
-        let z = 2.0 * Math.sin(i*0.3);
+        let c = N.data.century;
+        c -= 18;
+        c *= 0.5;
+
+        let x = (2.0 + c) * Math.cos(i*0.3);
+        let z = (2.0 + c) * Math.sin(i*0.3);
 
         N.setPosition(x,y,z).orientToLocation(0,y,0).setScale(APP.ITEM_SCALE);
     };

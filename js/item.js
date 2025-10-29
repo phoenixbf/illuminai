@@ -54,6 +54,7 @@ setupEvents(){
             
             this.load(4096);
 
+            // distance 0.6
             this.position.x = THREE.MathUtils.lerp(this.position.x,this._origin.x, 0.5);
             this.position.z = THREE.MathUtils.lerp(this.position.z,this._origin.z, 0.5);
 
