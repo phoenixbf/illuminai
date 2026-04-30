@@ -1,8 +1,8 @@
 {
     "respath": "",
     "db":{
-        "main": "Image_ICCD.csv",
+        "main": "Gruppo_4000_webApp_v2.csv",
         "classes": "ICONCLASS_Class_Subject.csv"
     },
-    "ncdata": "https://interlumo.ispc.cnr.it/cloud/apps/files_sharing/publicpreview/S6nC6XzjBiBiRMf"
+    "ncdata": "ttps://interlumo.ispc.cnr.it/cloud/s/YjYpKKzgD9PfxqS"
 }

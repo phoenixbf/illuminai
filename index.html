@@ -53,10 +53,523 @@
 	<script type="module" src="js/main.js"></script>
 </head>
 
-<body>
-    <div id="toolbar" class="aton-toolbar-top"></div>
+<body oncontextmenu="return true;">
+    <!-- LANDING PAGE - DA RIVEDERE!!!
+    <div id="idLandingPage" class="landing-overlay">
+        <div class="landing-content">
+            <img src="appicon.png" alt="IlluminAI-logo" class="landing-logo">
+            <h1>Welcome on IlluminAI</h1>
+            <p>The CNR-IPSC application for discovering illuminated manuscripts in three-dimensional space</p>
+            <button class="start-btn" onclick="startApp()">START DISCORVER</button>
+        </div>
+    </div> -->
+
+    <!-- HOMEPAGE con MENU CLUSTER - DA REALIZZARE -->
+	<!-- TOP TOOLBAR -->
+    <div id="idTopToolbar" class="atonToolbar atonToolbar-top-left">
+        <button class="my-custom-btn" onclick="azione()">
+            <img src="appicon.png" alt="Home" style="width:20px; vertical-align:middle;" />
+            <span style="margin-left: 8px;">Home</span>
+        </button>
+        
+        <button class="my-custom-btn" onclick="toggleSidebar()">
+            <span>☰ Menu</span>
+        </button>
+    </div>
+	
+	<!-- SIDEBAR xD -->
+    <div id="idSidebar" class="aton-sidebar" style="width: 0;">
+        <div class="sidebar-wrapper">
+            
+            <div class="sidebar-top-section">
+                <div class="sidebar-header">
+                    <h3 style="margin: 0; padding: 15px; color: white;">Menu</h3>
+                </div>
+                <!-- FILTRO: CLASSI OGGETTI -->
+                <div class="sidebar-content">
+                    <button type="button" class="sidebar-btn btn-box" onclick="azione1()">💡 Azione 1</button>
+                    <button type="button" class="sidebar-btn btn-box" onclick="toggleFilterList()">📊 Filter - Class<span> ▼</span></button>
+                    <div id="idFilterContent" class="filter-content" style="max-height: 0; overflow: hidden; transition: 0.4s;">
+                        <ul class="filter-list" style="list-style: none; padding: 10px 20px; margin: 0;">
+                            <li><label><input type="checkbox" value="P.01" checked onchange="applyFilter(this)"> Manuscript Sheets </label></li>
+                            <li><label><input type="checkbox" value="P.02" checked onchange="applyFilter(this)"> Printed Pages</label></li>
+                            <li><label><input type="checkbox" value="A.01" checked onchange="applyFilter(this)"> Paintings </label></li>
+                            <li><label><input type="checkbox" value="A.02" checked onchange="applyFilter(this)"> Engravings </label></li>
+                            <li><label><input type="checkbox" value="A.03" checked onchange="applyFilter(this)"> Drawings </label></li>
+                            <li><label><input type="checkbox" value="A.04" checked onchange="applyFilter(this)"> Sculpture </label></li>
+                            <li><label><input type="checkbox" value="A.05" checked onchange="applyFilter(this)"> Stained-Glass Windows </label></li>
+                            <li><label><input type="checkbox" value="A.06" checked onchange="applyFilter(this)"> Tapestries </label></li>
+                            <li><label><input type="checkbox" value="A.07" checked onchange="applyFilter(this)"> Prints </label></li>
+                            <li><label><input type="checkbox" value="A.08" checked onchange="applyFilter(this)"> Objects </label></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- FILTRO: TIMELINE (Visualizzazione anelli)--> 
+                    <div class="century-section" style="padding: 15px; border: 1px solid #444; border-radius: 8px; background: rgba(255,255,255,0.05); margin: 15px 10px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 12px; color: #ccc;">
+                            <span style="margin-right: 8px;">⌛</span>
+                            <span style="font-weight: bold; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;">Timeline</span>
+                        </div>
+                            
+                        <div class="filter-section">
+                            <label class="slider-label" style="font-size: 0.9em; color: #00d4ff; display: block; margin-bottom: 8px;">
+                                Timeline: <span id="yearDisplay" style="font-weight: bold;">V Century</span>
+                            </label>
+                                
+                            <div class="slider-container" style="padding: 5px 0;">
+                                <input type="range" id="centurySlider" class="flat-slider" min="0" max="5" value="5" step="1" 
+                                    oninput="applySliderFilter(this.value)" 
+                                    style="width: 100%; cursor: pointer;">
+                            </div>
+
+                            <div class="slider-steps" style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 8px; font-family: monospace;">
+                                <span> 1 </span><span> 2 </span><span> 3 </span><span> 4 </span><span> 5 </span><span> 6 </span>
+                            </div>
+                        </div>
+                    </div>   
+                    
+                    <!-- FILTRO: CENTURY (visualizzazione items) --> 
+                    <button type="button" class="sidebar-btn btn-box" onclick="toggleFilterListC()">⚡ Filter - Century<span> ▼</span></button>
+                        <div id="idFilterContent-C" class="filter-content" style="max-height: 0; overflow: hidden; transition: 0.4s;">
+                        <ul class="filter-list" style="list-style: none; padding: 10px 20px; margin: 0;">
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                            <li><label><input type="checkbox" value="?" checked onchange="applyFilter(this)"> ? Century </label></li>
+                        </ul>
+                    </div><button type="button" class="sidebar-btn btn-box reset-btn" onclick="resetView()">🔄 Visual Reset</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button onclick="toggleSidebar()" class="btn-close-bottom">✕ Close</button>
+            </div>
+        </div> 
+    </div> 
+    
+	<!-- Bottom Toolbar -->
+    <div id="idBottomToolbar" class="atonToolbar atonToolbar-bottom"></div>
+
+    <!-- DOCK-MAIN - menu in basso al centro--><!--Sostituibile <span class="icon">📱</span> con: <img src="tua-icona.png" style="width:24px;"> -->
+    <div id="idBottomDock" class="aton-dock-container">
+        <div class="aton-dock">
+            <button class="dock-btn" onclick="toggleLateralDock()" data-label="Tools"><span class="icon">🛠️</span></button>
+            <button class="dock-btn" onclick="azione2()" data-label="Zoom"><span class="icon">⚙️</span></button>
+            <div class="dock-separator"></div>
+            <button class="dock-btn" onclick="openModalPopup()" data-label="Change cluster"><span class="icon">🔄</span></button>
+            <div class="dock-separator"></div>
+            <button class="dock-btn" onclick="toggleSearch()" data-label="Search"><span class="icon">🔍</span></button>
+            <button class="dock-btn" onclick="openInfoPopup()" data-label="Info"><span class="icon">ℹ️</span></button>
+        </div>
+    </div>
+
+    <!-- MENU MODAL - scelta dei cluster - tasto centrale -->
+    <div id="modalPopupWindow" class="modalPopup-window" style="display: none;" onclick="openModalPopup()">
+        <div class="modalPopup-header" onclick="event.stopPropagation()">
+            <span>Cluster</span>
+            <button class="modalClose-x" onclick="closePopup()">&times;</button>
+        </div>
+            
+        <div class="modalPopup-body">
+            <button class="modalMenu-item" onclick="alert('Cluster 0')">⚙️ Opzione 1</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 1')">⚙️ Opzione 2</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 2')">⚙️ Opzione 3</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 3')">⚙️ Opzione 4</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 4')">⚙️ Opzione 5</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 5')">⚙️ Opzione 6</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 6')">⚙️ Opzione 7</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 7')">⚙️ Opzione 8</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 8')">⚙️ Opzione 9</button>
+            <button class="modalMenu-item" onclick="alert('Cluster 9')">⚙️ Opzione 10</button>
+        </div>
+    </div>
+
+	<!-- SEARCH-OVERLAY - ricerca interna cluster - primo XD -->
+    <div id="searchOverlay" class="search-overlay" onclick="closeSearchOutside(event)">
+        <div class="search-modal">
+            <span class="close-x" onclick="toggleSearch()">&times;</span>
+            
+            <h2>Search in the cluster</h2>
+            <div class="input-group">
+                <input type="text" id="searchInput" placeholder="What are you looking for?">
+                <button class="search-go" onclick="eseguiRicerca()">Go</button>
+            </div>
+        </div>
+    </div>
+
+	<!-- POP-UP INFO - cosa fare con IlluminAI - secondo XD -->
+    <div id="infoPopup" class="info-overlay" onclick="openInfoPopup()">
+        <div class="infoPopup-content" onclick="event.stopPropagation()"">
+            <h3>🚀 Discover IlluminAI</h3>
+            <p>Welcome! what you can do:</p>
+    
+            <div class="instruction-step">
+                <span>1️⃣</span>
+                <p>Select one of the clusters to start using <b>Home</b>.</p>
+            </div>
+    
+            <div class="instruction-step">
+                <span>2️⃣</span>
+                <p>Apply <b>Filters</b> to refine your search.</p>
+            </div>
+
+            <div class="instruction-step">
+                <span>3️⃣</span>
+                <p>Apply <b>Filters</b> to refine your search.</p>
+            </div>
+
+            <button class="infoClose-btn" onclick="closeInfoPopup()">Ready!</button>
+        </div>
+    </div>
+
+	 <!-- DOCK-TOOLBAR - monbile esterno - XS --><!--Sostituibile <span class="icon">🔄</span> con: <img src="tua-icona.png" style="width:24px;"> -->
+    <div id="idLateralDock" class="aton-dock-container-vertical dock-hidden">
+        <div class="aton-dock-vertical">
+            <button class="dock-btn" onclick="azione1()" data-label="Label 1"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione2()" data-label="Label 2"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione3()" data-label="Label 3"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione4()" data-label="Label 4"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione5()" data-label="Label 5"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione6()" data-label="Label 6"><span class="icon">🔄</span></button>
+            <button class="dock-btn" onclick="azione7()" data-label="Label 7"><span class="icon">🔄</span></button>
+        </div>
+    </div>
+	
+	<!-- Main Popup -->
+    <div id="idPopup" class="atonPopupContainer" style="display:none;"></div>
+
+    <!-- Loader -->
+    <div id="idLoader" class="atonCenterLoader" style="display:none;"></div>
 
     <div class="aton-poweredby" >
         Powered by <a href="https://aton.ispc.cnr.it/site/" target="_blank">ATON</a>
     </div>
 </body>
+<!-- FUNZIONI TOP TOOLBAR
+<script>
+    // Definizione della funzione richiamata dal pulsante Home -- DA COMPLETARE!!!
+    function myFunction() {
+        console.log("Pulsante cliccato!");
+        // Esempio: reset della camera (se ATON è inizializzato)
+        // if(typeof app !== 'undefined') app.resetCamera();
+    }
+</script> -->
+
+<script>
+    // Funzione richiamata da "MENU" ---> apre SIDEBAR **************************
+    //Apre-chiude "Sidebar"
+    function toggleSidebar() {
+        const sidebar = document.getElementById("idSidebar");
+        // Se è chiusa, aprila, altrimenti chiudila
+        if (sidebar.style.width === "400px") {
+            sidebar.style.width = "0";
+        } else {
+            sidebar.style.width = "400px";
+        }
+    }
+</script>
+
+<script>
+    //Funzione richiamata da "HOME" ---> apre MODAL POPUP
+    function openPopup() {
+        document.getElementById("popupWindow").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popupWindow").style.display = "none";
+    }
+
+    function azione(tipo) {
+        console.log("Azione selezionata:", tipo);
+        closePopup(); // Chiude dopo il click
+    }
+</script>
+    
+<!-- FUNZIONI SLIDEBAR -->
+<script>
+    // Funzione apre-chiude elenco "FILTER" - oggetti
+    function toggleFilterList() {
+        const content = document.getElementById("idFilterContent");
+        if (content.style.maxHeight === "0px" || content.style.maxHeight === "") {
+            content.style.maxHeight = "400px"; // Altezza sufficiente per la lista
+        } else {
+            content.style.maxHeight = "0px";
+        }
+    }
+        
+    // Logica Checkbox - DA MODIFICARE!!!
+    //function applyFilter(checkbox) {
+        //const name = checkbox.value;
+        //const isVisible = checkbox.checked;
+    
+        //if (window.APP && APP.baseRings) {
+            //APP.baseRings.forEach(nRing => {
+                //if (nRing.userData.nome === name) {
+                    //isVisible ? nRing.show() : nRing.hide();
+                //}
+            //});
+        //}
+    //}
+</script>
+
+<script>
+    // Funzione apre-chiude elenco "FILTER-CENTURY" - oggetti
+    function toggleFilterListC() {
+        const content = document.getElementById("idFilterContent-C");
+        if (content.style.maxHeight === "0px" || content.style.maxHeight === "") {
+            content.style.maxHeight = "400px"; // Altezza sufficiente per la lista
+        } else {
+            content.style.maxHeight = "0px";
+        }
+    }
+        
+    // Logica Checkbox - DA MODIFICARE!!!
+    //function applyFilter(checkbox) {
+        //const name = checkbox.value;
+        //const isVisible = checkbox.checked;
+    
+        //if (window.APP && APP.baseRings) {
+            //APP.baseRings.forEach(nRing => {
+                //if (nRing.userData.nome === name) {
+                    //isVisible ? nRing.show() : nRing.hide();
+                //}
+            //});
+        //}
+    //}
+</script>
+    
+<script>
+    // Funzione richiamata da "SLIDER" ---> fa comparire/scomparire anelli
+    function applySliderFilter(val) {
+        const value = parseInt(val);
+        const yearDisplay = document.getElementById("yearDisplay");
+        const century = [" 1 Century", "2 Century", "3 Century", "4 Century", "5 Century", "6 Century"];
+        yearDisplay.innerText = century[value];
+
+        if (yearDisplay) yearDisplay.innerText = century[value];
+        if (window.APP && APP.baseRings) {
+            APP.baseRings.forEach(nRing => {
+                // Se l'id dell'anello è minore o uguale al valore dello slider, mostralo
+                if (nRing.userData.id_ring <= value) {
+                    nRing.show();
+                } else {
+                    nRing.hide();
+                }
+            });
+        }
+    }
+</script>
+
+<script>
+    //Definizione funzione richiamata da "RESET" ---> ripristina visualizzazione iniziale - da rivedere e completare
+    function resetView() {
+        // 1. Ripristina la telecamera alla posizione iniziale
+        if (window.ATON) {
+            const controls = ATON.getControls(); 
+            if (controls) controls.reset(); 
+        }
+        // 2. Reset UI: visualizzazione anelli
+        const slider = document.getElementById("centurySlider");
+        const display = document.getElementById("yearDisplay");
+            
+        if (slider) {
+            slider.value = 4; // Riporta graficamente lo slider al massimo
+            // Usiamo la funzione esistente per aggiornare la scena 3D in base allo slider
+            if (typeof applySliderFilter === "function") {
+                applySliderFilter(4); 
+            }
+        }
+        if (display) {
+            display.innerText = "V Century";
+        }
+
+        // --- 3. Reset UI: Checkbox ---
+        // Seleziona tutti i checkbox dentro la sidebar
+        const checkboxes = document.querySelectorAll('.filter-list input[type="checkbox"]');
+            
+        checkboxes.forEach(cb => {
+            cb.checked = true; // Li rimette tutti su "selezionato"
+            // 2. Ripristina oggetti 3D
+            const name = cb.value;
+                
+            if (window.APP && APP.baseRings) {
+                APP.baseRings.forEach(nRing => {
+                    // Controlla se il nome corrisponde
+                    if (nRing.userData.nome === name){
+                        nRing.show(); // Mostra l'anello
+                        // 3. Ripristina opacità iniziale
+                    if (nRing.userData.material) {
+                            nRing.userData.material.opacity = nRing.userData.opacityOriginal || 1;
+                        }
+                    }
+                });
+            }
+        });  
+        console.log("Visualizzazione e filtri ripristinati.");
+    }  
+</script>
+    
+<!-- FUNZIONI MAINDOCK -->
+<script>
+    // Definizione funzione richiamata da "TOOLS" nel main dock ---> apre menu laterale xS
+    window.toggleLateralDock = function() {
+        const dock = document.getElementById("idLateralDock");
+    
+        if (dock) {
+            // La funzione classList.toggle aggiunge la classe se manca, 
+            // o la rimuove se è già presente.
+            dock.classList.toggle("dock-hidden");
+        }    
+        console.log("Stato Dock Laterale modificato");
+    }
+</script>
+    
+<script>
+    // Definizione funzione richiamata da "SEARCH" nel main dock ---> apre barra di ricerca
+    function toggleSearch() {
+        const overlay = document.getElementById("searchOverlay");
+        if (!overlay) return; // Evita errori se l'elemento non esiste
+            
+        // Attiva o disattiva la classe 'active'
+        overlay.classList.toggle("active");
+
+        // Se aperta, metti il focus sull'input
+        if (overlay.classList.contains("active")) {
+            // Usiamo setTimeout per dare tempo al CSS di renderizzare l'elemento
+            setTimeout(() => {
+                const input = overlay.querySelector("input");
+                if (input) input.focus();
+            }, 50);
+            // Opzionale: blocca lo scroll della pagina sotto il popup
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Ripristina lo scroll quando chiudi
+            document.body.style.overflow = 'auto';
+        }
+    }   
+
+    // Barra ricerca - Chiudi premendo il tasto ESC + controllo sicurezza
+    window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            const overlay = document.getElementById("searchOverlay");
+            if (overlay && overlay.classList.contains("active")) {
+                overlay.classList.remove("active");
+                document.body.style.overflow = 'auto';
+            }
+        }
+    });
+        
+    // Barra ricerca - Chiudi cliccando su nero
+    window.onclick = function(event) {
+        const overlay = document.getElementById("searchOverlay");
+        if (event.target == overlay) {
+            overlay.classList.remove("active");
+        }
+    }
+</script>
+    
+<script>
+    function updateSlider() {
+        const minInput = document.getElementById('min-range');
+        const maxInput = document.getElementById('max-range');
+        const labelMin = document.getElementById('label-min');
+        const labelMax = document.getElementById('label-max');
+
+        // Valori correnti dello slider
+        let valMin = parseInt(minInput.value);
+        let valMax = parseInt(maxInput.value);
+
+        // Impedisce l'incrocio dei cursori
+        if (valMin > valMax) {
+            minInput.value = valMax;
+            valMin = valMax;
+        }
+        if (valMax < valMin) {
+            maxInput.value = valMin;
+            valMax = valMin;
+        }
+
+        // Aggiorna etichette testuali
+        labelMin.innerText = valMin;
+        labelMax.innerText = valMax;
+
+        // --- LOGICA DI COLLEGAMENTO AGLI ANELLI ---
+        // Cicliamo su tutti gli anelli definiti nella configurazione
+        baseRingsLayers.forEach((layer) => {
+            // Troviamo l'oggetto 3D/Grafico corrispondente nell'array APP.baseRings
+            // Assumendo che APP.baseRings[0] corrisponda a id_ring: 0
+            const ringNode = APP.baseRings[layer.id_ring];
+
+            if (ringNode) {
+                // Se l'id dell'anello è compreso nel range dello slider, mostralo
+                if (layer.id_ring >= valMin && layer.id_ring <= valMax) {
+                    ringNode.visible = true; // Per Three.js
+                    // Se usi CSS/DOM usa: ringNode.style.display = "block";
+                } else {
+                    ringNode.visible = false; // Nascondi l'anello
+                    // Se usi CSS/DOM usa: ringNode.style.display = "none";
+                }
+            }
+        });
+    }
+</script>
+    
+<script>
+    // Funzione per aprire il popup - add.
+    function openModalPopup() {
+        const popup = document.getElementById("modalPopupWindow");
+        if (popup) {
+            popup.style.display = "block"; // O "flex" se vuoi usare il centramento flexbox
+        }
+    }
+
+    // Funzione per chiudere il popup
+    function closePopup() {
+        const popup = document.getElementById("modalPopupWindow");
+        if (popup) {
+            popup.style.display = "none";
+        }
+    }
+        
+    // Gestione delle azioni del menu
+    function selezionaOpzione(numeroOpzione) {
+        console.log("Hai scelto l'opzione: " + numeroOpzione);
+    
+        // Inserisci qui la logica specifica (es. apri un link, filtra dati, ecc.)
+    
+        // Chiudi il popup dopo la scelta
+        closePopup();
+    }
+
+    // Chiudi il popup premendo il tasto ESC sulla tastiera
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closePopup();
+        }
+    });
+</script>
+
+       
+<script>
+    //Popup INFO
+    function openInfoPopup() {
+        const popup = document.getElementById("infoPopup");
+        if (popup) {
+            popup.style.display = "block"; // O "flex" se vuoi usare il centramento flexbox
+        }
+    }
+
+    // Funzione per chiudere il popup
+    function closeInfoPopup() {
+        const popup = document.getElementById("infoPopup");
+        if (popup) {
+            popup.style.display = "none";
+        }
+    }
+</script>

@@ -1,0 +1,767 @@
+/* ############################################################################ */
+/* FIRST PAGE */
+/* ############################################################################ */
+.landing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+    background-size: cover;
+    background-position: center;
+    
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; /* IMP! sopra ogni altra cosa */
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+/* Logo prima pagina */
+.landing-logo {
+    max-width: 250px; /* Larghezza massima del logo */
+    height: auto; /* Mantiene le proporzioni */
+    margin-bottom: 20px; /* Spazio extra sotto il logo (oltre al gap) */
+}
+
+/* Stile per la transizione fluida */ 
+.landing-overlay {
+    transition: opacity 0.8s ease, transform 0.5s ease;
+    transition: opacity 0; transition: 0.8s;
+}
+
+/* Stile "Welcome" */
+.landing-content h1 {
+    font-size: 3rem;
+    margin: 0; /* Rimuove margini default per usare gap/margini logo */
+    letter-spacing: 2px;
+}
+
+/* Stile sottotitolo */
+.landing-content p {
+    font-size: 1.5rem;
+    margin: 1; /* Rimuove margini default per usare gap/margini logo */
+    letter-spacing: 0.7px;
+}
+
+/* Tasto "start discorver" */
+.start-btn {
+    padding: 15px 50px;
+    background: #00cc00;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0,255,0,0.3);
+    transition: 0.3s;
+}
+
+.start-btn:hover {
+    background-color: #00ff00;
+    transform: scale(1.1);
+}
+
+/* DA RIVEDERE: Comportamento Landing page dopo funzionamento */
+.landing-hidden {
+    opacity: 0;
+    visibility: hidden; /* Nasconde l'elemento ai lettori di schermo */
+    z-index: -999999 !important; /* Sposta lo z-index al valore minimo possibile */
+    pointer-events: none; /* IMP: i click passano attraverso! */
+    transition: opacity 0.8s ease, visibility 0.8s;
+    /* display: none; La toglie dal flusso finché non serve */
+}
+
+/* ############################################################################ */
+/* TOP TOOLBAR */
+/* ############################################################################ */
+
+#idTopToolbar {
+    background-color: rgba(0, 0, 0, 0.8); 
+    border-bottom: 2px solid #00ff00;    
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    width: 100%; 
+    position: fixed; /* Blocca la barra in alto */
+    top: 0;
+}
+/* Allinea pulsanti orizzontalmente nella Top Toolbar */
+.atonToolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Spazio tra i pulsanti */
+    padding: 10px;
+    position: fixed; /* Li tiene fissi in alto */
+    top: 0;
+    left: 0;
+    min-height: 40px;
+    z-index: 1000; 
+}
+
+/* Top Toolbar: Pulsanti XS */
+.my-custom-btn {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 8px 16px;
+    display: inline-flex;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+.my-custom-btn:hover {
+    background: #555;
+}
+.my-custom-btn img {
+    width: 25px;
+    height: 22px;
+    display: block;
+}
+
+/* ############################################################################ */
+/* PoweredBy - ATON */
+/* ############################################################################ */
+
+.poweredBy {
+    position: fixed;
+    bottom: 10px;
+    right: auto !important; /* Rimuove l'aggancio a destra */
+    left: 30px;
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+/* ############################################################################ */
+/* SIDEBAR */
+/* ############################################################################ */
+
+/* SIDEBAR XD - generale ****************************************/
+.aton-sidebar {
+    height: 100%;
+    width: 0; /* Inizialmente chiusa */
+    max-width: 600px; /* Nuova ampiezza massima */
+    position: fixed;
+    z-index: 2000; /* Sopra tutto */
+    top: 0px;
+    right: 0px; /* Si apre da destra */
+    background-color: rgba(30, 30, 30, 0.95);
+    overflow-x: hidden;
+    transition: 0.4s; /* Effetto scorrimento */
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+    color: white;
+    font-family: sans-serif;
+}
+
+.sidebar-wrapper { 
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* IMP! Spinge il footer in basso */
+}
+
+.sidebar-top-section {
+    flex-grow: 1; 
+    overflow-y: auto; /* Permette lo scroll se ci sono troppi bottoni */
+}
+
+.sidebar-header {
+    display: flex; 
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    /*padding: 20px;
+    gap: 15px;*/
+}
+
+.sidebar-btn {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #ccc;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+/* Stile base per il rettangolo intorno ai tasti */
+.btn-box {
+    border: 1px solid #666;      
+    border-radius: 4px;           
+    margin: 8px 15px;             
+    width: calc(100% - 30px);     
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.btn-box:hover {
+    border-color: #00d4ff;        
+    background: rgba(0, 212, 255, 0.1);
+    color: white;
+}
+
+/* Stile Footer Sidebar ****************************************/
+.sidebar-footer {
+    padding: 20px;
+    background: rgba(20, 20, 20, 0.8); /* Sfondo leggermente più scuro */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tasto chiusura Sidebar */
+.btn-close-bottom {
+    width: 100%;
+    padding: 15px;
+    background-color: #d93025;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-close-bottom:hover {
+    background-color: #b71c1c;
+}
+/* SIDEBAR - Filtro a lista: oggetti ****************************************/
+
+.filter-header {
+    width: 100%;
+    background: #333;
+    color: white;
+    padding: 15px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-content {
+    max-height: 0; /* Chiuso di default */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #444;
+}
+
+.filter-content.open {
+    max-height: 350px; 
+}
+
+.filter-list {
+    list-style: none;
+    padding: 15px;
+    margin: 0;
+    color: white;
+}
+
+.filter-list li { padding: 5px 0; }
+
+/* SIDEBAR - Range Slider di Century ***************************************/
+.filter-section {
+    padding: 20px;
+    color: white;
+}
+
+.slider-container {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.centurySlider {
+    width: 100%;
+    cursor: pointer;
+    accent-color: #007bff; /* Colore del cursore */
+}
+
+.slider-steps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+    padding: 0 5px;
+}
+
+.slider-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* SIDEBAR - Tasto "Reset" ****************************************/
+
+.reset-btn {
+    color: #e5d07b !important; /* colore testo */
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+/* Rettangolo specifico per il Reset (magari con bordo giallo) */
+.reset-btn.btn-box {
+    /*border-color: #ffc107;*/
+    margin-top: 20px; /* Più distacco dagli altri */
+}
+
+.reset-btn:hover {
+    transform: scale(0.95);
+    filter: brightness(1.2);
+}
+
+/* ############################################################################ */
+/* MAIN DOCK - principale, fissato in basso */
+/* ############################################################################ */
+
+.aton-dock-container {
+    position: fixed;
+    bottom: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); /* Centra l'elemento rispetto a se stesso */
+    z-index: 2000; /* Sopra il 3D e altre toolbar */
+    pointer-events: none; 
+    display: flex !important; /* Forza la visualizzazione */
+}
+
+/* Caratteristiche barra */
+.aton-dock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(25, 25, 25, 0.85); /* Semi-trasparente */
+    backdrop-filter: blur(10px); /* Effetto vetro sfocato */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px; /* Forma a pillola */
+    pointer-events: auto; /* Riattiva i click sui tasti */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Stile dei pulsanti circolari */
+.dock-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative; 
+}
+
+/* Effetto ingrandimento al passaggio del mouse */
+.dock-btn:hover {
+    transform: scale(1.3) translateY(-5px);
+    background: #00ff00; /* Colore ATON */
+    color: black;
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.dock-separator {
+    width: 1px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 5px;
+}
+
+/* Creazione del nome popup con tag tasto */
+.aton-dock-container .dock-btn::after {
+    content: attr(data-label); 
+    position: absolute;
+    bottom: 60px; 
+    left: 50%; 
+    transform: translateX(-50%) translateY(10px); 
+    
+    background: rgba(20, 20, 20, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0; /* Inizialmente invisibile */
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Piccola freccia (triangolo) sotto label */
+.aton-dock-container .dock-btn::before {
+    content: "";
+    position: absolute;
+    bottom: 52px; /* Appena sotto la label */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    
+    border-width: 8px 8px 0 8px; /* Crea un triangolo che punta in basso */
+    border-style: solid;
+    border-color: rgba(20, 20, 20, 0.9) transparent transparent transparent;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.aton-dock-container .dock-btn:hover::after,
+.aton-dock-container .dock-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* Sale nella posizione finale */
+}
+
+/* ############################################################################ */
+/* MODAL MENU - scelta cluster */
+/* ############################################################################ */
+
+.modalPopup-window {
+    display: none; /* Nascosta di default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    width: 300px;
+    background: #2c2c2c; 
+    color: white;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* Testata della finestra */
+.modalPopup-header {
+    background: #3d3d3d;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #555;
+    font-weight: bold;
+    font-size: 0.9em;
+    position: relative;
+}
+
+.modalClose-x {
+    position: absolute;
+    right: 15px; 
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modalClose-x:hover { color: white; }
+
+/* Corpo della finestra */
+.modalPopup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px;
+    width: 100%; 
+    box-sizing: border-box; /* Include il padding nel calcolo della larghezza */
+}
+
+.modalMenu-item {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%; 
+    max-width: 240px; 
+    transition: background 0.2s;
+}
+
+.modalMenu-item:hover {
+    background: #00d4ff;
+    color: black;
+    transform: translateY(-1px); 
+}
+
+
+/* ############################################################################ */
+/* DOCK TOOLS - popup info */
+/* ############################################################################ */
+
+.infoPopup-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: #2c2c2c;
+    width: 500px;
+    max-width: 90%;
+    height: 600px; 
+    padding: 20px 25px;
+
+    color: white;
+    border: 1px solid #444;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+#infoPopup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9998;
+}
+
+.instruction-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.infoClose-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.infoClose-btn:hover {
+    background: #3094fe;
+    transform: translateY(-1px); 
+}
+
+/* ############################################################################ */
+/* DOCK TOOLS - laterale */
+/* ############################################################################ */
+
+/* Dock popup ancorato al centro della parte destra */
+.aton-dock-container-vertical {
+    position: fixed;
+    left: 20px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    z-index: 3000;
+    transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1); 
+    opacity: 1;
+    pointer-events: auto;
+    display: flex !important;
+}
+
+/* La barra verticale */
+.aton-dock-vertical {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 12px;
+    padding: 20px 10px;
+    background: rgba(25, 25, 25, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px; 
+    pointer-events: auto;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.4);
+}
+
+/* Classe per nascondere il dock */
+.dock-hidden {
+    right: -100px !important; 
+    opacity: 0; 
+    pointer-events: none; 
+}
+
+/* Effetto hover specifico per dock laterale */
+.dock-btn:hover {
+    transform: scale(1.2) translateX(-5px); 
+    background: #00ff00;
+    color: black;
+}
+
+/* Mantieni lo stile dei bottoni che abbiamo usato prima */
+.dock-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Per visualizzare i tag */
+.aton-dock-vertical .dock-btn {
+    position: relative; 
+}
+
+/* La Label */
+.aton-dock-vertical .dock-btn::after {
+    content: attr(data-label); 
+    position: absolute;
+    left: 120%;
+    top: 50%;                 
+    
+    background: rgba(20, 20, 20, 0.9);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    white-space: nowrap; /* Evita che il testo vada a capo */
+    opacity: 0;               
+    pointer-events: none;      
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* La piccola freccia (triangolo) sotto la label */
+.aton-dock-vertical .dock-btn::before {
+    content: "";
+    position: absolute;
+    bottom: 52px; /* Appena sotto la label */
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: rgba(20, 20, 20, 0.9) transparent transparent transparent;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Effetto al passaggio del mouse */
+.aton-dock-vertical .dock-btn:hover::after,
+.aton-dock-vertical .dock-btn:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* Overlay tasto SEARCH */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); 
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px); 
+}
+
+/* Quando è attiva overlay come flexbox */
+.search-overlay.active {
+    display: flex;
+}
+
+/* La barra di ricerca */
+.search-modal {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Lo stile della X */
+.close-x {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-x:hover {
+    color: #ff0000;
+
+/* Pulsante GO
+.input-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}*/
+
+#searchInput {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Stile del tasto Go */
+.search-go {
+    display: block !important; 
+    background-color: #0056b3;
+    color: white !important; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 60px; /* Impedisce al tasto di rimpicciolirsi troppo */
+}
+
+.search-go:hover {
+    background-color: #007bff;
+}
+
+/* ############################################################################ */
+/* CLUSTER STRUTTURA */
+/* ############################################################################ */
+
+/* Anellid dei cluster */
+.ring-label-popup {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ff00;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    display: none;
+    z-index: 2000;
+    transform: translate(-50%, -100%);
+}
