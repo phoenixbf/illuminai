@@ -3,17 +3,19 @@
 
 ==========================================*/
 import Item from "./item.js";
-
+import UI from "./ui.js";
 
 let APP = ATON.App.realize();
 //APP.requireFlares(["myFlare"]);
 window.APP = APP;
 
 APP.Item = Item;
+APP.UI   = UI;
 
 APP.bgColor = new THREE.Color(0.1,0.1,0.1);
 APP.pathConfigFile   = APP.basePath + "config.json";
 APP.pathResAssets    = APP.basePath + "assets/";
+APP.pathResIcons     = APP.pathResAssets + "icons/";
 
 APP.ITEM_SCALE = 0.25;
 
@@ -55,6 +57,7 @@ APP.loadConfig = ()=>{
     });
 };
 
+/*
 // MODIFICA: visualizza pagina Landing
 window.startApp = function() {
     const landing = document.getElementById("idLandingPage");
@@ -69,6 +72,7 @@ window.startApp = function() {
         landing.style.zIndex = "-1000";
     }, 850);
 };
+*/
 
 APP.setup = ()=>{
 
@@ -76,7 +80,7 @@ APP.setup = ()=>{
     ATON.UI.addBasicEvents();
 
     ATON.Nav.setAndRequestHomePOV(
-        new ATON.POV().setPosition(-1,1.5,0).setTarget(0,1.5,0)
+        new ATON.POV().setPosition(-2.0,1.6,0).setTarget(0,0,0)
     );
 
     APP.setupScene();
@@ -88,6 +92,8 @@ APP.setup = ()=>{
 
 APP.setupScene = ()=>{
     ATON.setBackgroundColor(APP.bgColor);
+    ATON.setMainPanorama(APP.pathResAssets+"4k.jpeg");
+
     ATON._bqScene = true;
 
     // --- Configurazione 6 ANELLI (CENTURY) ---
@@ -285,6 +291,12 @@ APP.setupScene = ()=>{
 APP.setupEvents = ()=>{
     ATON.on("APP_DB_READY", APP.onReadyDB );
 
+    ATON.on("APP_ConfigLoaded", ()=>{
+        APP.UI.setup();
+
+        APP.UI.modalWelcome();
+    });
+
     //Effetto HOVER ANELLI (DA RIVEDERE!!!) -------------------------------------------------
     //1. INGRESSO
     ATON.on("pick", (node) => {
@@ -332,8 +344,10 @@ APP.setupEvents = ()=>{
 // DA MODIFICARE!!! --------------------------------------------------
 APP.onReadyDB = ()=>{
     console.log("DB ready")
+    //console.log(APP.db["main"])
 
     // Cluster
+    //TODO: refactor with new class
     let C = ATON.createUINode("C0");
     C.attachToRoot();
 
@@ -367,6 +381,7 @@ APP.onReadyDB = ()=>{
     ATON.SUI.createLayout(C, spiral);
 };
 
+/*
 // Funzioni della Toolbar ----> DA COMPLETARE !!! ----------------------------
 window.toggleSidebar = function() {
     const sidebar = document.getElementById("idSidebar");
@@ -377,6 +392,7 @@ window.toggleSidebar = function() {
         sidebar.style.width = "400px";
     }
 };
+*/
 // DA MODIFICARE!!! --------------------------------------------------
 // https://<nccloud-addr>/apps/files_sharing/publicpreview/iq2623RQzQbe33E?x=1024&y=1024&a=true&file=/A_Art/A.01_Painting/A.01_A_18GRmGFN-B000237.jpg
 APP.getImageURL = (path, res)=>{

@@ -14,6 +14,8 @@ constructor(id, db){
     if (!db) return;
     this.data = APP.db[db][id];
 
+    console.log(this.data["id_cluster"])
+
     this.panel = new ATON.SUI.MediaPanel("panel-"+id);
     this.panel.setTitle( id );
     //this.panel.setBackdrop(0.5);
