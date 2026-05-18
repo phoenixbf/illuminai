@@ -3,6 +3,7 @@
 
 ==========================================*/
 import Item from "./item.js";
+import Cluster from "./cluster.js";
 import UI from "./ui.js";
 
 let APP = ATON.App.realize();
@@ -10,6 +11,7 @@ let APP = ATON.App.realize();
 window.APP = APP;
 
 APP.Item = Item;
+APP.Cluster = Cluster;
 APP.UI   = UI;
 
 APP.bgColor = new THREE.Color(0.1,0.1,0.1);
@@ -17,11 +19,29 @@ APP.pathConfigFile   = APP.basePath + "config.json";
 APP.pathResAssets    = APP.basePath + "assets/";
 APP.pathResIcons     = APP.pathResAssets + "icons/";
 
-APP.ITEM_SCALE = 0.25;
+APP.ITEM_SCALE = 0.1;
+
+APP.CATS_LIST = [
+    "P.01",
+    "P.02",
+    "A.01",
+    "A.02",
+    "A.03",
+    "A.04",
+    "A.05",
+    "A.06",
+    "A.07",
+    "A.08"
+];
+
+APP.CLUSTER_NUM_SLICES = 6;
+
 
 APP.confdata  = undefined;
 APP.cloudbase = undefined;
 APP.db        = {};
+
+APP.activeClusterID = undefined;
 
 
 APP.loadConfig = ()=>{
@@ -298,6 +318,7 @@ APP.setupEvents = ()=>{
     });
 
     //Effetto HOVER ANELLI (DA RIVEDERE!!!) -------------------------------------------------
+/*
     //1. INGRESSO
     ATON.on("pick", (node) => {
         if (node && node.userData.tipo === "ring_century") {
@@ -338,7 +359,7 @@ APP.setupEvents = ()=>{
             // ATON.Nav.fitToNode(node); //Sposta la telecamera sull'anello cliccato
         }
     });
-
+*/
 };
 
 // DA MODIFICARE!!! --------------------------------------------------
@@ -347,38 +368,14 @@ APP.onReadyDB = ()=>{
     //console.log(APP.db["main"])
 
     // Cluster
-    //TODO: refactor with new class
-    let C = ATON.createUINode("C0");
+    let cid = APP.params.get("c");
+    if (!cid) cid = 0;
+
+    let C = new APP.Cluster(parseInt(cid));
     C.attachToRoot();
 
-    let count = 0;
-    for (let e in APP.db["main"]){
-
-        if (count < 200){
-            let P = new APP.Item(e, "main");
-            P.setClusterOrigin(C.position);
-
-            P.attachTo(C);
-            P.load(128);
-
-            count++;
-        }
-    }
-
-    let spiral = (N,i)=>{
-        let y = 0.3 + (i * 0.03);
-
-        let c = N.data.century;
-        c -= 18;
-        c *= 0.5;
-
-        let x = (2.0 + c) * Math.cos(i*0.3);
-        let z = (2.0 + c) * Math.sin(i*0.3);
-
-        N.setPosition(x,y,z).orientToLocation(0,y,0).setScale(APP.ITEM_SCALE);
-    };
-
-    ATON.SUI.createLayout(C, spiral);
+    C.realize();
+    C.setActive();
 };
 
 /*

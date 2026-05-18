@@ -12,9 +12,8 @@ constructor(id, db){
     this._id = id;
 
     if (!db) return;
-    this.data = APP.db[db][id];
 
-    console.log(this.data["id_cluster"])
+    this.setData( APP.db[db][id] );
 
     this.panel = new ATON.SUI.MediaPanel("panel-"+id);
     this.panel.setTitle( id );
@@ -27,7 +26,22 @@ constructor(id, db){
     this.setupEvents();
 
     this._bIspection = false;
+}
 
+setData(data){
+    if (!data){
+        this.data = {};
+        return;
+    }
+
+    this.data = data;
+
+    let icat = undefined;
+    for (let c=0; c<APP.CATS_LIST.length; c++){
+        if ( parseInt(data[ APP.CATS_LIST[c] ]) > 0 ) icat = c;
+    }
+
+    this.data.icat = icat;
 }
 
 setupEvents(){
