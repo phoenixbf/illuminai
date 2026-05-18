@@ -69,43 +69,74 @@ UI.openSideFilters = ()=>{
     elClasses.append(
         ATON.UI.createSwitch({
             label: "Manuscript Sheets",
-            //onchange: (b)=>{}
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["P.01_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Printed Pages",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["P.02_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Paintings",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.01_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Engravings",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.02_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Drawings",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.03_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Sculpture",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.04_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Stained-Glass Windows",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.05_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Tapestries",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.06_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Prints",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.07_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         }),
         ATON.UI.createSwitch({
             label: "Objects",
-            //onchange: (b)=>{}
+            onchange: (b)=>{
+                APP.filters["A.08_annotation"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
         })
     );
 

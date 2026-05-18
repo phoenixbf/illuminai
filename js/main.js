@@ -42,6 +42,9 @@ APP.cloudbase = undefined;
 APP.db        = {};
 
 APP.activeClusterID = undefined;
+APP.activeCluster   = undefined;
+
+APP.filters = {};
 
 
 APP.loadConfig = ()=>{

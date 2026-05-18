@@ -45,7 +45,7 @@ realize(){
             let P = new APP.Item(iid, "main");
             P.setClusterOrigin( this.position );
 
-            P.attachTo( this );
+            P.attachTo( this.gItems );
             P.load(64);
 
             //console.log(P)
@@ -54,7 +54,7 @@ realize(){
 
     let arrange = (N,i)=>{
         const data = N.data;
-        console.log(data)
+        //console.log(data)
 
         let y = 0.5;
         if (data && data.icat !== undefined) y += data.icat;
@@ -98,17 +98,39 @@ realize(){
         N.setPosition(x,y,z).orientToLocation(0,y,0).setScale(APP.ITEM_SCALE);
     };
 
-    ATON.SUI.createLayout(this, arrange);
+    ATON.SUI.createLayout(this.gItems, arrange);
     return this;
 }
 
 setActive(){
     APP.activeClusterID = this._id;
+    APP.activeCluster   = this;
 
     // TODO: update base here
 
+    this.filter();
+
     console.log("Active cluster #"+this._id);
     return this;
+}
+
+filter(){
+    for (let i in this.gItems.children){
+        let I = this.gItems.children[i];
+
+        I.hide();
+
+        let data = I.data;
+
+        if (data){
+            for (let f in APP.filters){
+                //console.log(APP.filters[f])
+                //console.log(data[f])
+
+                if (APP.filters[f] && parseInt(data[f])) I.show();
+            }
+        }
+    }
 }
 
 }
