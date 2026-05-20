@@ -9,5 +9,48 @@
             "file": "ICONCLASS_Class_Subject.csv"
         }
     },
-    "ncdata": "https://interlumo.ispc.cnr.it/cloud/apps/files_sharing/publicpreview/YjYpKKzgD9PfxqS"
+    "ncdata": "https://interlumo.ispc.cnr.it/cloud/apps/files_sharing/publicpreview/YjYpKKzgD9PfxqS",
+
+    "clusters":[
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        },
+        {
+            "title":"xxx",
+            "descr": "..."
+        }
+    ]
 }
