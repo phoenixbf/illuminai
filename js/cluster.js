@@ -79,7 +79,7 @@ realize(){
         let slice = 0;
         if (data && data["id_slice"]) slice = parseInt( data["id_slice"] );
 
-        let a = parseFloat( slice / (APP.CLUSTER_NUM_SLICES-1) );
+        let a = parseFloat( slice / APP.CLUSTER_NUM_SLICES );
         a = a * Math.PI * 2.0;
 
         let x = r * Math.cos(a);

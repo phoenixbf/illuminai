@@ -113,12 +113,39 @@ APP.setup = ()=>{
     APP.setupEvents();
 };
 
+APP.realizeBaseCluster = (size)=>{
+    let g = new THREE.PlaneGeometry( size, size );
+    g.rotateX(-Math.PI*0.5); // 1.0472
+
+    APP.matBaseCluster = new THREE.MeshBasicMaterial({
+        color: ATON.MatHub.colors.white,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        //opacity: 0.2,
+		//blending: THREE.MultiplyBlending,
+        //premultipliedAlpha: true
+    });
+
+    ATON.Utils.loadTexture(APP.pathResAssets+ "base-cluster.png", (tex)=>{
+        APP.matBaseCluster.map = tex;
+        APP.matBaseCluster.needsUpdate = true;
+    });
+
+    APP.baseCluster = ATON.createSceneNode("basecluster").rotateY(Math.PI / APP.CLUSTER_NUM_SLICES).attachToRoot();
+    APP.baseCluster.add( new THREE.Mesh(g, APP.matBaseCluster) );
+};
+
 APP.setupScene = ()=>{
     ATON.setBackgroundColor(APP.bgColor);
     ATON.setMainPanorama(APP.pathResAssets+"4k.jpeg");
 
     ATON._bqScene = true;
 
+    APP.realizeBaseCluster(4.0); // diameter in meters
+
+
+/*
     // --- Configurazione 6 ANELLI (CENTURY) ---
     APP.baseRings = []; 
     const baseRingsLayers = [
@@ -307,7 +334,7 @@ APP.setupScene = ()=>{
     APP.sliceConfig.forEach(config => {
         APP.createSeparateSlice(config, maxRadius, numSlices);
     });
-
+*/
 };
 
 

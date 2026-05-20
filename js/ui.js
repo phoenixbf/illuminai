@@ -44,8 +44,7 @@ UI.modalWelcome = ()=>{
         ATON.UI.elem(`
             <div style='text-align:center; margin:8px'>
                 <img src='${APP.basePath}/appicon.png' style='width:100px; height:auto'>
-                <br><b>IlluminAI</b>
-                <br><hr>
+                <br><br>
                 <span style='text-align:left'>
                     IlluminAI is a Web3D/WebXR application for exploring late medieval illuminated manuscripts in a 3D space. The users will be able to analyze pages searching for figurative miniatures and compare these with other artworks based on their iconography.
                 </span>
