@@ -15,7 +15,10 @@ APP.Cluster = Cluster;
 APP.UI   = UI;
 
 APP.bgColor = new THREE.Color(0.1,0.1,0.1);
-APP.pathConfigFile   = APP.basePath + "config.json";
+
+APP.pathConfig       = APP.basePath + "config/";
+APP.pathDB           = APP.pathConfig + "db/";
+APP.pathConfigFile   = APP.pathConfig + "config.json";
 APP.pathResAssets    = APP.basePath + "assets/";
 APP.pathResIcons     = APP.pathResAssets + "icons/";
 
@@ -67,7 +70,7 @@ APP.loadConfig = ()=>{
 
                 if (!APP.db[e]) APP.db[e] = {};
 
-                ATON.ASCII.loadCSV(APP.basePath +"db/"+csv, pi, (d)=>{
+                ATON.ASCII.loadCSV(APP.pathDB + csv, pi, (d)=>{
                     APP.db[e] = d;
                     dbloaded++;
 
