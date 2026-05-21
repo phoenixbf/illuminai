@@ -23,6 +23,7 @@ APP.pathResAssets    = APP.basePath + "assets/";
 APP.pathResIcons     = APP.pathResAssets + "icons/";
 
 APP.ITEM_SCALE = 0.1;
+APP.ITEM_INSPECT_RAD = 0.5;
 
 APP.CATS_LIST = [
     "P.01",

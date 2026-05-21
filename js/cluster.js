@@ -96,6 +96,7 @@ realize(){
         z += vRand.z;
 
         N.setPosition(x,y,z).orientToLocation(0,y,0).setScale(APP.ITEM_SCALE);
+        N.setOriginalLocation( N.position );
     };
 
     ATON.SUI.createLayout(this.gItems, arrange);
