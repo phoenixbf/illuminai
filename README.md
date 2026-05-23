@@ -19,3 +19,4 @@ Minisini, V., Gosti, G., Fanini, B. (2025). The IlluminAI project: a deep neural
 Web3D app realized by: Valeria Minisini (Sapienza University of Rome and CNR-ISPC), Bruno Fanini (CNR-ISPC) and Giorgio Gosti (Cineca).
 
 ## License 
+GPL - 3.0 license
