@@ -54,3 +54,15 @@
     width: 100%;
     height: 100%;
 }
+
+/*   
+    PoweredBy - ATON 
+*/ 
+.aton-poweredby {
+    position: fixed;
+    bottom: 10px;
+    right: auto !important;
+    left: 20px !important;
+    font-size: 12px;
+    font-family: sans-serif;
+}
