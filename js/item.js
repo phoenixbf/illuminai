@@ -68,37 +68,37 @@ setupEvents(){
 
     this.panel.onSelect = ()=>{
         if (!this._bIspection){
-            
             this.load(4096);
-            
-            /*
-            // distance 0.6
-            this.position.x = THREE.MathUtils.lerp(this.position.x,this._origin.x, 0.5);
-            this.position.z = THREE.MathUtils.lerp(this.position.z,this._origin.z, 0.5);
-            */
-           let eye = ATON.Nav.getCurrentEyeLocation();
-           let dir = ATON.Nav.getCurrentDirection();
-           
-           this.position.x = eye.x + (dir.x * APP.ITEM_INSPECT_RAD);
-           this.position.y = eye.y + (dir.y * APP.ITEM_INSPECT_RAD);
-           this.position.z = eye.z + (dir.z * APP.ITEM_INSPECT_RAD);
-           
-           this.orientToCamera();
-           
-           this.setScale(APP.ITEM_SCALE * 2.0);
-           
-           this._bIspection = true;
+
+            this.arrangeForInspection();
         }
-
-        else {
-            if (this._origLoc) this.position.copy(this._origLoc);
-            this.orientToLocation(0, this._origLoc.y, 0);
-
-            this.load(128);
-
-            this._bIspection = false;
-        }
+        else this.reset();
     };
+}
+
+// Reset item to its original location in the cluster
+reset(){
+    if (this._origLoc) this.position.copy(this._origLoc);
+    this.orientToLocation(0, this._origLoc.y, 0);
+
+    this.load(128);
+
+    this._bIspection = false;
+}
+
+arrangeForInspection(){
+    let eye = ATON.Nav.getCurrentEyeLocation();
+    let dir = ATON.Nav.getCurrentDirection();
+    
+    this.position.x = eye.x + (dir.x * APP.ITEM_INSPECT_RAD);
+    this.position.y = eye.y + (dir.y * APP.ITEM_INSPECT_RAD);
+    this.position.z = eye.z + (dir.z * APP.ITEM_INSPECT_RAD);
+    
+    this.orientToCamera();
+    
+    this.setScale(APP.ITEM_SCALE * 2.0);
+
+    this._bIspection = true;
 }
 
 load(res){
