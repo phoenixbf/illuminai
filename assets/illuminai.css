@@ -66,3 +66,48 @@
     font-size: 12px;
     font-family: sans-serif;
 }
+
+/*   
+    INFO Page 
+*/
+.info-container {
+    text-align: center;
+    margin: 8px;
+}
+
+.info-title {
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 10px;
+    color: whitesmoke;
+}
+
+.info-divider {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 15px 0;
+}
+
+.info-description {
+    display: block;
+    text-align: center;
+    line-height: 1.5;
+    color: whitesmoke;
+}
+
+.info-btn {
+    padding: 15px 50px;
+    background: #00cc00;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0,255,0,0.3);
+    transition: 0.3s;
+}
+
+.info-btn:hover {
+    background-color: #00ff00;
+    transform: scale(1.05);
+}
