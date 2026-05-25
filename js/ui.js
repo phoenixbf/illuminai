@@ -4,9 +4,9 @@ UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
 
     UI._elDock.append(
-        ATON.UI.createButtonHome({ classes: "illuminai-dock-btn" }),
-        
+        UI.createButtonTools(),
         UI.createButtonFilters(),
+        ATON.UI.createButtonHome({ classes: "illuminai-dock-btn" }),
         UI.createButtonSearch(),
         UI.createButtonInfo(),
     );
@@ -33,10 +33,56 @@ UI.createButtonInfo = ()=>{
     return ATON.UI.createButton({
         icon: APP.pathResIcons+"info.png", // "bi-sliders",
         classes: "illuminai-dock-btn",
-        onpress: UI.modalWelcome
+        onpress: UI.modalInfo
     }); 
 };
 
+UI.createButtonTools = ()=>{
+    return ATON.UI.createButton({
+        icon: APP.pathResIcons+"tools.png", // "bi-sliders",
+        classes: "illuminai-dock-btn",
+        onpress: UI.modalWelcome
+    });
+};
+
+// INFO PAGE
+UI.modalInfo = ()=>{
+    let elBody = ATON.UI.createContainer();
+
+    elBody.append(
+        ATON.UI.elem(`
+            <div class="info-container">
+                <img src="${APP.basePath}/appicon.png" style='width:100px; height:auto'>
+                <br><hr class="info-divider">
+                <br><b class="info-title">🚀 Discover IlluminAI</b>
+                <div class="info-description">
+                    <p>Welcome! Here what you can do:</p>
+                    <div class="instruction-step">
+                        <span>1️⃣</span>
+                        <p>Select one of the clusters to start using <b>Home</b>.</p>
+                    </div>
+                    <div class="instruction-step">
+                        <span>2️⃣</span>
+                        <p>Apply <b>Filters</b> to refine your search.</p>
+                    </div>
+                    <div class="instruction-step">
+                        <span>3️⃣</span>
+                        <p>Select an <b>Items</b> to view the image in high resolution and to explore the related information.</p>
+                    </div>
+                </div>
+                <br><hr class="info-divider">
+                <button class="info-btn" onclick="ATON.UI.hideModal()">READY!</button>
+            </div>
+        `),
+    );
+
+    ATON.UI.showModal({
+        header: "Getting Started",
+        body: elBody
+    });
+};
+
+//WELCOME PAGE
 UI.modalWelcome = ()=>{
     let elBody = ATON.UI.createContainer();
 
