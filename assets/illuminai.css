@@ -111,3 +111,61 @@
     background-color: #00ff00;
     transform: scale(1.05);
 }
+
+/* 
+    SIDEBAR - Filters 
+*/
+
+.filter-block-title {
+    margin: 15px 0 8px 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
+
+.filter-block-separator {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #948f8f;
+    opacity: 0.7;
+}
+
+/* 
+    SIDEBAR - Centuries (Comprimibile)
+*/
+
+.filter-collapsible-summary {
+    cursor: pointer;
+    list-style: none; /* Rimuove la freccia predefinita del browser su Chrome/Firefox */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+/* Rimuove la freccia predefinita del browser su Safari */
+.filter-collapsible-summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Aggiungiamo una freccia personalizzata usando un pseudo-elemento CSS */
+.filter-collapsible-summary::after {
+    content: '➔'; /* Oppure'▼'*/
+    display: inline-block;
+    font-size: 10px;
+    transform: rotate(90deg); /* Verso il basso da chiuso */
+    transition: transform 0.2s ease;
+    color: #888888;
+}
+
+/* Ruota la freccia da aperto */
+.filter-collapsible[open] .filter-collapsible-summary::after {
+    transform: rotate(-90deg); /* Punta verso l'alto (o a sinistra) quando è aperto */
+}
+
+/* Spaziatura quando si espande */
+.filter-collapsible[open] > div {
+    margin-top: 10px;
+}
