@@ -6,7 +6,7 @@ UI.setup = ()=>{
     UI._elDock.append(
         UI.createButtonTools(),
         UI.createButtonFilters(),
-        ATON.UI.createButtonHome({ classes: "illuminai-dock-btn" }),
+        ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
         UI.createButtonSearch(),
         UI.createButtonInfo(),
     );
@@ -104,10 +104,16 @@ UI.modalWelcome = ()=>{
     });
 };
 
-// Side panels
+// SIDE PANEL (FILTERS)
 UI.openSideFilters = ()=>{
     let elBody = ATON.UI.createContainer();
 
+    // 1 Block - CLASSES
+    let titleClasses = document.createElement("h3");
+    titleClasses.innerText = "Object Types";
+    titleClasses.className = "filter-block-title"; 
+    elClassesBlock.append(titleClasses);
+    
     let elClasses = ATON.UI.createContainer();
     elBody.append(elClasses);
 
@@ -185,6 +191,199 @@ UI.openSideFilters = ()=>{
         })
     );
 
+    // Linea divisoria - tra blocco 1 e 2
+    let separator = document.createElement("hr");
+    separator.className = "filter-block-separator";
+    elBody.append(separator);
+
+    //Blocco 2 - CHRONOLOGY 
+    //Blocco 2 - RINGS (Slidebar)
+    APP.filters["max_visible_ring"] = 6;
+    
+    let elSliderBlock = ATON.UI.createContainer();
+
+    let titleSlider = document.createElement("h3");
+    titleSlider.innerText = "Chronology";
+    titleSlider.className = "filter-block-title";
+    elSliderBlock.append(titleSlider);
+
+    let sliderWrapper = document.createElement("div");
+    sliderWrapper.className = "filter-slider-wrapper";
+
+    let elSliderContainer = ATON.UI.createContainer();
+    elSliderContainer.append(
+        ATON.UI.createSlider({
+            label: "Max Ring Visible",
+            min: 0,
+            max: 6,
+            value: 6, // Valore iniziale
+            step: 1,   // Incremento dello slider
+            onchange: (v) => {
+                // 'v' è il valore numerico ritornato dallo slider
+                APP.filters["max_visible_ring"] = parseInt(v);
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        })
+    );
+
+    elSliderBlock.append(elSliderContainer);
+    elBody.append(elSliderBlock);
+
+    //Blocco 2.2 - CENTURY (Comprimibile) ********************************/
+    
+    let collapsibleWrapper = document.createElement("details");
+    collapsibleWrapper.className = "filter-collapsible";
+    //collapsibleWrapper.open = true per APERTO di default
+    
+    let titleCenturies = document.createElement("summary");
+    titleCenturies.innerText = "Centuries";
+    titleCenturies.className = "filter-block-title filter-collapsible-summary";
+    collapsibleWrapper.append(titleCenturies);
+
+    let elCenturies = ATON.UI.createContainer();
+    elCenturies.append(
+
+        ATON.UI.createSwitch({
+            label: "IX Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["8"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        
+        ATON.UI.createSwitch({
+            label: "X Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["9"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        
+        ATON.UI.createSwitch({
+            label: "XI Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["10"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        
+        ATON.UI.createSwitch({
+            label: "XII Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["11"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        
+        ATON.UI.createSwitch({
+            label: "XIII Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["12"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+
+        ATON.UI.createSwitch({
+            label: "XIV Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["13"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+
+        ATON.UI.createSwitch({
+            label: "XV Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["14"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+
+        ATON.UI.createSwitch({
+            label: "XVI Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["15"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+
+        ATON.UI.createSwitch({
+            label: "XVII Century",
+            //value: true,
+            onchange: (b)=>{
+                APP.filters["16"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        
+    );
+
+    //elCenturiesBlock.append(elCenturies);
+    collapsibleWrapper.append(elCenturies);
+    elBody.append(collapsibleWrapper);
+
+    ATON.UI.showSidePanel({
+        header: "Filters",
+        body: elBody
+    });
+};
+
+//prova||prova
+UI.sideTools = ()=>{
+    let elBody = ATON.UI.createContainer();
+    let elMeasSection = ATON.UI.createContainer();
+
+    elMeasSection.append(
+        UI.createTextBlock("Add text"),
+        UI.createBlockGroup({
+            items:[
+                ATON.UI.createButton({
+                    text: "Add text"+ UI.TASK_SYMBOL,
+                    classes: "illuminai-dock-btn",
+                    onpress: ()=>{
+                        //HATHOR.setCurrentTask(HATHOR.TASK_MEASURE_AB);
+                        //ATON.UI.setCursorStyle("crosshair");
+                    }
+                })
+            ]
+        }),
+
+        //UI.createTextBlock("Remove all"),
+        UI.createBlockGroup({
+            items:[
+                ATON.UI.createButton({
+                    text: "Add text",
+                    icon: "delete",
+                    classes: "illuminai-dock-btn",
+                    onpress: ()=>{
+                        //HATHOR.ED.removeMeasures();
+                    }
+                })
+            ]
+        })
+    );
+
+    elBody.append(
+        ATON.UI.createTreeGroup({
+            items:[
+                {
+                    title: "Measure",
+                    open: true,
+                    content: elMeasSection
+                }
+            ]
+        })
+    )
+
+    
     ATON.UI.showSidePanel({
         header: "Filters",
         body: elBody
