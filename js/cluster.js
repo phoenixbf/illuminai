@@ -133,7 +133,29 @@ filter(){
         }
     }
 }
+//filterByRing() {
+    //let maxVisibleRing = (APP.filters && APP.filters["max_visible_ring"] !== undefined) ? APP.filters["max_visible_ring"] : 6;
 
+    //for (let i in this.gItems.children) {
+        //let I = this.gItems.children[i];
+        
+        //let data = I.data;
+        //if (!data) continue;
+
+        //let currentRing = data["id_ring"] ? parseInt(data["id_ring"]) : 0;
+
+        //if (currentRing > maxVisibleRing) {
+            //I.hide();
+        //}
+    //}
+//}
+
+//filter() {
+    //ordine di esecuzione
+    //this.filterBySwitch();
+    //this.filterByRing();
+//}
+    
 }
 
 export default Cluster;
