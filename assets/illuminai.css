@@ -112,6 +112,89 @@
     transform: scale(1.05);
 }
 
+/* ############################################################################ */
+/*  WELCOME Page */
+/* Cluster Dropdown *********************/
+
+.dropdown-container {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    margin: 5px auto 30px auto; 
+    width: 100%;
+    text-align: center;
+}
+
+.dropdown-label {
+    display: block; 
+    margin-bottom: 15px; 
+    font-weight: bold; 
+    font-size: 1.2rem; 
+    color: #333;
+    text-align: center;
+}
+
+.dropdown-select {
+    display: block;
+    margin: 0 auto;
+    padding: 12px 24px;
+    width: 80%; 
+    max-width: 450px; 
+    font-size: 1.1rem; 
+    font-weight: 600;
+    text-align: center;
+    text-align-last: center;
+    border: 2px solid #007bff; 
+    border-radius: 10px;
+    background-color: #f2eaea;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1)t;
+    height: auto;
+}
+
+/* VR and AR Bottoms *********************/
+/*.filter-modal-separator {
+    border: none;
+    border-top: 1px solid #7a7777;
+    margin: 20px 8px 10px 8px;
+    opacity: 0.7;
+}*/
+
+.modal-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-vr-rect {
+    border-radius: 4px;
+    background-color: #656a6d;/*#0076a3*/
+    color: #ffffff;
+    padding: 15px 50px;
+    height: auto;
+}
+
+.btn-vr-rect:hover {
+    background-color: #0093cc;
+}
+
+.btn-ar-rect {
+    border-radius: 4px;
+    background-color: #656a6d;/*#2e7d32*/
+    color: #ffffff;
+    padding: 15px 50px;
+    height: auto;
+}
+
+.btn-ar-rect:hover {
+    background-color: #388e3c;
+}
+/* ############################################################################ */
+
 /* 
     SIDEBAR - Filters 
 */
@@ -149,8 +232,7 @@
 .filter-collapsible-summary::-webkit-details-marker {
     display: none;
 }
-
-/* Aggiungiamo una freccia personalizzata usando un pseudo-elemento CSS */
+/* Freccia personalizzata */
 .filter-collapsible-summary::after {
     content: '➔'; /* Oppure'▼'*/
     display: inline-block;
