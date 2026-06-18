@@ -99,22 +99,6 @@ APP.loadConfig = ()=>{
     });
 };
 
-/*
-// MODIFICA: visualizza pagina Landing
-window.startApp = function() {
-    const landing = document.getElementById("idLandingPage");
-    landing.classList.add("landing-hidden");
-    
-    landing.style.pointerEvents = "none";
-
-    if (typeof APP !== 'undefined') APP.setup();
-
-    setTimeout(() => {
-        landing.style.display = "none";
-        landing.style.zIndex = "-1000";
-    }, 850);
-};
-*/
 
 APP.setup = ()=>{
 
