@@ -1,8 +1,9 @@
 let UI = {};
 
+//MAIN DOCK
 UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
-
+    
     UI._elDock.append(
         UI.createButtonTools(),
         UI.createButtonFilters(),
@@ -12,7 +13,7 @@ UI.setup = ()=>{
     );
 };
 
-// Dock buttons
+//MAIN DOCK - Buttons
 UI.createButtonFilters = ()=>{
     return ATON.UI.createButton({
         icon: APP.pathResIcons+"filter.png", // "bi-sliders",
@@ -41,10 +42,14 @@ UI.createButtonTools = ()=>{
     return ATON.UI.createButton({
         icon: APP.pathResIcons+"tools.png", // "bi-sliders",
         classes: "illuminai-dock-btn",
-        onpress: UI.modalWelcome
+        //onpress: UI.modalWelcome
+        //onpress: UI.sideTools
     });
+    
+//UI._elTB.push(UI._elTools);
+//return UI._elTools;
 };
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // INFO PAGE
 UI.modalInfo = ()=>{
     let elBody = ATON.UI.createContainer();
@@ -81,7 +86,7 @@ UI.modalInfo = ()=>{
         body: elBody
     });
 };
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //WELCOME PAGE
 UI.modalWelcome = ()=>{
     let elBody = ATON.UI.createContainer();
@@ -97,18 +102,133 @@ UI.modalWelcome = ()=>{
             </div>
         `),
     );
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    let separator = ATON.UI.elem(`
+        <hr class='filter-modal-separator'>
+    `);
+    elBody.append(separator);
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // menu discesa per scelta cluster
+    
+    let dropdownElement = ATON.UI.elem(`
+        <div id="cluster-dropdown-container" class="dropdown-container">
+            <label for="aton-dropdown" class="illuminaai-dropdown-label">
+                Select a Cluster
+            </label>
+            <select id="aton-dropdown" class="dropdown-select">
+                <option value="scene0">Cluster 0</option>    
+                <option value="scene1">Cluster 1</option>
+                <option value="scene2">Cluster 2</option>
+                <option value="scene3">Cluster 3</option>
+                <option value="scene4">Cluster 4</option>
+                <option value="scene5">Cluster 5</option>
+                <option value="scene6">Cluster 6</option>
+                <option value="scene7">Cluster 7</option>
+                <option value="scene8">Cluster 8</option>
+                <option value="scene9">Cluster 9</option>
+            </select>
+        </div> 
+    `);
+    
+    const dropdown = dropdownElement.querySelector('#aton-dropdown');
+    
+    dropdown.addEventListener('change', (event) => {
+        const selectedValue = event.target.value;
+        console.log("Change cluster with:", selectedValue);
 
+        switch(selectedValue) {
+            case 'scene0': break;
+            case 'scene1': break;
+            case 'scene2': break;
+            case 'scene3': break;
+            case 'scene4': break;
+            case 'scene5': break;
+            case 'scene6': break;
+            case 'scene7': break;
+            case 'scene8': break;
+            case 'scene9': break;
+        }
+    });
+
+    elBody.append(dropdownElement);
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// Tasti VR e AR --------  
+    let btnVR = ATON.UI.createButton({
+        icon: "vr", // o "xr"
+        tooltip: "Virtual Reality (VR)",
+        onpress: UI.modalVR
+    });
+
+    let btnAR = ATON.UI.createButton({
+        icon: "ar",
+        tooltip: "Augmented Reality (AR)",
+        onpress: UI.modalAR
+    });
+
+    btnVR.className += " btn-vr-rect";
+    btnAR.className += " btn-ar-rect";
+
+    UI._elVR = btnVR;
+    UI._elAR = btnAR;
+
+    //Gestione del supporto hardware
+    //const updateXRVisibility = () => {
+        //if (ATON.device.xrSupported && ATON.device.xrSupported['immersive-vr']) {
+            //ATON.UI.showElement(btnVR);
+        //} else {
+            //ATON.UI.hideElement(btnVR);
+        //}
+        //if (ATON.device.xrSupported && ATON.device.xrSupported['immersive-ar']) {
+            //ATON.UI.showElement(btnAR);
+        //} else {
+            //ATON.UI.hideElement(btnAR);
+        //}
+
+    //};
+
+    const updateXRVisibility = () => {
+        ATON.UI.showElement(btnVR);
+        ATON.UI.showElement(btnAR);
+    };
+    
+    updateXRVisibility();
+
+    ATON.on("XR_support", () => {
+        updateXRVisibility();
+    });
+
+    if (UI._elTB) {
+        UI._elTB.push(btnVR);
+        UI._elTB.push(btnAR);
+    }
+    
+    //affianca i due bottoni
+    let buttonsContainer = ATON.UI.elem(`
+        <div class='modal-buttons-container'>
+            <div id='vr-btn-placeholder'></div>
+            <div id='ar-btn-placeholder'></div>
+        </div>
+    `);
+
+    buttonsContainer.querySelector('#vr-btn-placeholder').append(btnVR);
+    buttonsContainer.querySelector('#ar-btn-placeholder').append(btnAR);
+
+    elBody.append(buttonsContainer);
+    
     ATON.UI.showModal({
         header: "IlluminAI",
         body: elBody
     });
 };
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // SIDE PANEL (FILTERS)
 UI.openSideFilters = ()=>{
     let elBody = ATON.UI.createContainer();
 
     // 1 Block - CLASSES
+    let titleClasses = document.createElement("h3");
+    
+    // Title "CLASSES"
     let titleClasses = document.createElement("h3");
     titleClasses.innerText = "Object Types";
     titleClasses.className = "filter-block-title"; 
@@ -190,14 +310,17 @@ UI.openSideFilters = ()=>{
             }
         })
     );
-
+    elClassesBlock.append(elClasses);
+    elBody.append(elClassesBlock);
+//******************************************************************/
     // Linea divisoria - tra blocco 1 e 2
     let separator = document.createElement("hr");
     separator.className = "filter-block-separator";
     elBody.append(separator);
-
+//******************************************************************/
     //Blocco 2 - CHRONOLOGY 
     //Blocco 2 - RINGS (Slidebar)
+    //if (!APP.filters) APP.filters = {};
     APP.filters["max_visible_ring"] = 6;
     
     let elSliderBlock = ATON.UI.createContainer();
@@ -207,8 +330,8 @@ UI.openSideFilters = ()=>{
     titleSlider.className = "filter-block-title";
     elSliderBlock.append(titleSlider);
 
-    let sliderWrapper = document.createElement("div");
-    sliderWrapper.className = "filter-slider-wrapper";
+    //let sliderWrapper = document.createElement("div");
+    //sliderWrapper.className = "filter-slider-wrapper";
 
     let elSliderContainer = ATON.UI.createContainer();
     elSliderContainer.append(
@@ -216,21 +339,19 @@ UI.openSideFilters = ()=>{
             label: "Max Ring Visible",
             min: 0,
             max: 6,
-            value: 6, // Valore iniziale
-            step: 1,   // Incremento dello slider
+            value: 6,
+            step: 1,
             onchange: (v) => {
-                // 'v' è il valore numerico ritornato dallo slider
+                // 'v' valore numerico ritornato dallo slider
                 APP.filters["max_visible_ring"] = parseInt(v);
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         })
     );
-
     elSliderBlock.append(elSliderContainer);
     elBody.append(elSliderBlock);
-
+//******************************************************************/
     //Blocco 2.2 - CENTURY (Comprimibile) ********************************/
-    
     let collapsibleWrapper = document.createElement("details");
     collapsibleWrapper.className = "filter-collapsible";
     //collapsibleWrapper.open = true per APERTO di default
@@ -242,7 +363,6 @@ UI.openSideFilters = ()=>{
 
     let elCenturies = ATON.UI.createContainer();
     elCenturies.append(
-
         ATON.UI.createSwitch({
             label: "IX Century",
             //value: true,
@@ -251,82 +371,85 @@ UI.openSideFilters = ()=>{
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-        
         ATON.UI.createSwitch({
             label: "X Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["9"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-        
         ATON.UI.createSwitch({
             label: "XI Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["10"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-        
         ATON.UI.createSwitch({
             label: "XII Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["11"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-        
         ATON.UI.createSwitch({
             label: "XIII Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["12"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-
         ATON.UI.createSwitch({
             label: "XIV Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["13"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-
         ATON.UI.createSwitch({
             label: "XV Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["14"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-
         ATON.UI.createSwitch({
             label: "XVI Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["15"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-
         ATON.UI.createSwitch({
             label: "XVII Century",
-            //value: true,
             onchange: (b)=>{
                 APP.filters["16"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
-        
+        ATON.UI.createSwitch({
+            label: "XVIII Century",
+            onchange: (b)=>{
+                APP.filters["17"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        ATON.UI.createSwitch({
+            label: "XIX Century",
+            onchange: (b)=>{
+                APP.filters["18"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),
+        ATON.UI.createSwitch({
+            label: "XX Century",
+            onchange: (b)=>{
+                APP.filters["19"] = b;
+                if (APP.activeCluster) APP.activeCluster.filter();
+            }
+        }),    
     );
 
-    //elCenturiesBlock.append(elCenturies);
     collapsibleWrapper.append(elCenturies);
     elBody.append(collapsibleWrapper);
 
@@ -335,7 +458,7 @@ UI.openSideFilters = ()=>{
         body: elBody
     });
 };
-
+//******************************************************************/
 //prova||prova
 UI.sideTools = ()=>{
     let elBody = ATON.UI.createContainer();
@@ -383,7 +506,6 @@ UI.sideTools = ()=>{
         })
     )
 
-    
     ATON.UI.showSidePanel({
         header: "Filters",
         body: elBody
