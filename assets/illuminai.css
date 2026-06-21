@@ -3,19 +3,14 @@
     depends on Bootstrap and main ATON CSS
 
 ==========================================*/
-
-/*
-    Variabili globali
-*/
+/* Variabili globali */
 :root {
     --illuminai-ui-margin: 8px;
-
     --illuminai-dock-btn-size: 50px;
 }
 
-/*
-    IlluminAI classes (illuminai-*) 
-*/
+/* IlluminAI classes (illuminai-*) */
+/*MAIN DOCK*/
 .illuminai-dock-container {
     position: absolute;
     bottom: 0px;
@@ -42,7 +37,6 @@
     height: var(--illuminai-dock-btn-size);
     width: var(--illuminai-dock-btn-size);
     border-radius: 20px;
-
     padding: 4px;
 }
 
@@ -55,9 +49,39 @@
     height: 100%;
 }
 
-/*   
-    PoweredBy - ATON 
-*/ 
+/*Etichette del MAIN DOCK*/
+.illuminai-dock-btn::after {
+    content: attr(data-label);
+    position: absolute;
+    
+    bottom: 100%;
+    left: 50%;  
+    margin-bottom: 4px;
+    
+    transform: translateX(-50%) scale(0.8);
+    
+    /* Grafica del Label */
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: sans-serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+
+    /* Animazione di comparsa*/
+    opacity: 0;
+    pointer-events: none;     
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.illuminai-dock-btn:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px) scale(1);
+}
+/* ############################################################################ */
+/* PoweredBy - ATON */ 
 .aton-poweredby {
     position: fixed;
     bottom: 10px;
@@ -66,41 +90,49 @@
     font-size: 12px;
     font-family: sans-serif;
 }
-
-/*   
-    INFO Page 
-*/
+/* ############################################################################ */
+/* INFO Page */
 .info-container {
     text-align: center;
-    margin: 8px;
+    margin: 0 auto;
+}
+
+.info-logo {
+    width:100px; 
+    height:auto;
+    margin: 2px auto;
+    text-align: center;  
 }
 
 .info-title {
     font-size: 1.2rem;
     display: block;
-    margin-top: 10px;
+    margin-top: 0px;
+    margin-bottom: 2px;
     color: whitesmoke;
 }
 
 .info-divider {
     border: 0;
     border-top: 1px solid #ccc;
-    margin: 15px 0;
+    margin: 3px auto 4 auto;
 }
 
 .info-description {
     display: block;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.3;
     color: whitesmoke;
+    margin: 2px auto;
 }
 
 .info-btn {
-    padding: 15px 50px;
+    padding: 8px 50px;
     background: #00cc00;
     color: black;
     border: none;
     border-radius: 30px;
+    margin: 10px auto 0px auto;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 0 20px rgba(0,255,0,0.3);
@@ -111,24 +143,22 @@
     background-color: #00ff00;
     transform: scale(1.05);
 }
-
 /* ############################################################################ */
 /*  WELCOME Page */
 /* Cluster Dropdown *********************/
-
 .dropdown-container {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    margin: 5px auto 30px auto; 
+    margin: 5px auto 10px auto; 
     width: 100%;
     text-align: center;
 }
 
 .dropdown-label {
     display: block; 
-    margin-bottom: 15px; 
+    margin-bottom: 45px; 
     font-weight: bold; 
     font-size: 1.2rem; 
     color: #333;
@@ -174,7 +204,7 @@
     border-radius: 4px;
     background-color: #656a6d;/*#0076a3*/
     color: #ffffff;
-    padding: 15px 50px;
+    padding: 8px 50px;
     height: auto;
 }
 
@@ -186,18 +216,35 @@
     border-radius: 4px;
     background-color: #656a6d;/*#2e7d32*/
     color: #ffffff;
-    padding: 15px 50px;
+    padding: 8px 50px;
     height: auto;
 }
 
 .btn-ar-rect:hover {
     background-color: #388e3c;
 }
-/* ############################################################################ */
 
-/* 
-    SIDEBAR - Filters 
-*/
+/* START - Button */
+.start-button-container {
+    margin: 0px auto 5px auto;
+    text-align: center;
+}
+
+.btn-start-rect {
+    border-radius: 4px;
+    padding: 10px 24px;
+    background-color: #656a6d;
+    color: #ffffff;
+    min-width: 200px;
+    height: auto; /*45px;*/
+   /*line-height: 45px;*/
+}
+
+.btn-start-rect:hover {
+    background-color: #388e3c;
+}
+/* ############################################################################ */
+/* SIDEBAR - Filters */
 
 .filter-block-title {
     margin: 15px 0 8px 5px;
@@ -214,40 +261,280 @@
     border-top: 1px solid #948f8f;
     opacity: 0.7;
 }
+/* --- SLIDER CHRONOLOGY  --- */
+/* Per ottimizzazione la fluidità dello Slider */
+input[type='range'] {
+    -webkit-appearance: auto !important; 
+    appearance: auto !important;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 2px; /* Spazio per evitare il sovrapporsi ai numeri */
+    cursor: grab;
+    background: transparent !important;
+}
 
-/* 
-    SIDEBAR - Centuries (Comprimibile)
-*/
+input[type='range']:active {
+    cursor: grabbing;
+}
 
+/* Evita lo scivolare del pallino oltre lo snap numerico */
+input[type='range']::-webkit-slider-thumb,
+input[type='range']::-moz-range-thumb {
+    transition: none !important; 
+}
+
+/* Container dei numeri sotto lo slider */
+datalist {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px; /* Allinea 0 e 5 alle estremità della barra */
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #888888;
+    font-family: var(--aton-font-family, sans-serif);
+    pointer-events: none;
+}
+
+/* Centra la cifra sotto il trattino */
+datalist option {
+    padding: 0;
+    text-align: center;
+    width: 14px; /* Bounding box simmetrica per la cifra */
+}
+
+/* ---FILTER CENTURY - BLOCCO COMPRIMIBILE --- */
 .filter-collapsible-summary {
     cursor: pointer;
-    list-style: none; /* Rimuove la freccia predefinita del browser su Chrome/Firefox */
+    list-style: none; /* Rimuove freccia predefinita Chrome/Firefox */
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
+    padding: 6px 0;
 }
 
-/* Rimuove la freccia predefinita del browser su Safari */
 .filter-collapsible-summary::-webkit-details-marker {
     display: none;
 }
-/* Freccia personalizzata */
+
 .filter-collapsible-summary::after {
-    content: '➔'; /* Oppure'▼'*/
+    content: '▼';
     display: inline-block;
     font-size: 10px;
-    transform: rotate(90deg); /* Verso il basso da chiuso */
-    transition: transform 0.2s ease;
     color: #888888;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* Ruota la freccia da aperto */
+/* Quando passa il mouse illumina leggermente la freccia */
+.filter-collapsible-summary:hover::after {
+    color: var(--aton-colors-accent, #ffffff);
+}
+
+/* capovolge se aperto la freccia verso l'alto */
 .filter-collapsible[open] .filter-collapsible-summary::after {
-    transform: rotate(-90deg); /* Punta verso l'alto (o a sinistra) quando è aperto */
+    transform: rotate(180deg);
 }
 
-/* Spaziatura quando si espande */
-.filter-collapsible[open] > div {
-    margin-top: 10px;
+/* Spazio sopra il contenuto interno quando si espande */
+.filter-collapsible[open] > *:not(summary) {
+    margin-top: 12px;
+    display: block; /* Garantisce che il container rispetti il margine superiore */
+}
+
+/*******************************************************************/ 
+/*RESET BUTTON*/
+.illuminai-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 90%;
+    max-width: 240px;
+    height: 42px;
+    border-radius: 8px;
+    padding: 0 16px;
+    border: none;
+    
+    background-color: #e63946 !important;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    
+    color: #ffffff !important;
+    font-family: var(--aton-font-family, sans-serif);
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.illuminai-reset-btn:hover {
+    background-color: #cb2d3a !important;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+.illuminai-reset-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/*******************************************************************/ 
+/*TOOLBAR INSPECTION*/
+/* TOOL BUTTON - apre la toolbar*/
+
+/* CONTENITORE GLOBALE (Fisso sullo schermo) */
+.global-inspection-ui {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* FOND! permette di cliccare il 3D sotto */
+    z-index: 999999;
+}
+
+/* MAIN TOOL BUTTON */
+.inspection-trigger-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    pointer-events: auto; /* Riattiva i click solo sul bottone */
+    z-index: 100000;
+
+    width: 60px;
+    height: 60px;
+    max-width: 60px;
+    max-height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    background: rgba(20, 20, 20, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%; /* Sferico */
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    overflow: visible;
+    /*cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);*/
+}
+
+.inspection-trigger-btn .btn-icon-trigger {
+    width: 32px;
+    height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    object-fit: contain;
+    pointer-events: none;
+    display: block;
+    margin: 0;
+}
+
+/* Effetti di Hover e Attivazione */
+.inspection-trigger-btn:hover {
+    background: #007bff !important;
+    transform: scale(1.05);
+}
+
+.inspection-trigger-btn.btn-active {
+    background: #dc3545 !important;
+}
+
+/* TOOLBAR VERTICALE */
+.inspection-toolbar-vertical {
+    position: fixed;
+    top: 50%;
+    left: calc(50vw - 340px); /* Regola distanza per avvicinare all'immagine */
+    transform: translateY(-50%) scale(0.8);
+    pointer-events: auto; /* Riattiva i click sui singoli strumenti */
+    
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px 10px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column; 
+    gap: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    z-index: 100000;
+    
+    /* Imp! Per etichette */
+    overflow: visible !important; /* Impedisce alla toolbar di tagliare l'etichetta che esce */
+    clip-path: none !important; /* Rimuove maschere di ritaglio native */
+    visibility: visible !important;
+
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Stato attivo quando la toolbar è aperta */
+.inspection-toolbar-vertical.is-active {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+/* SINGLE TOOL BUTTON */
+.tool-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    position: relative; /* Punto di ancoraggio per l'etichetta ::after */
+    overflow: visible !important;
+}
+
+/* Etichette Tasti TOOLBAR */
+.tool-btn::after {
+    content: attr(data-label) !important; /* Forza la lettura */
+    position: absolute;
+    
+    /* Posizionamento a destra del bottone */
+    top: 50%;
+    left: 100%; 
+    margin-left: 15px;
+    transform: translateY(-50%) scale(0.8);
+    
+    /* Grafica dell'etichetta */
+    background: #000000;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: sans-serif;
+    font-weight: normal;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    
+    /* Stato iniziale nascosto */
+    opacity: 0 !important;
+    pointer-events: none !important;     
+    z-index: 999999 !important;
+    
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tool-btn:hover::after {
+    opacity: 1 !important;
+    transform: translateY(-50%) scale(1) !important;
+}
+
+/* Icona interna */
+.tool-btn .btn-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    pointer-events: none; /* Impedisce hover sull'immagine invece che sul bottone */
 }
