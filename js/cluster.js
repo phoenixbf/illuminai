@@ -115,24 +115,24 @@ setActive(){
     return this;
 }
 
-filter(){
-    for (let i in this.gItems.children){
-        let I = this.gItems.children[i];
+//filter(){
+    //for (let i in this.gItems.children){
+        //let I = this.gItems.children[i];
 
-        I.hide();
+        //I.hide();
 
-        let data = I.data;
+        //let data = I.data;
 
-        if (data){
-            for (let f in APP.filters){
+        //if (data){
+            //for (let f in APP.filters){
                 //console.log(APP.filters[f])
                 //console.log(data[f])
 
-                if (APP.filters[f] && parseInt(data[f])) I.show();
-            }
-        }
-    }
-}
+                //if (APP.filters[f] && parseInt(data[f])) I.show();
+            //}
+        //}
+    //}
+//}
 //filterByRing() {
     //let maxVisibleRing = (APP.filters && APP.filters["max_visible_ring"] !== undefined) ? APP.filters["max_visible_ring"] : 6;
 
@@ -150,11 +150,56 @@ filter(){
     //}
 //}
 
-//filter() {
-    //ordine di esecuzione
-    //this.filterBySwitch();
-    //this.filterByRing();
-//}
+filter() {
+    for (let i in this.gItems.children) {
+        let I = this.gItems.children[i];
+        let data = I.data;
+
+        if (!data) {
+            I.show();
+            continue; 
+        }
+
+        let keepVisible = true;
+
+        for (let f in APP.filters) {
+            let filterValue = APP.filters[f];
+
+            // GESTIONE SLIDER
+            if (f === "max_visible_ring") {
+                let objRing = data["max_visible_ring"] !== undefined ? data["max_visible_ring"] : data["id_ring"];
+                if (objRing !== undefined && parseInt(objRing) > filterValue) {
+                    keepVisible = false;
+                    break;
+                }
+            } 
+            
+            // GESTIONE SWITCH (Object Classes e Century)
+            else {
+                // Estraiamo i codici identificativi dal database
+                let classCode = f.split("_")[0];
+                let centuryCode = f; //+ "C"; 
+
+                let isThisClass = data.path && data.path.includes(classCode);
+                let isThisCentury = (data.path && data.path.includes(centuryCode)) || (data.original && data.original.includes(centuryCode));
+
+                if (isThisClass || isThisCentury) {
+                    // visibile SOLO se filtro esiste e ATTIVO
+                    if (filterValue !== true) {
+                        keepVisible = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (keepVisible) {
+            I.show();
+        } else {
+            I.hide();
+        }
+    }
+}
     
 }
 
