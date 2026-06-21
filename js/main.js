@@ -63,8 +63,21 @@ APP.db        = {};
 APP.activeClusterID = undefined;
 APP.activeCluster   = undefined;
 
-APP.filters = {};
-
+APP.filters = {
+    "max_visible_ring": 5,
+    "P.01_annotation": false,
+    "P.02_annotation": false,
+    "A.01_annotation": false,
+    "A.02_annotation": false,
+    "A.03_annotation": false,
+    "A.04_annotation": false,
+    "A.05_annotation": false,
+    "A.06_annotation": false,
+    "A.07_annotation": false,
+    "A.08_annotation": false,
+    "8": false, "9": false, "10": false, "11": false, "12": false, "13": false,
+    "14": false, "15": false, "16": false, "17": false, "18": false, "19": false
+};
 
 APP.loadConfig = ()=>{
     return $.getJSON( APP.pathConfigFile, ( data )=>{
@@ -394,21 +407,36 @@ APP.setupEvents = ()=>{
     });
 */
 };
+//***************************************************************************
+// FUNZIONE CAMBIO CLUSTER 
+APP.changeCluster = (clusterId) => {
+    const id = parseInt(clusterId);
+    console.log(`[Cluster Switch] Avvio transizione verso il Cluster #${id}`);
 
-// DA MODIFICARE!!! --------------------------------------------------
-APP.onReadyDB = ()=>{
-    console.log("DB ready")
-    //console.log(APP.db["main"])
+    // Rimuove vecchio cluster
+    if (APP.activeCluster) {
+        if (APP.activeCluster.parent) {
+            APP.activeCluster.parent.removeChild(APP.activeCluster);
+        } else if (typeof APP.activeCluster.detachFrom === 'function') {
+            APP.activeCluster.detachFrom();
+        }
+        APP.activeCluster = undefined;
+    }
 
-    // Cluster
-    let cid = APP.params.get("c");
-    if (!cid) cid = 0;
-
-    let C = new APP.Cluster(parseInt(cid));
+    // Istanza nuovo cluster
+    let C = new APP.Cluster(id);
+    
     C.attachToRoot();
 
-    C.realize();
-    C.setActive();
+    C.realize();   // Carica i dati e dispone gli oggetti
+    C.setActive(); // Imposta APP.activeCluster e lancia internamente C.filter()
+
+    // Aggiorna parametro URL
+    if (APP.params && typeof APP.params.set === 'function') {
+        APP.params.set("c", id);
+    }
+    
+    //console.log(`[Cluster Switch] Cluster #${id} caricato e filtrato con successo.`);
 };
 
 /*
@@ -423,7 +451,7 @@ window.toggleSidebar = function() {
     }
 };
 */
-// DA MODIFICARE!!! --------------------------------------------------
+
 // https://<nccloud-addr>/apps/files_sharing/publicpreview/iq2623RQzQbe33E?x=1024&y=1024&a=true&file=/A_Art/A.01_Painting/A.01_A_18GRmGFN-B000237.jpg
 APP.getImageURL = (path, res)=>{
     if (!APP.cloudbase) return undefined;
