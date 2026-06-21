@@ -84,6 +84,21 @@ reset(){
     this.load(128);
 
     this._bIspection = false;
+    
+    // Reset della toolbar *****************************
+    //let triggerBtn = document.getElementById("inspection-trigger-btn");
+    //if (triggerBtn) triggerBtn.remove();
+    
+    //let toolbar = document.getElementById("inspection-tools-bar");
+    //if (toolbar) toolbar.remove();
+    
+    //Evita sovrapposizione delle toolbar
+    if (APP.currentInspectedItem === this) {
+        APP.currentInspectedItem = null;
+    }
+
+    let uiContainer = document.getElementById("global-inspection-container");
+    if (uiContainer) uiContainer.remove();  
 }
 
 arrangeForInspection(){
@@ -99,6 +114,90 @@ arrangeForInspection(){
     this.setScale(APP.ITEM_SCALE * 2.0);
 
     this._bIspection = true;
+    // INSPECTION TOOLBAR ********************************************
+    //OLD part --------
+    //let oldTools = document.getElementById("global-inspection-container");
+    //if (oldTools) oldTools.remove();
+    //OLD part --------
+    //Evita che più toolbar siano aperte contemporaneamente <-----inizio
+    let activeGlobalContainer = document.getElementById("global-inspection-container");
+    if (activeGlobalContainer) {
+        console.log("[Toolbar Guard] Trovata un'altra toolbar attiva. Rimozione in corso...");
+        
+        // Removibile! Cerca se istanza di ualtro oggetto registrata e resetta lo stato 3D
+        if (APP.currentInspectedItem && APP.currentInspectedItem !== this) {
+            APP.currentInspectedItem._bIspection = false;
+            if (typeof APP.currentInspectedItem.reset === 'function') {
+                APP.currentInspectedItem.reset(); // Fa tornare il vecchio oggetto al suo posto
+            }
+        }
+        // Rimuove fisicamente l'elemento HTML dello schermo per non avere duplicati di ID nel DOM
+        activeGlobalContainer.remove();
+    }
+    // Registriamo questo specifico oggetto come "l'oggetto attualmente ispezionato" a livello globale
+    APP.currentInspectedItem = this;
+    //Evita che più toolbar siano aperte contemporaneamente <------finisce
+
+    // Crea il contenitore principale - fisso
+    let uiContainer = document.createElement("div");
+    uiContainer.id = "global-inspection-container";
+    uiContainer.className = "global-inspection-ui";
+    uiContainer.innerHTML = `
+        <div id="inspection-tools-bar" class="inspection-toolbar-vertical">
+            <button class="tool-btn" data-action="rotate" data-label="Action1">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool1" class="btn-icon">
+            </button>
+            <button class="tool-btn" data-action="zoomin" data-label="Action2">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool2" class="btn-icon">
+            </button>
+            <button class="tool-btn" data-action="zoomout" data-label="Action3">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool3" class="btn-icon">
+            </button>
+            <button class="tool-btn" data-action="info" data-label="Action4">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool4" class="btn-icon">
+            </button>
+            <button class="tool-btn" data-action="zoomout" data-label="Action5">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool5" class="btn-icon">
+            </button>
+            <button class="tool-btn" data-action="info" data-label="Action6">
+                <img src="${APP.pathResIcons}tools.png" alt="Tool6" class="btn-icon">
+            </button>
+        </div>
+        
+        <button id="inspection-trigger-btn" class="inspection-trigger-btn" data-label="Open Tools">
+            <img src="${APP.pathResIcons}tools.png" alt="Tool0" class="btn-icon-trigger">
+        </button>
+    `;
+
+    document.body.appendChild(uiContainer);
+
+    // Elementi del DOM per la gestione degli eventi
+    const triggerBtn = uiContainer.querySelector("#inspection-trigger-btn");
+    const toolbar = uiContainer.querySelector("#inspection-tools-bar");
+
+    // Click sul tasto "Tools"
+    triggerBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Blocca la propagazione ad ATON
+        toolbar.classList.toggle("is-active");
+        triggerBtn.classList.toggle("btn-active");
+    });
+
+    // Clic sui bottoni della toolbar
+    uiContainer.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Protegge l'ispezione 3D
+            const action = btn.getAttribute("data-action");
+            console.log("Strumento cliccato:", action);
+            
+            // Logica di esempio (es. Rotazione oggetto ATON)
+            if (action === "rotate") {
+                if (this.panel && this.panel.object3D) {
+                    this.panel.object3D.rotation.y += Math.PI / 4;
+                }
+            }
+        });
+    });
+    //aggiunta di prova a qui ********************************************
 }
 
 load(res){
