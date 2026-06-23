@@ -236,8 +236,14 @@
     background-color: #656a6d;
     color: #ffffff;
     min-width: 200px;
-    height: auto; /*45px;*/
-   /*line-height: 45px;*/
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px; 
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    height: auto;
 }
 
 .btn-start-rect:hover {
