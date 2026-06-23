@@ -82,11 +82,9 @@ UI.createButtonSearch = ()=>{
         classes: "illuminai-dock-btn"
         // onpress: UI.openSearch
     }); 
-
     if (btn && btn.setAttribute) {
         btn.setAttribute("data-label", "Search");
     }
-
     return btn;
 };
 
@@ -157,7 +155,6 @@ UI.modalInfo = ()=>{
             </div>
         `),
     );
-
     ATON.UI.showModal({
         header: "Getting Started",
         body: elBody
@@ -186,14 +183,14 @@ UI.modalWelcome = ()=>{
     `);
     elBody.append(separator);
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    // menu discesa per scelta cluster
-    
+    // MENU SCELTA CLUSTER
     let dropdownElement = ATON.UI.elem(`
         <div id="cluster-dropdown-container" class="dropdown-container">
             <label for="aton-dropdown" class="illuminaai-dropdown-label">
                 Select a Cluster
             </label>
             <select id="aton-dropdown" class="dropdown-select">
+                <option value="" selected disabled hidden>Where to start?</option>
                 <option value="scene">Where to start?</option>
                 <option value="scene0">Cluster 0</option>    
                 <option value="scene1">Cluster 1</option>
@@ -211,8 +208,8 @@ UI.modalWelcome = ()=>{
     
     const dropdown = dropdownElement.querySelector('#aton-dropdown');
     
-    let currentUrlCluster = (APP.params && APP.params.get("c")) || "0";
-    dropdown.value = "scene" + currentUrlCluster;
+    //let currentUrlCluster = (APP.params && APP.params.get("c")) || "0";
+    //dropdown.value = "scene" + currentUrlCluster;
 
     dropdown.addEventListener('change', (event) => {
         const selectedValue = event.target.value;
@@ -292,7 +289,7 @@ UI.modalWelcome = ()=>{
         icon: APP.pathResIcons+"home.png",
         tooltip: "Start Exploration",
         onpress: () => {
-            console.log("Starting application with cluster:", dropdown.value);
+            //console.log("Starting application with cluster:", dropdown.value);
             ATON.UI.hideModal(); 
             
             // Qui logica di inizializzazione della scena 
@@ -309,6 +306,7 @@ UI.modalWelcome = ()=>{
     `);
 
     startContainer.querySelector('#start-btn-placeholder').append(btnStart);
+    btnStart.innerHTML = "START";
     elBody.append(startContainer);
     
     ATON.UI.showModal({
@@ -698,60 +696,5 @@ UI.openSideFilters = ()=>{
         }
     }
 };
-//******************************************************************/
-//******************************************************************/
-
-//prova||prova
-//UI.sideTools = ()=>{
-    //let elBody = ATON.UI.createContainer();
-    //let elMeasSection = ATON.UI.createContainer();
-
-    //elMeasSection.append(
-        //UI.createTextBlock("Add text"),
-        //UI.createBlockGroup({
-            //items:[
-                //ATON.UI.createButton({
-                    //text: "Add text"+ UI.TASK_SYMBOL,
-                    //classes: "illuminai-dock-btn",
-                    //onpress: ()=>{
-                        //HATHOR.setCurrentTask(HATHOR.TASK_MEASURE_AB);
-                        //ATON.UI.setCursorStyle("crosshair");
-                    //}
-                //})
-            //]
-        //}),
-
-        //UI.createTextBlock("Remove all"),
-        //UI.createBlockGroup({
-            //items:[
-                //ATON.UI.createButton({
-                    //text: "Add text",
-                    //icon: "delete",
-                    //classes: "illuminai-dock-btn",
-                    //onpress: ()=>{
-                        //HATHOR.ED.removeMeasures();
-                    //}
-                //})
-            //]
-        //})
-    //);
-
-    //elBody.append(
-        //ATON.UI.createTreeGroup({
-            //items:[
-                //{
-                    //title: "Measure",
-                    //open: true,
-                    //content: elMeasSection
-                //}
-            //]
-        //})
-    //)
-
-    //ATON.UI.showSidePanel({
-        //header: "Filters",
-        //body: elBody
-    //});
-//};
 
 export default UI;
