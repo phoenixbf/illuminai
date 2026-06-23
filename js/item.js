@@ -55,7 +55,7 @@ setupEvents(){
         //this.position.x *= 0.9;
         //this.position.z *= 0.9;
 
-        ATON.AudioHub.playOnceGlobally(ATON.PATH_RES+"audio/blop.mp3");
+        //ATON.AudioHub.playOnceGlobally(ATON.PATH_RES+"audio/blop.mp3");
         console.log(this._id);
     };
 

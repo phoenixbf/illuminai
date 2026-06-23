@@ -46,7 +46,7 @@ realize(){
             P.setClusterOrigin( this.position );
 
             P.attachTo( this.gItems );
-            P.load(64);
+            P.load(128);
 
             //console.log(P)
         }

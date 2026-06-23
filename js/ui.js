@@ -10,8 +10,8 @@ let UI = {};
         //ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
         //UI.createButtonSearch(),
         //UI.createButtonInfo(),
-    );
-};
+//    );
+//};
 
 UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
