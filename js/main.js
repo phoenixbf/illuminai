@@ -479,3 +479,33 @@ APP.getImageURL = (path, res)=>{
 
     return APP.cloudbase+"?x="+res+"&y="+res+"&a=true&file=/"+path;
 };
+
+// Custom material for item inspection
+APP.matBaseItem = new THREE.ShaderMaterial({
+        uniforms: {
+            tBase: { type:'t' /*, value: 0*/ },
+            tAMask: { type:'t' /*, value: 0*/ },
+            tDepth: { type:'t' /*, value: 0*/ },
+        },
+
+        vertexShader: ATON.MatHub.getDefVertexShader(),
+
+        fragmentShader:`
+            uniform sampler2D tBase;
+            uniform sampler2D tAMask;
+            uniform sampler2D tDepth;
+
+            varying vec2 vUv;
+
+		    void main(){
+		        vec4 frag = texture2D(tBase, vUv);
+                vec4 orig = frag;
+
+                //frag.g = 1.0;
+
+		        gl_FragColor = frag;
+		    }
+        `,
+
+        //side: THREE.DoubleSide
+});

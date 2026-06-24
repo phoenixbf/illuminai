@@ -68,7 +68,7 @@ setupEvents(){
 
     this.panel.onSelect = ()=>{
         if (!this._bIspection){
-            this.load(APP.ITEM_RES_HIGH);
+            this.load(APP.ITEM_RES_HIGH, true);
 
             this.arrangeForInspection();
         }
@@ -79,7 +79,7 @@ setupEvents(){
 // Reset item to its original location in the cluster
 reset(){
     if (this._origLoc) this.position.copy(this._origLoc);
-    
+
     this.orientToLocation(
         0, 
         this._origLoc.y + APP.activeCluster.position.y, 
@@ -207,11 +207,22 @@ arrangeForInspection(){
     //aggiunta di prova a qui ********************************************
 }
 
-load(res){
+load(res, bIspection){
     if (!res) res = APP.ITEM_RES_HIGH;
 
-    this.panel.load( APP.getImageURL(this.data.path, res) );
-    
+    if (!bIspection){
+        this.panel.load( APP.getImageURL(this.data.path, res) );
+    }
+    else {
+        if (!this.panel._mediamesh.material) return;
+
+        this.panel._mediamesh.material = APP.matBaseItem.clone();
+
+        ATON.Utils.loadTexture( APP.getImageURL(this.data.path, res), tex => {
+            this.panel._mediamesh.material.uniforms.tBase.value = tex;
+        });
+    }
+
     this.enablePicking();
 }
 
