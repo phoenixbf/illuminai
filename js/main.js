@@ -25,6 +25,9 @@ APP.pathResIcons     = APP.pathResAssets + "icons/";
 APP.ITEM_SCALE = 0.1;
 APP.ITEM_INSPECT_RAD = 0.5;
 
+APP.ITEM_RES_BASE = 128;
+APP.ITEM_RES_HIGH = 4096;
+
 APP.CATS_LIST = [
     "P.01",
     "P.02",
@@ -363,6 +366,11 @@ APP.setupEvents = ()=>{
         APP.UI.modalWelcome();
     });
 
+    ATON.on("KeyPress", k => {
+        if (k==='ArrowUp')   APP.shiftActiveCluster(0.05);
+        if (k==='ArrowDown') APP.shiftActiveCluster(-0.05);
+    });
+
     //Effetto HOVER ANELLI (DA RIVEDERE!!!) -------------------------------------------------
 /*
     //1. INGRESSO
@@ -437,6 +445,17 @@ APP.changeCluster = (clusterId) => {
     }
     
     //console.log(`[Cluster Switch] Cluster #${id} caricato e filtrato con successo.`);
+};
+
+APP.shiftActiveCluster = (h)=>{
+    if (!APP.activeCluster) return;
+
+    if (!h){
+        APP.activeCluster.position.set(0,0,0);
+        return;
+    }
+
+    APP.activeCluster.position.y += h;
 };
 
 /*

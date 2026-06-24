@@ -68,7 +68,7 @@ setupEvents(){
 
     this.panel.onSelect = ()=>{
         if (!this._bIspection){
-            this.load(4096);
+            this.load(APP.ITEM_RES_HIGH);
 
             this.arrangeForInspection();
         }
@@ -79,9 +79,14 @@ setupEvents(){
 // Reset item to its original location in the cluster
 reset(){
     if (this._origLoc) this.position.copy(this._origLoc);
-    this.orientToLocation(0, this._origLoc.y, 0);
+    
+    this.orientToLocation(
+        0, 
+        this._origLoc.y + APP.activeCluster.position.y, 
+        0
+    );
 
-    this.load(128);
+    this.load(APP.ITEM_RES_BASE);
 
     this._bIspection = false;
     
@@ -108,6 +113,8 @@ arrangeForInspection(){
     this.position.x = eye.x + (dir.x * APP.ITEM_INSPECT_RAD);
     this.position.y = eye.y + (dir.y * APP.ITEM_INSPECT_RAD);
     this.position.z = eye.z + (dir.z * APP.ITEM_INSPECT_RAD);
+
+    this.position.y -= APP.activeCluster.position.y;
     
     this.orientToCamera();
     
@@ -201,7 +208,7 @@ arrangeForInspection(){
 }
 
 load(res){
-    if (!res) res = 4096;
+    if (!res) res = APP.ITEM_RES_HIGH;
 
     this.panel.load( APP.getImageURL(this.data.path, res) );
     

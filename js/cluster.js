@@ -29,7 +29,7 @@ setPosition(p){
 addItem(I){
     I.setClusterOrigin(this.position);
     I.attachTo(this.gItems);
-    I.load(128);
+    I.load(APP.ITEM_RES_BASE);
 
     return this;
 }
@@ -46,7 +46,7 @@ realize(){
             P.setClusterOrigin( this.position );
 
             P.attachTo( this.gItems );
-            P.load(128);
+            P.load(APP.ITEM_RES_BASE);
 
             //console.log(P)
         }
