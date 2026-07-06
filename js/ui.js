@@ -1,18 +1,6 @@
 let UI = {};
 
-//MAIN DOCK
-//UI.setup = ()=>{
-    //UI._elDock = ATON.UI.get("dock");
-    
-    //UI._elDock.append(
-        //UI.createButtonTools(),
-        //UI.createButtonFilters(),
-        //ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
-        //UI.createButtonSearch(),
-        //UI.createButtonInfo(),
-//    );
-//};
-
+// MAIN DOCK
 UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
     if (UI._elDock) {
@@ -69,7 +57,6 @@ UI.createButtonFilters = ()=>{
         classes: "illuminai-dock-btn",
         onpress: UI.openSideFilters
     });
-    
     if (btn && btn.setAttribute) {
         btn.setAttribute("data-label", "Filters");
     }
@@ -191,7 +178,6 @@ UI.modalWelcome = ()=>{
             </label>
             <select id="aton-dropdown" class="dropdown-select">
                 <option value="" selected disabled hidden>Where to start?</option>
-                <option value="scene">Where to start?</option>
                 <option value="scene0">Cluster 0</option>    
                 <option value="scene1">Cluster 1</option>
                 <option value="scene2">Cluster 2</option>
@@ -222,13 +208,13 @@ UI.modalWelcome = ()=>{
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // Tasti VR e AR --------  
     let btnVR = ATON.UI.createButton({
-        icon: "vr", // o "xr"
+        icon: APP.pathResIcons+"vr.png", // o "xr"
         tooltip: "Virtual Reality (VR)",
         onpress: UI.modalVR
     });
 
     let btnAR = ATON.UI.createButton({
-        icon: "ar",
+        icon: APP.pathResIcons+"ar.png",
         tooltip: "Augmented Reality (AR)",
         onpress: UI.modalAR
     });
@@ -286,7 +272,7 @@ UI.modalWelcome = ()=>{
     //START Button
     let btnStart = ATON.UI.createButton({
         label: "START",
-        icon: APP.pathResIcons+"home.png",
+        icon: "",
         tooltip: "Start Exploration",
         onpress: () => {
             //console.log("Starting application with cluster:", dropdown.value);
