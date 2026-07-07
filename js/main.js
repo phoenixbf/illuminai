@@ -475,7 +475,7 @@ window.toggleSidebar = function() {
 APP.getImageURL = (path, res)=>{
     if (!APP.cloudbase) return undefined;
 
-    if (!res) res = 2048;
+    if (!res) res = APP.ITEM_RES_HIGH;
 
     return APP.cloudbase+"?x="+res+"&y="+res+"&a=true&file=/"+path;
 };
