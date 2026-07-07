@@ -183,7 +183,7 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.1)t;
     height: auto;
 }
-
+/* ############################################################################ */
 /* VR and AR Bottoms *********************/
 /*.filter-modal-separator {
     border: none;
@@ -387,7 +387,165 @@ datalist option {
     transform: scale(0.98);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
+/*******************************************************************/ 
+/* SEARCH BAR POPUP 
 
+.search-popup-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Spazio orizzontale tra l'input e il tasto GO */
+    /*margin: 10px auto;
+    width: 100%;
+    max-width: 500px; /* Larghezza massima della barra di ricerca */
+/*}
+
+
+/* Il campo di testo per scrivere */
+/*.search-input-field {
+    flex: 1; /* Prende tutto o spazio disponibile a sinistra */
+    /*height: 45px;
+    padding: 0 15px;
+    font-size: 1rem;
+    border: 2px solid #656a6d;
+    border-radius: 4px;
+    background-color: #f2eaea;
+    color: #333;
+    outline: none;      
+    transition: border-color 0.3s;
+}
+
+/* Cambia colore al bordo quando l'utente ci clicca dentro */
+/*.search-input-field:focus {
+    border-color: #388e3c;
+}
+
+/* Il tasto GO di conferma */
+/*.btn-search-submit {
+    border-radius: 4px;
+    padding: 0 20px;    
+    background-color: #656a6d;
+    color: #ffffff !important;
+    font-weight: bold;
+    height: 45px;
+    min-width: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/****************************************************************** 
+RESEARCH BAR - fluttuante sopra il DOCK */
+.search-floating-wrapper {
+    position: fixed;
+    bottom: calc(var(--illuminai-dock-btn-size) + var(--illuminai-ui-margin) + 20px); 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9995;
+    pointer-events: none;
+    width: 90%;
+    max-width: 520px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-floating-wrapper .search-popup-container {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Spazio tra input e tasto GO */
+    width: 100%;
+
+    background-color: #656a6d;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Ombra per staccare dal modello 3D */
+}
+
+/* RESEARCH BAR - Campo di testo */
+.search-input-field {
+    flex: 1;
+    height: 45px;
+    padding: 0 15px;
+    font-size: 1rem;
+    border: 2px solid #505457;
+    border-radius: 4px;        
+    background-color: #f2eaea;
+    color: #333;
+    outline: none;      
+    transition: border-color 0.3s;
+}
+
+.search-input-field:focus {
+    border-color: #c3ac3c;
+}
+
+/* RESEARCH BAR - Tasto GO */
+.btn-search-submit {
+    border-radius: 4px;  
+    padding: 0 20px;    
+    background-color: #7e7b7b;
+    color: #434648 !important;
+    font-weight: bold;
+    height: 45px;
+    min-width: 60px;
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-search-submit:hover {
+    background-color: #c3ac3c; 
+    color: #ffffff !important;
+}
+
+/*******************************************************************/ 
+/* SEARCH HIGHLIGHTING*/
+.search-highlight {
+    /* Forza l'accelerazione hardware per evitare lag durante il movimento nel cluster 3D */
+    transform: translateZ(0);
+    will-change: box-shadow, outline-color;
+
+    /* Assicura che l'elemento appaia sopra tutti gli altri nodi HTML/overlay */
+    z-index: 9999 !important;
+    
+    /* Transizione fluida quando la classe viene attivata o rimossa */
+    transition: all 0.3s ease-in-out;
+
+    /* Stile iniziale del bordo (Verde Neon) */
+    outline: 3px solid #00ff00 !important;
+    outline-offset: 2px;
+    
+    /* Create a bright green luminous shadow */
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.8), /* Inner glow */
+                0 0 30px rgba(0, 255, 0, 0.6) !important; /* Outer glow */
+    
+    /* Animation to make the effect pulse and draw attention */
+    animation: search-pulse 1.5s infinite alternate ease-in-out !important;
+}
+
+/* Keyframes for the pulsing border animation */
+@keyframes search-pulse {
+    from {
+        outline-color: rgba(0, 255, 0, 0.7);
+        box-shadow: 0 0 12px rgba(0, 255, 0, 0.6), 
+                    0 0 20px rgba(0, 255, 0, 0.4);
+    }
+    to {
+        outline-color: rgba(255, 255, 255, 1); /* Il bordo pulsa virando verso il bianco per massimo contrasto */
+        box-shadow: 0 0 25px rgba(0, 255, 0, 1), 
+                    0 0 50px rgba(0, 255, 0, 0.8);
+    }
+}
 /*******************************************************************/ 
 /*TOOLBAR INSPECTION*/
 /* TOOL BUTTON - apre la toolbar*/
