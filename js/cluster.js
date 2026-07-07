@@ -115,41 +115,6 @@ setActive(){
     return this;
 }
 
-//filter(){
-    //for (let i in this.gItems.children){
-        //let I = this.gItems.children[i];
-
-        //I.hide();
-
-        //let data = I.data;
-
-        //if (data){
-            //for (let f in APP.filters){
-                //console.log(APP.filters[f])
-                //console.log(data[f])
-
-                //if (APP.filters[f] && parseInt(data[f])) I.show();
-            //}
-        //}
-    //}
-//}
-//filterByRing() {
-    //let maxVisibleRing = (APP.filters && APP.filters["max_visible_ring"] !== undefined) ? APP.filters["max_visible_ring"] : 6;
-
-    //for (let i in this.gItems.children) {
-        //let I = this.gItems.children[i];
-        
-        //let data = I.data;
-        //if (!data) continue;
-
-        //let currentRing = data["id_ring"] ? parseInt(data["id_ring"]) : 0;
-
-        //if (currentRing > maxVisibleRing) {
-            //I.hide();
-        //}
-    //}
-//}
-
 filter() {
     for (let i in this.gItems.children) {
         let I = this.gItems.children[i];
