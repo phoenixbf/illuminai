@@ -56,6 +56,14 @@ APP.CENTS_LIST = [
     "19"
 ];
 
+APP.ACTMAPS = [
+    "Text_annotation",
+    "Fig_annotation",
+    "Deco_annotation",
+    "Mus_annotation",
+    "Let_annotation"
+];
+
 APP.CLUSTER_NUM_SLICES = 6;
 
 
@@ -509,3 +517,44 @@ APP.matBaseItem = new THREE.ShaderMaterial({
 
         //side: THREE.DoubleSide
 });
+
+APP.setupToolbarForItem = (I)=>{
+    if (!APP._itemToolbar){
+        APP._itemToolbar = ATON.createUINode();
+        APP._itemToolbar.attachToRoot();
+
+        for (let i=0; i<APP.ACTMAPS.length; i++){
+            let A = APP.ACTMAPS[i];
+            //console.log(A)
+
+            let b = new ATON.SUI.Button("btn-"+A);
+
+            //b.setText(A);
+            b.setIcon(APP.pathResIcons + A + "-sf.png");
+            b.setScale(0.4);
+
+            b.position.x = -0.15;
+            b.position.y = 0.1 - (i * 0.5 * APP.ITEM_SCALE);
+
+            b.attachTo(APP._itemToolbar);
+        }
+
+        ThreeMeshUI.update();
+    }
+
+    if (I.data){
+        for (let i=0; i<APP.ACTMAPS.length; i++){
+            let A = APP.ACTMAPS[i];
+            if (I.data.amaps[A]){
+                let btn = ATON.getUINode("btn-"+A);
+                btn.setBaseColor(ATON.MatHub.colors.white); // Active
+            }
+        }
+    }
+
+
+    APP._itemToolbar.position.copy(I.position);
+    APP._itemToolbar.rotation.copy(I.rotation);
+
+
+};

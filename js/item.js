@@ -44,6 +44,16 @@ setData(data){
     }
 
     this.data.icat = icat;
+
+    // Activation Maps
+    this.data.amaps = {};
+    for (let a=0; a<APP.ACTMAPS.length; a++){
+        let A = APP.ACTMAPS[a];
+
+        if (this.data[A] === "1") this.data.amaps[A] = true;
+    }
+
+    //console.log(this.data.amaps)
 }
 
 setupEvents(){
@@ -89,6 +99,8 @@ reset(){
     this.load(APP.ITEM_RES_BASE);
 
     this._bIspection = false;
+
+    APP._itemToolbar.hide();
     
     // Reset della toolbar *****************************
     //let triggerBtn = document.getElementById("inspection-trigger-btn");
@@ -121,6 +133,11 @@ arrangeForInspection(){
     this.setScale(APP.ITEM_SCALE * 2.0);
 
     this._bIspection = true;
+
+    // 3D Toolbar
+    APP.setupToolbarForItem(this);
+    APP._itemToolbar.show();
+
     // INSPECTION TOOLBAR ********************************************
     //OLD part --------
     //let oldTools = document.getElementById("global-inspection-container");
