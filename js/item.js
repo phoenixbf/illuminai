@@ -139,14 +139,9 @@ arrangeForInspection(){
     APP._itemToolbar.show();
 
     // INSPECTION TOOLBAR ********************************************
-    //OLD part --------
-    //let oldTools = document.getElementById("global-inspection-container");
-    //if (oldTools) oldTools.remove();
-    //OLD part --------
     //Evita che più toolbar siano aperte contemporaneamente <-----inizio
     let activeGlobalContainer = document.getElementById("global-inspection-container");
     if (activeGlobalContainer) {
-        console.log("[Toolbar Guard] Trovata un'altra toolbar attiva. Rimozione in corso...");
         
         // Removibile! Cerca se istanza di ualtro oggetto registrata e resetta lo stato 3D
         if (APP.currentInspectedItem && APP.currentInspectedItem !== this) {
