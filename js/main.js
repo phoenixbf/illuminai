@@ -547,8 +547,6 @@ APP.setupToolbarForItem = (I)=>{
 
             b.attachTo(APP._itemToolbar);
         }
-
-        ThreeMeshUI.update();
     }
 
     if (I.data){
@@ -565,9 +563,8 @@ APP.setupToolbarForItem = (I)=>{
         }
     }
 
-
     APP._itemToolbar.position.copy(I.position);
     APP._itemToolbar.rotation.copy(I.rotation);
 
-
+    ThreeMeshUI.update();
 };

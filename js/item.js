@@ -102,6 +102,7 @@ reset(){
 
     APP._itemToolbar.hide();
     
+/*
     // Reset della toolbar *****************************
     //let triggerBtn = document.getElementById("inspection-trigger-btn");
     //if (triggerBtn) triggerBtn.remove();
@@ -115,7 +116,8 @@ reset(){
     }
 
     let uiContainer = document.getElementById("global-inspection-container");
-    if (uiContainer) uiContainer.remove();  
+    if (uiContainer) uiContainer.remove();
+*/
 }
 
 arrangeForInspection(){
@@ -138,6 +140,7 @@ arrangeForInspection(){
     APP.setupToolbarForItem(this);
     APP._itemToolbar.show();
 
+    /*
     // INSPECTION TOOLBAR ********************************************
     //Evita che più toolbar siano aperte contemporaneamente <-----inizio
     let activeGlobalContainer = document.getElementById("global-inspection-container");
@@ -217,6 +220,7 @@ arrangeForInspection(){
         });
     });
     //aggiunta di prova a qui ********************************************
+*/
 }
 
 load(res, bIspection){
