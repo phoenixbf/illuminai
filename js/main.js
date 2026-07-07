@@ -523,6 +523,8 @@ APP.setupToolbarForItem = (I)=>{
         APP._itemToolbar = ATON.createUINode();
         APP._itemToolbar.attachToRoot();
 
+        const bScale = APP.ITEM_SCALE * 3.0;
+
         for (let i=0; i<APP.ACTMAPS.length; i++){
             let A = APP.ACTMAPS[i];
             //console.log(A)
@@ -531,10 +533,17 @@ APP.setupToolbarForItem = (I)=>{
 
             //b.setText(A);
             b.setIcon(APP.pathResIcons + A + "-sf.png");
-            b.setScale(0.4);
+            b.setScale(bScale);
 
-            b.position.x = -0.15;
+            b.position.x = -0.15; // Left
             b.position.y = 0.1 - (i * 0.5 * APP.ITEM_SCALE);
+
+            b.onHover = ()=>{
+                b.setScale(bScale * 1.2);
+            };
+            b.onLeave = ()=>{
+                b.setScale(bScale);
+            };
 
             b.attachTo(APP._itemToolbar);
         }
@@ -545,9 +554,13 @@ APP.setupToolbarForItem = (I)=>{
     if (I.data){
         for (let i=0; i<APP.ACTMAPS.length; i++){
             let A = APP.ACTMAPS[i];
-            if (I.data.amaps[A]){
-                let btn = ATON.getUINode("btn-"+A);
+            let btn = ATON.getUINode("btn-"+A);
+
+            if (I.data.amaps[A]){    
                 btn.setBaseColor(ATON.MatHub.colors.white); // Active
+            }
+            else {
+                btn.setBaseColor(ATON.MatHub.colors.black);
             }
         }
     }
