@@ -63,15 +63,51 @@ UI.createButtonFilters = ()=>{
     return btn;
 };
 
-UI.createButtonSearch = ()=>{
+//UI.createButtonSearch = ()=>{
+    //let btn = ATON.UI.createButton({
+        //icon: APP.pathResIcons + "search.png",
+        //classes: "illuminai-dock-btn"
+        //onpress: () => {
+        //UI.modalSearch();}
+    //}); 
+    //if (btn && btn.setAttribute) {
+        //btn.setAttribute("data-label", "Search");
+    //}
+    //return btn;
+//};
+
+UI.createButtonSearch = () => {
     let btn = ATON.UI.createButton({
         icon: APP.pathResIcons + "search.png",
-        classes: "illuminai-dock-btn"
-        // onpress: UI.openSearch
+        classes: "illuminai-dock-btn",
+        onpress: () => {
+            let existingFloatingBar = document.querySelector('.search-floating-wrapper');
+
+            if (existingFloatingBar) {
+                existingFloatingBar.remove();
+                if (APP.filters) APP.filters["search_query"] = "";
+                
+                // Chiamata di reset sicuro
+                applySearchFilterToClusterMain(""); 
+                
+                let domBtn = btn.element || btn.dom || btn;
+                if (domBtn && domBtn.classList) domBtn.classList.remove("dock-btn-active");
+            } else {
+                if (typeof UI.createFloatingSearch === "function") {
+                    UI.createFloatingSearch();
+                    let domBtn = btn.element || btn.dom || btn;
+                    if (domBtn && domBtn.classList) domBtn.classList.add("dock-btn-active");
+                } else {
+                    console.error("Funzione UI.createFloatingSearch non trovata.");
+                }
+            }
+        }
     }); 
+
     if (btn && btn.setAttribute) {
         btn.setAttribute("data-label", "Search");
     }
+    
     return btn;
 };
 
@@ -301,6 +337,58 @@ UI.modalWelcome = ()=>{
     });
 };
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// SEARCH BAR
+UI.createFloatingSearch = () => {
+    if (document.querySelector('.search-floating-wrapper')) return;
+
+    let searchWrapper = document.createElement('div');
+    searchWrapper.className = 'search-floating-wrapper';
+
+    let searchContainer = ATON.UI.elem(`
+        <div class="search-popup-container">
+            <input type="text" id="search-input" class="search-input-field" placeholder="Search by author, subject..." autocomplete="off">
+            <div id="search-submit-placeholder"></div>
+        </div>
+    `);
+
+    let btnSubmitSearch = ATON.UI.createButton({
+        label: "GO",
+        icon: "",
+        tooltip: "Execute Search",
+        onpress: () => {
+            const query = searchContainer.querySelector('#search-input').value.trim().toLowerCase();
+            if (APP.filters) APP.filters["search_query"] = query;
+            
+            // Ora la funzione è globale, verrà trovata senza problemi
+            applySearchFilterToClusterMain(query);
+        }
+    });
+
+    let targetDomBtn = btnSubmitSearch.element || btnSubmitSearch.dom || btnSubmitSearch;
+    if (targetDomBtn) {
+        targetDomBtn.innerHTML = "GO";
+    }
+
+    if (btnSubmitSearch.classList) {
+        btnSubmitSearch.classList.add("btn-search-submit");
+    } else if (btnSubmitSearch.node?.classList) {
+        btnSubmitSearch.node.classList.add("btn-search-submit");
+    }
+
+    searchContainer.querySelector('#search-submit-placeholder').append(btnSubmitSearch);
+    searchWrapper.append(searchContainer);
+    document.body.append(searchWrapper);
+
+    setTimeout(() => {
+        const inputField = searchWrapper.querySelector('#search-input');
+        if (inputField) {
+            inputField.focus();
+            if (APP.filters && APP.filters["search_query"]) {
+                inputField.value = APP.filters["search_query"];
+            }
+        }
+    }, 50);
+};
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // SIDE PANEL - FILTERS
 UI.openSideFilters = ()=>{
@@ -612,7 +700,21 @@ UI.openSideFilters = ()=>{
                 APP.filters[key] = false; // Forza lo stato disattivato iniziale
             });
             APP.filters["max_visible_ring"] = 5;
-
+            
+            //Reset barra di ricarca
+            let searchInput = document.getElementById("search-input");
+            if (searchInput) {
+                searchInput.value = ""; 
+            }
+            //APP.currentSearchQuery = ""; <---- se app memorizza stringa di ricerca in una variabile globale
+            if (APP.activeCluster && APP.activeCluster.items) {
+                APP.activeCluster.items.forEach(item => {
+                    if (item.node && item.node.classList) {
+                        item.node.classList.remove('search-highlight');
+                    }
+                });
+            }
+            
             let domElement = elBody.element || elBody.dom || elBody; // Reset visivo componenti nel DOM
             if (domElement) {
                 // Spegne i checkbox/switch del pannello
