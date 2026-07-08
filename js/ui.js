@@ -146,6 +146,18 @@ UI.createButtonCluster = ()=>{
     }
     return btn;
 };
+
+UI.createButtonFullscreen = (options = {}) => {
+    let btn = ATON.UI.createButton({
+        icon:"fullscreen",
+        classes: "illuminai-dock-btn",
+        onpress: ATON.toggleFullScreen
+    });
+    if (btn && btn.setAttribute) {
+        btn.setAttribute("data-label", "Full Screen");
+    }
+    return btn;
+};
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // INFO PAGE
