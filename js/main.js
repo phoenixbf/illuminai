@@ -143,7 +143,7 @@ APP.setup = ()=>{
 
     ATON.Nav.setAndRequestHomePOV(
         //new ATON.POV().setPosition(-2.0,1.6,0).setTarget(0,0,0)
-        new ATON.POV().setPosition(0,1.0,0).setTarget(2,1.0,0).setFOV(70.0)
+        new ATON.POV().setPosition(0,1.0,0).setTarget(2,1.0,0).setFOV(60.0)
     );
 
     APP.setupScene();
