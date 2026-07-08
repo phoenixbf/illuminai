@@ -243,6 +243,7 @@ UI.modalWelcome = ()=>{
     elBody.append(dropdownElement);
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // Tasti VR e AR --------  
+/*
     let btnVR = ATON.UI.createButton({
         icon: APP.pathResIcons+"vr.png", // o "xr"
         tooltip: "Virtual Reality (VR)",
@@ -254,6 +255,9 @@ UI.modalWelcome = ()=>{
         tooltip: "Augmented Reality (AR)",
         onpress: UI.modalAR
     });
+*/
+    let btnVR = ATON.UI.createButtonVR();
+    let btnAR = ATON.UI.createButtonAR();
 
     btnVR.className += " btn-vr-rect";
     btnAR.className += " btn-ar-rect";
@@ -275,7 +279,7 @@ UI.modalWelcome = ()=>{
         //}
 
     //};
-
+/*
     const updateXRVisibility = () => {
         ATON.UI.showElement(btnVR);
         ATON.UI.showElement(btnAR);
@@ -286,7 +290,7 @@ UI.modalWelcome = ()=>{
     ATON.on("XR_support", () => {
         updateXRVisibility();
     });
-
+*/
     if (UI._elTB) {
         UI._elTB.push(btnVR);
         UI._elTB.push(btnAR);

@@ -56,8 +56,8 @@ realize(){
         const data = N.data;
         //console.log(data)
 
-        let y = 0.5;
-        if (data && data.icat !== undefined) y += data.icat;
+        let y = APP.CAT_HEIGHT * 0.5; // Baseline
+        if (data && data.icat !== undefined) y += (data.icat * APP.CAT_HEIGHT);
 
         //let y = 0.3 + (i * 0.03);
 /*
@@ -100,6 +100,19 @@ realize(){
     };
 
     ATON.SUI.createLayout(this.gItems, arrange);
+
+    const tickness = 0.02;
+    for (let c=0; c<APP.CATS_LIST.length; c++){
+
+        let gR = new THREE.CylinderGeometry(2,2, tickness, 64,1, true);
+
+        let R = new THREE.Mesh(gR, APP.matCatsCluster);
+
+        R.position.y = c * APP.CAT_HEIGHT;
+
+        this.add(R);
+    }
+
     return this;
 }
 

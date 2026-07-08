@@ -237,10 +237,27 @@ load(res, bIspection){
         ATON.Utils.loadTexture( APP.getImageURL(this.data.path, res), tex => {
             this.panel._mediamesh.material.uniforms.tBase.value = tex;
         });
+
     }
 
     this.enablePicking();
 }
+
+loadActivationMask = (m)=>{
+    if (!this.panel._mediamesh) return;
+    if (!this.panel._mediamesh.material) return;
+
+    // Clean
+    let fpath = this.data.path.replace(".jpeg","");
+    fpath = fpath.replace(".jpg","");
+
+    let ext = APP.ACTMAPS_EXT[m];
+
+    ATON.Utils.loadTexture( APP.getImageURL(fpath + ext, 128), tex => {
+        this.panel._mediamesh.material.uniforms.tAMask.value = tex;
+        console.log("Loaded AM: "+fpath+ext);
+    });
+};
 
 setOriginalLocation(p){
     this._origLoc.copy(p);

@@ -28,6 +28,8 @@ APP.ITEM_INSPECT_RAD = 0.5;
 APP.ITEM_RES_BASE = 128;
 APP.ITEM_RES_HIGH = 4096;
 
+APP.CAT_HEIGHT = 2.0;
+
 APP.CATS_LIST = [
     "P.01",
     "P.02",
@@ -62,6 +64,14 @@ APP.ACTMAPS = [
     "Deco_annotation",
     "Mus_annotation",
     "Let_annotation"
+];
+
+APP.ACTMAPS_EXT = [
+    "-AM-Text.jpeg",
+    "-AM-Fig.jpeg",
+    "-AM-Deco.jpeg",
+    "-AM-Mus.jpeg",
+    "-AM-Let.jpeg"
 ];
 
 APP.CLUSTER_NUM_SLICES = 6;
@@ -129,8 +139,11 @@ APP.setup = ()=>{
     ATON.realize();
     ATON.UI.addBasicEvents();
 
+    ATON.Nav.setFirstPersonControl();
+
     ATON.Nav.setAndRequestHomePOV(
-        new ATON.POV().setPosition(-2.0,1.6,0).setTarget(0,0,0)
+        //new ATON.POV().setPosition(-2.0,1.6,0).setTarget(0,0,0)
+        new ATON.POV().setPosition(0,1.0,0).setTarget(2,1.0,0).setFOV(70.0)
     );
 
     APP.setupScene();
@@ -138,6 +151,18 @@ APP.setup = ()=>{
     APP.loadConfig();
 
     APP.setupEvents();
+
+    APP.matCatsCluster = new THREE.MeshBasicMaterial({
+        color: ATON.MatHub.colors.white,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        opacity: 0.3,
+		//blending: THREE.MultiplyBlending,
+        //premultipliedAlpha: true
+    });
+
+    ATON.SUI.showSelector(false);
 };
 
 APP.realizeBaseCluster = (size)=>{
@@ -161,6 +186,10 @@ APP.realizeBaseCluster = (size)=>{
 
     APP.baseCluster = ATON.createSceneNode("basecluster").rotateY(Math.PI / APP.CLUSTER_NUM_SLICES).attachToRoot();
     APP.baseCluster.add( new THREE.Mesh(g, APP.matBaseCluster) );
+    APP.baseCluster.enablePicking();
+
+    //APP.baseCluster = ATON.createSceneNode("basecluster").load(APP.pathResAssets+"base.glb").rotateY(Math.PI / APP.CLUSTER_NUM_SLICES).attachToRoot();
+    //APP.baseCluster.enablePicking();
 };
 
 APP.setupScene = ()=>{
@@ -379,6 +408,10 @@ APP.setupEvents = ()=>{
         if (k==='ArrowDown') APP.shiftActiveCluster(-0.05);
     });
 
+    ATON.on("Tap", ()=>{
+        //
+    });
+
     //Effetto HOVER ANELLI (DA RIVEDERE!!!) -------------------------------------------------
 /*
     //1. INGRESSO
@@ -483,9 +516,15 @@ window.toggleSidebar = function() {
 APP.getImageURL = (path, res)=>{
     if (!APP.cloudbase) return undefined;
 
-    if (!res) res = APP.ITEM_RES_HIGH;
+    //if (!res) res = APP.ITEM_RES_HIGH;
 
-    return APP.cloudbase+"?x="+res+"&y="+res+"&a=true&file=/"+path;
+    let url = APP.cloudbase+"?";
+    url += "a=true&file=/"+path;
+
+    if (res) url += "&x="+res+"&y="+res;
+
+    return url;
+    //return APP.cloudbase+"?x="+res+"&y="+res+"&a=true&file=/"+path;
 };
 
 // Custom material for item inspection
@@ -506,10 +545,18 @@ APP.matBaseItem = new THREE.ShaderMaterial({
             varying vec2 vUv;
 
 		    void main(){
-		        vec4 frag = texture2D(tBase, vUv);
+		        vec4 frag   = texture2D(tBase, vUv);
+                vec4 fragAM = texture2D(tAMask, vUv);
+
                 vec4 orig = frag;
 
-                //frag.g = 1.0;
+                // Gradient
+                vec4 amBase   = vec4(0,2,0,0);
+                vec4 amTarget = vec4(2,0,0,1);
+
+                vec4 amCol = mix(amBase, amTarget, fragAM);
+
+                frag = mix(frag, amCol, fragAM*0.8);
 
 		        gl_FragColor = frag;
 		    }
@@ -556,6 +603,10 @@ APP.setupToolbarForItem = (I)=>{
 
             if (I.data.amaps[A]){    
                 btn.setBaseColor(ATON.MatHub.colors.white); // Active
+                btn.onSelect = ()=>{
+                    console.log("Select")
+                    I.loadActivationMask(i);
+                }
             }
             else {
                 btn.setBaseColor(ATON.MatHub.colors.black);
@@ -564,6 +615,8 @@ APP.setupToolbarForItem = (I)=>{
     }
 
     APP._itemToolbar.position.copy(I.position);
+    APP._itemToolbar.position.y += APP.activeCluster.position.y;
+    
     APP._itemToolbar.rotation.copy(I.rotation);
 
     ThreeMeshUI.update();
