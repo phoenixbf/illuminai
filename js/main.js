@@ -67,11 +67,11 @@ APP.ACTMAPS = [
 ];
 
 APP.ACTMAPS_EXT = [
-    "-AM-Text.jpeg",
-    "-AM-Fig.jpeg",
-    "-AM-Deco.jpeg",
-    "-AM-Mus.jpeg",
-    "-AM-Let.jpeg"
+    "-AM-Text.jpg",
+    "-AM-Fig.jpg",
+    "-AM-Deco.jpg",
+    "-AM-Mus.jpg",
+    "-AM-Let.jpg"
 ];
 
 APP.CLUSTER_NUM_SLICES = 6;
