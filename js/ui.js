@@ -5,51 +5,40 @@ UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
     if (UI._elDock) {
         UI._elDock.append(
+            //UI.createButtonQR(),
             UI.createButtonCluster(),
             UI.createButtonFilters(),
             ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
             UI.createButtonSearch(),
             UI.createButtonInfo(),
+            UI.createButtonFullscreen()
         );
     }
 };
 
-//MAIN DOCK - Buttons
-//UI.createButtonFilters = ()=>{
-    //return ATON.UI.createButton({
-        //icon: APP.pathResIcons+"filter.png", // "bi-sliders",
-        //classes: "illuminai-dock-btn",
-        //onpress: UI.openSideFilters
-    //});
-//};
-
-//UI.createButtonSearch = ()=>{
-    //return ATON.UI.createButton({
-        //icon: APP.pathResIcons+"search.png", // "bi-sliders",
-        //classes: "illuminai-dock-btn",
-        //onpress: UI.openSideFilters
-    //}); 
-//};
-
-//UI.createButtonInfo = ()=>{
-    //return ATON.UI.createButton({
-        //icon: APP.pathResIcons+"info.png", // "bi-sliders",
-        //classes: "illuminai-dock-btn",
-        //onpress: UI.modalInfo
-    //}); 
-//};
-
-//UI.createButtonTools = ()=>{
-    //return ATON.UI.createButton({
-        //icon: APP.pathResIcons+"tools.png", // "bi-sliders",
+//UI.createButtonQR = ()=>{
+    //let btn = ATON.UI.createButton({
+        //icon: "share", //APP.pathResIcons + "change-tools.png",
         //classes: "illuminai-dock-btn",
         //onpress: UI.modalWelcome
-        //onpress: UI.sideTools
     //});
-    
-//UI._elTB.push(UI._elTools);
-//return UI._elTools;
-//};
+    //if (btn && btn.setAttribute) {
+        //btn.setAttribute("data-label", "Share");
+    //}
+    //return btn;
+//}
+
+UI.createButtonCluster = ()=>{
+    let btn = ATON.UI.createButton({
+        icon: APP.pathResIcons + "change-cluster.png",
+        classes: "illuminai-dock-btn",
+        onpress: UI.modalWelcome
+    });
+    if (btn && btn.setAttribute) {
+        btn.setAttribute("data-label", "Change cluster");
+    }
+    return btn;
+};
 
 UI.createButtonFilters = ()=>{
     let btn = ATON.UI.createButton({
@@ -135,18 +124,6 @@ UI.createButtonInfo = ()=>{
     return btn;
 };
 
-UI.createButtonCluster = ()=>{
-    let btn = ATON.UI.createButton({
-        icon: APP.pathResIcons + "change-cluster.png",
-        classes: "illuminai-dock-btn",
-        onpress: UI.modalWelcome
-    });
-    if (btn && btn.setAttribute) {
-        btn.setAttribute("data-label", "Change cluster");
-    }
-    return btn;
-};
-
 UI.createButtonFullscreen = (options = {}) => {
     let btn = ATON.UI.createButton({
         icon:"fullscreen",
@@ -219,55 +196,88 @@ UI.modalWelcome = ()=>{
     elBody.append(separator);
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // MENU SCELTA CLUSTER
-    let dropdownElement = ATON.UI.elem(`
-        <div id="cluster-dropdown-container" class="dropdown-container">
-            <label for="aton-dropdown" class="illuminaai-dropdown-label">
-                Select a Cluster
-            </label>
-            <select id="aton-dropdown" class="dropdown-select">
-                <option value="" selected disabled hidden>Where to start?</option>
-                <option value="scene0">Cluster 0</option>    
-                <option value="scene1">Cluster 1</option>
-                <option value="scene2">Cluster 2</option>
-                <option value="scene3">Cluster 3</option>
-                <option value="scene4">Cluster 4</option>
-                <option value="scene5">Cluster 5</option>
-                <option value="scene6">Cluster 6</option>
-                <option value="scene7">Cluster 7</option>
-                <option value="scene8">Cluster 8</option>
-                <option value="scene9">Cluster 9</option>
-            </select>
-        </div> 
-    `);
+    //let dropdownElement = ATON.UI.elem(`
+        //<div id="cluster-dropdown-container" class="dropdown-container">
+            //<label for="aton-dropdown" class="illuminaai-dropdown-label">
+                //Select a Cluster
+            //</label>
+            //<select id="aton-dropdown" class="dropdown-select">
+                //<option value="" selected disabled hidden>Where to start?</option>
+                //<option value="scene0">Cluster 0</option>    
+                //<option value="scene1">Cluster 1</option>
+                //<option value="scene2">Cluster 2</option>
+                //<option value="scene3">Cluster 3</option>
+                //<option value="scene4">Cluster 4</option>
+                //<option value="scene5">Cluster 5</option>
+                //<option value="scene6">Cluster 6</option>
+                //<option value="scene7">Cluster 7</option>
+                //<option value="scene8">Cluster 8</option>
+                //<option value="scene9">Cluster 9</option>
+            //</select>
+        //</div> 
+    //`);
     
-    const dropdown = dropdownElement.querySelector('#aton-dropdown');
+    //const dropdown = dropdownElement.querySelector('#aton-dropdown');
+
+    //dropdown.addEventListener('change', (event) => {
+        //const selectedValue = event.target.value;
+        //let clusterId = selectedValue.replace("scene", "");
+
+        //APP.changeCluster(clusterId);
+    //});
+
+    //elBody.append(dropdownElement);
+
+    let dropdownElement;
     
-    //let currentUrlCluster = (APP.params && APP.params.get("c")) || "0";
-    //dropdown.value = "scene" + currentUrlCluster;
+    let clusterItems = [];
+    for (let i = 0; i <= 9; i++) {
+        clusterItems.push({
+            title: `Cluster ${i}`,
+            onselect: () => {
+                if (dropdownElement) {
+                    // Aggiorna il testo del bottone principale
+                    let btnText = dropdownElement.querySelector('.aton-btn-text');
+                    if (btnText) {
+                        btnText.innerText = `Cluster ${i}`;
+                    }
+                }
+                APP.changeCluster(i.toString());
+            }
+        });
+    }
 
-    dropdown.addEventListener('change', (event) => {
-        const selectedValue = event.target.value;
-        let clusterId = selectedValue.replace("scene", "");
-
-        APP.changeCluster(clusterId);
+    dropdownElement = ATON.UI.createDropdown({
+        title: "Where to start?", 
+        classes: "cluster-dropdown-container",
+        btnclasses: "w-100", 
+        items: clusterItems
     });
 
-    elBody.append(dropdownElement);
+    // Riprista la Label testuale sopra il dropdown
+    let wrapperElement = ATON.UI.createContainer({ classes: "dropdown-wrapper" });
+    wrapperElement.style.marginBottom = "15px";
+
+    let labelElement = document.createElement("label");
+    labelElement.className = "illuminaai-dropdown-label";
+    labelElement.innerText = "Select a Cluster";
+    labelElement.style.display = "block"; // Assicura che vada a capo
+    labelElement.style.marginBottom = "8px";
+
+    wrapperElement.append(labelElement);
+    wrapperElement.append(dropdownElement);
+    if (APP.params) {
+        let currentUrlCluster = APP.params.get("c") || "0";
+        let currentBtnText = wrapperElement.querySelector('.aton-btn-text');
+        if (currentBtnText) {
+            currentBtnText.innerText = `Cluster ${currentUrlCluster}`;
+        }
+    }
+
+    elBody.append(wrapperElement);
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // Tasti VR e AR --------  
-/*
-    let btnVR = ATON.UI.createButton({
-        icon: APP.pathResIcons+"vr.png", // o "xr"
-        tooltip: "Virtual Reality (VR)",
-        onpress: UI.modalVR
-    });
 
-    let btnAR = ATON.UI.createButton({
-        icon: APP.pathResIcons+"ar.png",
-        tooltip: "Augmented Reality (AR)",
-        onpress: UI.modalAR
-    });
-*/
     let btnVR = ATON.UI.createButtonVR();
     let btnAR = ATON.UI.createButtonAR();
 
@@ -277,32 +287,6 @@ UI.modalWelcome = ()=>{
     UI._elVR = btnVR;
     UI._elAR = btnAR;
 
-    //Gestione del supporto hardware
-    //const updateXRVisibility = () => {
-        //if (ATON.device.xrSupported && ATON.device.xrSupported['immersive-vr']) {
-            //ATON.UI.showElement(btnVR);
-        //} else {
-            //ATON.UI.hideElement(btnVR);
-        //}
-        //if (ATON.device.xrSupported && ATON.device.xrSupported['immersive-ar']) {
-            //ATON.UI.showElement(btnAR);
-        //} else {
-            //ATON.UI.hideElement(btnAR);
-        //}
-
-    //};
-/*
-    const updateXRVisibility = () => {
-        ATON.UI.showElement(btnVR);
-        ATON.UI.showElement(btnAR);
-    };
-    
-    updateXRVisibility();
-
-    ATON.on("XR_support", () => {
-        updateXRVisibility();
-    });
-*/
     if (UI._elTB) {
         UI._elTB.push(btnVR);
         UI._elTB.push(btnAR);
@@ -353,7 +337,8 @@ UI.modalWelcome = ()=>{
     });
 };
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// SEARCH BAR
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// SEARCH BAR - LIVE FILTER
 UI.createFloatingSearch = () => {
     if (document.querySelector('.search-floating-wrapper')) return;
 
@@ -405,6 +390,7 @@ UI.createFloatingSearch = () => {
         }
     }, 50);
 };
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // SIDE PANEL - FILTERS
 UI.openSideFilters = ()=>{
@@ -696,12 +682,28 @@ UI.openSideFilters = ()=>{
     separator2.className = "filter-block-separator";
     elBody.append(separator2);
 //******************************************************************/
-    // RESET BUTTON
-    // Reset Container
+    // BUTTONS BLOCK (CONFIRM & RESET)
+    // Buttons Container
     let elResetBlock = ATON.UI.createContainer();
     elResetBlock.style.padding = "20px 0px";
     elResetBlock.style.textAlign = "center";
+    
+    //Confirm Button
+    let btnConfirm = ATON.UI.createButton({
+        classes: "illuminai-confirm-btn",
+        onpress: () => {
+            ATON.UI.hideSidePanel();
+        }
+    });
 
+    let elConfirm = btnConfirm.element || btnConfirm.dom || btnConfirm;
+    if (elConfirm) {
+        elConfirm.innerText = "CONFIRM";
+        elConfirm.style.marginBottom = "12px"; // Aggiunge margine sotto per distanziarlo da Reset
+    }
+    
+    elResetBlock.append(btnConfirm);
+    // --------------------------------------------------------
     //Reset Button
     let btnReset = ATON.UI.createButton({
         classes: "illuminai-reset-btn", 
@@ -732,6 +734,7 @@ UI.openSideFilters = ()=>{
             }
             
             let domElement = elBody.element || elBody.dom || elBody; // Reset visivo componenti nel DOM
+            
             if (domElement) {
                 // Spegne i checkbox/switch del pannello
                 let checkboxes = domElement.querySelectorAll("input[type='checkbox']");
