@@ -402,7 +402,7 @@ UI.openSideFilters = ()=>{
     let titleClasses = document.createElement("h3");
     titleClasses.innerText = "Object Types";
     titleClasses.className = "filter-block-title"; 
-    elClassesBlock.append(titleClasses);
+    //elClassesBlock.append(titleClasses);
  
     let elClasses = ATON.UI.createContainer();
 
@@ -488,8 +488,46 @@ UI.openSideFilters = ()=>{
             }
         })
     );
-    elClassesBlock.append(elClasses);
+    elClassesBlock.append(titleClasses,elClasses);
     elBody.append(elClassesBlock);
+//******************************************************************/
+    //Linea divisoria --- tra blocco 1 e Tag
+    let separator3 = document.createElement("hr");
+    separator3.className = "filter-block-separator";
+    elBody.append(separator3);
+//******************************************************************/
+    // BLOCCO TAGS
+    // Inizializza l'array dei tag nei filtri globali se non esiste
+    if (!APP.filters["tags"]) {
+        APP.filters["tags"] = [];
+    }
+
+    let elTagsBlock = ATON.UI.createContainer();
+
+    let titleTags = document.createElement("h3");
+    titleTags.innerText = "Filter by Tags";
+    titleTags.className = "filter-block-title";
+    elTagsBlock.append(titleTags);
+
+    // Creazione del componente Tags usando il framework ATON
+    let elTagsComponent = ATON.UI.createTagsComponent({
+        label: "Tags",
+        placeholder: "Type a tag and press Enter...",
+        tags: APP.filters["tags"], // Carica i tag già salvati in memoria
+        onaddtag: (k) => {
+            if (!APP.filters["tags"].includes(k)) {
+                APP.filters["tags"].push(k);
+            }
+            if (APP.activeCluster) APP.activeCluster.filter();
+        },
+        onremovetag: (k) => {
+            APP.filters["tags"] = APP.filters["tags"].filter(t => t !== k);
+            if (APP.activeCluster) APP.activeCluster.filter();
+        }
+    });
+
+    elTagsBlock.append(elTagsComponent);
+    elBody.append(elTagsBlock);
 //******************************************************************/
     //Linea divisoria --- tra blocco 1 e 2
     let separator = document.createElement("hr");
@@ -698,7 +736,7 @@ UI.openSideFilters = ()=>{
 
     let elConfirm = btnConfirm.element || btnConfirm.dom || btnConfirm;
     if (elConfirm) {
-        elConfirm.innerText = "CONFIRM";
+        elConfirm.innerText = "CLOSE";
         elConfirm.style.marginBottom = "12px"; // Aggiunge margine sotto per distanziarlo da Reset
     }
     
@@ -748,6 +786,16 @@ UI.openSideFilters = ()=>{
                     sl.value = 5;
                     //sl.dispatchEvent(new Event('input'));
                 });
+                
+                // Rimuove i chip
+                let domTags = elTagsBlock.element || elTagsBlock.dom || elTagsBlock;
+                if (domTags && typeof domTags.querySelectorAll === "function") {
+                    let chips = domTags.querySelectorAll('.aton-chip, [class*="chip"]');
+                    chips.forEach(chip => chip.remove());
+                    
+                    let tagInput = domTags.querySelector('input[type="text"]');
+                    if (tagInput) tagInput.value = "";
+                }
             }
 
             // Aggiorna la scena tridimensionale
