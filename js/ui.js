@@ -509,10 +509,22 @@ UI.openSideFilters = ()=>{
     titleTags.className = "filter-block-title";
     elTagsBlock.append(titleTags);
 
+    //let tagList = [ //<--- adatta
+        //"manuscript", 
+        //"painting", 
+        //"miniature", 
+        //"gold leaf", 
+        //"vellum", 
+        //"restoration", 
+        //"monastery"
+    //];
+
+
     // Creazione del componente Tags usando il framework ATON
     let elTagsComponent = ATON.UI.createTagsComponent({
         label: "Tags",
         placeholder: "Type a tag and press Enter...",
+        //list: tagList, 
         tags: APP.filters["tags"], // Carica i tag già salvati in memoria
         onaddtag: (k) => {
             if (!APP.filters["tags"].includes(k)) {
