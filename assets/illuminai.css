@@ -290,6 +290,16 @@
     border-top: 1px solid #948f8f;
     opacity: 0.7;
 }
+
+/* --- TAG BAR  --- */
+.filter-block-title + div input[type="text"] {
+    margin-bottom: 12px;
+}
+
+.aton-chip {
+    margin-top: 8px;
+}
+
 /* --- SLIDER CHRONOLOGY  --- */
 /* Per ottimizzazione la fluidità dello Slider */
 input[type='range'] {
