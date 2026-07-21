@@ -151,15 +151,15 @@ UI.modalInfo = ()=>{
                     <p>Welcome! Here what you can do:</p>
                     <div class="instruction-step">
                         <span>1️⃣</span>
-                        <p>Select one of the clusters to start using <b>Home</b>.</p>
+                        <p>Select one of the thematic clusters to start using the <b>Dropdown Menu</b>.</p>
                     </div>
                     <div class="instruction-step">
                         <span>2️⃣</span>
-                        <p>Apply <b>Filters</b> to refine your search.</p>
+                        <p>Apply <b>Filters</b> to refine your search choosing which images to display.</p>
                     </div>
                     <div class="instruction-step">
                         <span>3️⃣</span>
-                        <p>Select an <b>Items</b> to view the image in high resolution and to explore the related information.</p>
+                        <p>Select an <b>Items</b> to view the image in high resolution and to explore the related data.</p>
                     </div>
                 </div>
                 <br><hr class="info-divider">
