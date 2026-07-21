@@ -229,19 +229,54 @@ UI.modalWelcome = ()=>{
     //elBody.append(dropdownElement);
 
     let dropdownElement;
+
+    let loadedConfig = APP.confdata || {};
+    
+    let descrElement = document.createElement("p");
+    descrElement.className = "illuminaai-dropdown-description";
     
     let clusterItems = [];
+
+    clusterItems.push({
+        title: "Where to start",
+        disabled: true,
+        onselect: (e) => {
+            // Blocca l'azione se viene cliccato
+            if (e && e.stopPropagation) e.stopPropagation();
+            return false;
+        }
+    });
+    
     for (let i = 0; i <= 9; i++) {
+        // Estrae "title" e "descr" da APP.confdata.clusters[i]
+        let nameFromConfig = "";
+        let descrFromConfig = "";
+        
+        if (loadedConfig.clusters && loadedConfig.clusters[i]) {
+            nameFromConfig = loadedConfig.clusters[i].title || "";
+            descrFromConfig = loadedConfig.clusters[i].descr || "";
+        }
+
+        // Formattazione: "Cluster X - Titolo"
+        let clusterLabel = nameFromConfig ? `Cluster ${i} - ${nameFromConfig}` : `Cluster ${i}`;
+
         clusterItems.push({
-            title: `Cluster ${i}`,
+            title: clusterLabel,
+            description: descrFromConfig,
             onselect: () => {
                 if (dropdownElement) {
                     // Aggiorna il testo del bottone principale
                     let btnText = dropdownElement.querySelector('.aton-btn-text');
                     if (btnText) {
-                        btnText.innerText = `Cluster ${i}`;
+                        btnText.innerText = clusterLabel;
                     }
+                    // Chiude la tendina dopo la selezione
+                    let menu = dropdownElement.querySelector('.aton-dropdown-menu');
+                    if (menu) menu.classList.remove('show');
                 }
+
+                // Aggiorna la descrizione sotto
+                descrElement.innerText = descrFromConfig;
                 APP.changeCluster(i.toString());
             }
         });
@@ -254,23 +289,43 @@ UI.modalWelcome = ()=>{
         items: clusterItems
     });
 
-    // Riprista la Label testuale sopra il dropdown
+    let dropdownMenu = dropdownElement.querySelector('.aton-dropdown-menu');
+    if (dropdownMenu) {
+        // Il primo elemento della lista
+        let firstItem = dropdownMenu.querySelector('.dropdown-item, a, li');
+        if (firstItem) {
+            firstItem.classList.add('disabled');
+            firstItem.style.pointerEvents = 'none';
+            firstItem.style.opacity = '0.5';
+            firstItem.style.cursor = 'not-allowed';
+        }
+    }
+
+    // Assemblaggio Wrapper e Label
     let wrapperElement = ATON.UI.createContainer({ classes: "dropdown-wrapper" });
     wrapperElement.style.marginBottom = "15px";
 
     let labelElement = document.createElement("label");
     labelElement.className = "illuminaai-dropdown-label";
     labelElement.innerText = "Select a Cluster";
-    labelElement.style.display = "block"; // Assicura che vada a capo
+    labelElement.style.display = "block"; 
     labelElement.style.marginBottom = "8px";
 
     wrapperElement.append(labelElement);
     wrapperElement.append(dropdownElement);
+    wrapperElement.append(descrElement);
+
+    // Impostazione dell'etichetta iniziale basata sull'URL
     if (APP.params) {
         let currentUrlCluster = APP.params.get("c") || "0";
+        let index = parseInt(currentUrlCluster);
+
+        // Recupera l'etichetta formattata dall'array clusterItems
+        let initialLabel = clusterItems[index + 1] ? clusterItems[index].title : `Cluster ${currentUrlCluster}`;
+
         let currentBtnText = wrapperElement.querySelector('.aton-btn-text');
         if (currentBtnText) {
-            currentBtnText.innerText = `Cluster ${currentUrlCluster}`;
+            currentBtnText.innerText = initialLabel;
         }
     }
 
