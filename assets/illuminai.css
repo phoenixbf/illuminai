@@ -146,8 +146,8 @@
 /* ############################################################################ */
 /*  WELCOME Page */
 /* Cluster Dropdown */
-/* Cluster Dropdown Wrapper *
-/.dropdown-wrapper {
+/* Cluster Dropdown Wrapper */
+.dropdown-wrapper {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -206,6 +206,29 @@
     width: 100%;
     border-radius: 8px;
 }
+
+.illuminaai-dropdown-description {
+    margin-top: 14px;
+    padding: 10px 14px;
+    
+    /*background-color: #f8f9fa; /* Sfondo chiaro */
+    /*border-left: 4px solid #007bff; /* Bordo blu richiamato dal pulsante */
+    /*border-radius: 6px;*/
+    
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #babec2; /* Grigio scuro ad alto contrasto */
+    text-align: center; /* Testo allineato a sinistra per facilitare la lettura */
+    
+    /*/box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;*/
+}
+
+/* Nasconde il box se è vuoto */
+.illuminaai-dropdown-description:empty {
+    display: none;
+}
+
 /* ############################################################################ */
 /* VR and AR Bottoms *********************/
 /*.filter-modal-separator {
