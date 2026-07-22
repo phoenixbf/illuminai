@@ -559,6 +559,12 @@ UI.openSideFilters = ()=>{
 
     let elTagsBlock = ATON.UI.createContainer();
 
+    // Assegna classe al contenitore del blocco tag
+    let domTagsBlock = elTagsBlock.element || elTagsBlock.dom || elTagsBlock;
+    if (domTagsBlock) {
+        domTagsBlock.className = "filter-tags-block"; 
+    }
+
     let titleTags = document.createElement("h3");
     titleTags.innerText = "Filter by Tags";
     titleTags.className = "filter-block-title";
@@ -573,7 +579,6 @@ UI.openSideFilters = ()=>{
         //"restoration", 
         //"monastery"
     //];
-
 
     // Creazione del componente Tags usando il framework ATON
     let elTagsComponent = ATON.UI.createTagsComponent({
