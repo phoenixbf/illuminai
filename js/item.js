@@ -28,6 +28,8 @@ constructor(id, db){
     this._bIspection = false;
 
     this._origLoc = new THREE.Vector3();
+    
+    this.cardUI = null; //add per CARD
 }
 
 setData(data){
@@ -86,6 +88,103 @@ setupEvents(){
     };
 }
 
+// CARD INFO **************************************************
+buildCardUI(){
+    if (this.cardUI) return this.cardUI;
+
+    // Creazione del Footer
+    const footerDiv = document.createElement("div");
+    footerDiv.innerHTML = `<button class="btn-close-card">Chiudi</button>`;
+
+    // Creazione della Card
+    this.cardUI = ATON.UI.createCard({
+        size: "small",
+        cover: this.data.cover || this.data.thumb || null,
+        //stdcover: APP.PATH_RES + "images/default_cover.jpg",
+        useblurtint: true,
+        classes: "inspection-item-card",
+        title: this.data.title || this._id,
+        onactivate: () => {}, 
+        keywords: this.data.amaps || {},
+        footer: footerDiv
+    });
+
+    if (!this.cardUI) return null;
+
+    const cardBody = this.cardUI.querySelector(".aton-card-body");
+    if (cardBody) {
+        const fieldsContainer = document.createElement("div");
+        fieldsContainer.className = "card-custom-fields";
+        
+        // Campi della Card
+        let htmlContent = "";
+        if (this.data.author) {
+            htmlContent += `<div class="field-row"><strong>Autore:</strong> <span>${this.data.author}</span></div>`;
+        }
+        if (this.data.century) {
+            htmlContent += `<div class="field-row"><strong>Secolo:</strong> <span>${this.data.century}</span></div>`;
+        }
+        if (this.data.subject_1) {
+            htmlContent += `<div class="field-row"><strong>Soggetto:</strong> <span>${this.data.subject_1}</span></div>`;
+        }
+        if (this.data.prov) {
+            htmlContent += `<div class="field-row"><strong>Provenienza:</strong> <span>${this.data.prov}</span></div>`;
+        }
+        if (this.data.description) {
+            htmlContent += `<div class="field-desc">${this.data.description}</div>`;
+        }
+        
+        // Interpreta il codice HTML senza stampare i tag a schermo
+        fieldsContainer.innerHTML = htmlContent;
+        
+        // Inserisce i campi subito prima del Footer
+        const footerEl = cardBody.querySelector(".card-footer");
+        if (footerEl) {
+            cardBody.insertBefore(fieldsContainer, footerEl);
+        } else {
+            cardBody.appendChild(fieldsContainer);
+        }
+    }
+
+    // Gestione chiusura ed eventi
+    const closeBtn = this.cardUI.querySelector(".btn-close-card");
+    if (closeBtn) {
+        closeBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.toggleCard(false);
+        };
+    }
+
+    this.cardUI.addEventListener("pointerdown", (e) => e.stopPropagation());
+    this.cardUI.addEventListener("mousedown", (e) => e.stopPropagation());
+    this.cardUI.addEventListener("click", (e) => e.stopPropagation());
+
+    document.body.appendChild(this.cardUI);
+    return this.cardUI;
+}
+
+toggleCard(show){
+    if (!this.cardUI) {
+        this.buildCardUI();
+    }
+
+    if (!this.cardUI) return;
+
+    const isHidden = (this.cardUI.style.display === "none" || this.cardUI.style.display === "");
+    const shouldShow = (show === undefined) ? isHidden : show;
+
+    if (shouldShow) {
+        this.cardUI.style.display = "block";
+        
+        // Avvia il ciclo di posizionamento dinamico in tempo reale
+        //this.updateCardPosition();
+    } else {
+        this.cardUI.style.display = "none";
+    }
+}
+//updateCardPosition(){}
+    
 // Reset item to its original location in the cluster
 reset(){
     if (this._origLoc) this.position.copy(this._origLoc);
@@ -135,6 +234,10 @@ arrangeForInspection(){
     this.setScale(APP.ITEM_SCALE * 2.0);
 
     this._bIspection = true;
+
+    // ADD CARD
+    this.buildCardUI();
+    // ADD CARD
 
     // 3D Toolbar
     APP.setupToolbarForItem(this);
