@@ -319,11 +319,33 @@ APP.matBaseItem = new THREE.ShaderMaterial({
 //********************************************************************** */
 // TOOLBAR ------------------------------------ modifica da qui
 APP.setupToolbarForItem = (I)=>{
-    if (!APP._itemToolbar){
+	// Fattore di scala per l'hover dei bottoni
+    const bScale = APP.ITEM_SCALE * 3.0;
+    
+	if (!APP._itemToolbar){
         APP._itemToolbar = ATON.createUINode();
         APP._itemToolbar.attachToRoot();
 
-        const bScale = APP.ITEM_SCALE * 3.0;
+        //const bScale = APP.ITEM_SCALE * 3.0;
+
+		// CREAZIONE BOTTONE INFO / CARD (posizionato in cima)
+        let btnInfo = new ATON.SUI.Button("btn-card-info");
+        btnInfo.setIcon(APP.pathResIcons + "info.png"); // Verifica che l'immagine esista!
+        btnInfo.setScale(0.4);
+
+        // Posizione Y dinamicamente calcolata per stare SOPRA la prima activation map
+        //btnInfo.position.x = -0.15;
+        //btnInfo.position.y = 0.1 + (0.5 * APP.ITEM_SCALE);
+        btnInfo.position.x = -0.15; // Aumentato offset per non finire dentro l'oggetto
+        btnInfo.position.y = 0.1 + (0.5 * APP.ITEM_SCALE);
+        btnInfo.position.z = 0.05; // Leggermente avanzato su Z
+
+        btnInfo.onHover = () => { btnInfo.setScale(bScale * 1.2); };
+        btnInfo.onLeave = () => { btnInfo.setScale(bScale); };
+
+        btnInfo.attachTo(APP._itemToolbar);
+        // -------------------------------------------------------------------------
+        // CREAZIONE TASTI ACTIVATION MAPS
 
         for (let i=0; i<APP.ACTMAPS.length; i++){
             let A = APP.ACTMAPS[i];
@@ -333,10 +355,12 @@ APP.setupToolbarForItem = (I)=>{
 
             //b.setText(A);
             b.setIcon(APP.pathResIcons + A + "-sf.png");
-            b.setScale(bScale);
+            //b.setScale(bScale);
+			b.setScale(0.4);
 
             b.position.x = -0.15; // Left
             b.position.y = 0.1 - (i * 0.5 * APP.ITEM_SCALE);
+			b.position.z = 0.05;
 
             b.onHover = ()=>{
                 b.setScale(bScale * 1.2);
@@ -349,11 +373,12 @@ APP.setupToolbarForItem = (I)=>{
         }
     }
 
+	// AGGIORNAMENTO STATI ED EVENTI PER L'ITEM CORRENTE ---------------------
     if (I.data){
         for (let i=0; i<APP.ACTMAPS.length; i++){
             let A = APP.ACTMAPS[i];
             let btn = ATON.getUINode("btn-"+A);
-
+			/* originale BRUNO
             if (I.data.amaps[A]){    
                 btn.setBaseColor(ATON.MatHub.colors.white); // Active
                 btn.onSelect = ()=>{
@@ -363,14 +388,54 @@ APP.setupToolbarForItem = (I)=>{
             }
             else {
                 btn.setBaseColor(ATON.MatHub.colors.black);
-            }
+            }*/
+			if (btn) {
+                if (I.data.amaps && I.data.amaps[A]){
+                    btn.setBaseColor(ATON.MatHub.colors.white); // Attivo
+                    btn.onSelect = () => {
+                        console.log("Select Activation Map:", A);
+                        if (typeof I.loadActivationMask === 'function') {
+                            I.loadActivationMask(i);
+                        }
+                    };
+                } else {  
+                    btn.setBaseColor(ATON.MatHub.colors.black); // Inattivo
+                    btn.onSelect = null;
+                }
+        	}
+    	}
+		
+		// EVENTO CLICK SUL BOTTONE INFO / CARD - add
+        let btnInfo = ATON.getUINode("btn-card-info");
+        if (btnInfo) {
+            btnInfo.setBaseColor(ATON.MatHub.colors.white);
+            btnInfo.onSelect = () => {
+                console.log("Toggle Card per item:", I._id);
+                //if (typeof I.toggleCard === 'function') {
+                    //I.toggleCard();
+                //}
+                // Verifica se l'oggetto I ha il metodo e lo esegue
+                if (I && typeof I.toggleCard === 'function') {
+                    I.toggleCard();
+                } else {
+                    console.error("Il metodo toggleCard non esiste su questo item!", I);
+                }
+            };
         }
     }
-
+    if (typeof APP._itemToolbar.show === 'function') {
+        APP._itemToolbar.show();
+    }
+	
     APP._itemToolbar.position.copy(I.position);
-    APP._itemToolbar.position.y += APP.activeCluster.position.y;
+    
+	//APP._itemToolbar.position.y += APP.activeCluster.position.y;
+	if (APP.activeCluster) {
+        APP._itemToolbar.position.y += APP.activeCluster.position.y;
+    }
     
     APP._itemToolbar.rotation.copy(I.rotation);
 
-    ThreeMeshUI.update();
+    //ThreeMeshUI.update();
+	if (window.ThreeMeshUI) ThreeMeshUI.update();
 };
