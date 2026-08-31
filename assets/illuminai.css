@@ -167,6 +167,7 @@
 }
 
 .cluster-dropdown-container {
+    position: relative !important; /*add*/
     width: 80%;
     max-width: 450px;
     margin: 0 auto;
@@ -795,4 +796,24 @@ RESEARCH BAR - fluttuante sopra il DOCK */
     height: 22px;
     object-fit: contain;
     pointer-events: none; /* Impedisce hover sull'immagine invece che sul bottone */
+}
+
+/* CARD */ 
+/* Style per la Card di ispezione */
+.inspection-item-card {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translate(0, 0);
+    z-index: 999999;
+    width: 320px;
+    background-color: rgba(20, 20, 20, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7);
+    pointer-events: auto;
+    transition: opacity 0.15s ease-in-out;
+    display: none; /* Inizialmente nascosta*/
 }
