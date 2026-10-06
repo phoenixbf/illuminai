@@ -21,7 +21,34 @@ constructor(id){
 setPosition(p){
     this.position.copy(p);
 
-    for (let i in this.gItems) this.gItems[i].setClusterOrigin(p);
+    if (this.gItems && this.gItems.children) {
+        for (let i = 0; i < this.gItems.children.length; i++) {
+            let item = this.gItems.children[i];
+            
+            // Aggiorna l'origine del cluster all'interno dell'Item
+            if (typeof item.setClusterOrigin === "function") {
+                item.setClusterOrigin(p);
+            }
+        }
+    }
+
+    return this;
+}
+
+// Scorrimento/spostamento verticale dinamico
+setOffsetY(offsetY) {
+    this.position.y = offsetY;
+
+    if (this.gItems && this.gItems.children) {
+        for (let i = 0; i < this.gItems.children.length; i++) {
+            let item = this.gItems.children[i];
+
+            // Se l'item memorizza la posizione locale aggiorna il suo offset
+            if (item.setClusterOrigin) {
+                item.setClusterOrigin(this.position);
+            }
+        }
+    }
 
     return this;
 }
@@ -47,8 +74,6 @@ realize(){
 
             P.attachTo( this.gItems );
             P.load(APP.ITEM_RES_BASE);
-
-            //console.log(P)
         }
     }
 
@@ -143,6 +168,22 @@ filter() {
         for (let f in APP.filters) {
             let filterValue = APP.filters[f];
 
+             // GESTIONE FILTRO TESTUALE (LIVE FILTER)
+            if (f === "text") {
+                if (filterValue && filterValue.length >= 3) {
+                    // Cerca nei campi rilevanti dell'oggetto o dell'item
+                    const searchTerm = filterValue.toLowerCase();
+                    const title = (data.title || data.name || data.id || "").toString().toLowerCase();
+                    const path = (data.path || "").toLowerCase();
+
+                    // Se non trova corrispondenze, nasconde l'elemento
+                    if (!title.includes(searchTerm) && !path.includes(searchTerm)) {
+                        keepVisible = false;
+                        break;
+                    }
+                }
+            }
+
             // GESTIONE SLIDER
             if (f === "max_visible_ring") {
                 let objRing = data["max_visible_ring"] !== undefined ? data["max_visible_ring"] : data["id_ring"];
@@ -150,11 +191,10 @@ filter() {
                     keepVisible = false;
                     break;
                 }
-            } 
-            
+            }
             // GESTIONE SWITCH (Object Classes e Century)
             else {
-                // Estraiamo i codici identificativi dal database
+                // Estrae i codici identificativi dal database
                 let classCode = f.split("_")[0];
                 let centuryCode = f; //+ "C"; 
 
