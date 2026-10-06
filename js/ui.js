@@ -1,32 +1,21 @@
 let UI = {};
-
-// MAIN DOCK
+//***************************************************************************
+//MAIN DOCK
+//***************************************************************************
 UI.setup = ()=>{
     UI._elDock = ATON.UI.get("dock");
     if (UI._elDock) {
         UI._elDock.append(
-            //UI.createButtonQR(),
             UI.createButtonCluster(),
             UI.createButtonFilters(),
-            ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
+            //ATON.UI.createButtonHome({ classes: "illuminai-dock-btn", icon: APP.pathResIcons+"home.png" }),
+            UI.createButtonHome(),
             UI.createButtonSearch(),
             UI.createButtonInfo(),
             UI.createButtonFullscreen()
         );
     }
 };
-
-//UI.createButtonQR = ()=>{
-    //let btn = ATON.UI.createButton({
-        //icon: "share", //APP.pathResIcons + "change-tools.png",
-        //classes: "illuminai-dock-btn",
-        //onpress: UI.modalWelcome
-    //});
-    //if (btn && btn.setAttribute) {
-        //btn.setAttribute("data-label", "Share");
-    //}
-    //return btn;
-//}
 
 UI.createButtonCluster = ()=>{
     let btn = ATON.UI.createButton({
@@ -52,19 +41,6 @@ UI.createButtonFilters = ()=>{
     return btn;
 };
 
-//UI.createButtonSearch = ()=>{
-    //let btn = ATON.UI.createButton({
-        //icon: APP.pathResIcons + "search.png",
-        //classes: "illuminai-dock-btn"
-        //onpress: () => {
-        //UI.modalSearch();}
-    //}); 
-    //if (btn && btn.setAttribute) {
-        //btn.setAttribute("data-label", "Search");
-    //}
-    //return btn;
-//};
-
 UI.createButtonSearch = () => {
     let btn = ATON.UI.createButton({
         icon: APP.pathResIcons + "search.png",
@@ -76,16 +52,15 @@ UI.createButtonSearch = () => {
                 existingFloatingBar.remove();
                 if (APP.filters) APP.filters["search_query"] = "";
                 
-                // Chiamata di reset sicuro
-                applySearchFilterToClusterMain(""); 
+                if (typeof applySearchFilterToClusterMain === "function") {
+                    applySearchFilterToClusterMain(""); 
+                }
                 
-                let domBtn = btn.element || btn.dom || btn;
-                if (domBtn && domBtn.classList) domBtn.classList.remove("dock-btn-active");
+                if (btn?.classList) btn.classList.remove("dock-btn-active");
             } else {
                 if (typeof UI.createFloatingSearch === "function") {
                     UI.createFloatingSearch();
-                    let domBtn = btn.element || btn.dom || btn;
-                    if (domBtn && domBtn.classList) domBtn.classList.add("dock-btn-active");
+                    if (btn?.classList) btn.classList.add("dock-btn-active");
                 } else {
                     console.error("Funzione UI.createFloatingSearch non trovata.");
                 }
@@ -141,40 +116,91 @@ UI.createButtonFullscreen = (options = {}) => {
 UI.modalInfo = ()=>{
     let elBody = ATON.UI.createContainer();
 
+    // Stile helper per le icone inserite nel testo
+    const inlineIconStyle = "height: 1.8em; width: auto; vertical-align: -0.6em; margin: 0 4px;";
+
     elBody.append(
         ATON.UI.elem(`
             <div class="info-container">
-                <img src="${APP.basePath}/appicon.png" style='width:100px; height:auto'>
-                <br><hr class="info-divider">
-                <br><b class="info-title">🚀 Discover IlluminAI</b>
+                <b class="info-title">🚀 Discover IlluminAI</b>
                 <div class="info-description">
                     <p>Welcome! Here what you can do:</p>
                     <div class="instruction-step">
                         <span>1️⃣</span>
-                        <p>Select one of the thematic clusters to start using the <b>Dropdown Menu</b>.</p>
+                        <p>Select a cluster or change it from the Welcome Page using the <img src="${APP.pathResIcons}/change-cluster.png" style="${inlineIconStyle}" alt="change"> <b>Dropdown Menu</b>.</p>
                     </div>
                     <div class="instruction-step">
                         <span>2️⃣</span>
-                        <p>Apply <b>Filters</b> to refine your search choosing which images to display.</p>
+                        <p>Apply <b>Filters</b> using the Sidebar <img src="${APP.pathResIcons}/filter.png" style="${inlineIconStyle}" alt="filter"> to make the images appear and refine the search.</p>
                     </div>
                     <div class="instruction-step">
                         <span>3️⃣</span>
-                        <p>Select an <b>Items</b> to view the image in high resolution and to explore the related data.</p>
+                        <p>Select an <b>Item</b> to view the image in high resolution and to explore the related data.</p>
                     </div>
+                    <div class="instruction-step">
+                        <span>4️⃣</span>
+                        <p>Use the <b>Search Bar</b> <img src="${APP.pathResIcons}/search.png" style="${inlineIconStyle}" alt="search"> to find what you are looking for!</p>
+                    </div>
+                    <p style="margin-top: 15px; margin-bottom: 0px; text-align: center;">
+                        Still have questions? 
+                        <a href="#" id="btn-open-tutorial" style="color: #007bff; text-decoration: underline; font-weight: bold; cursor: pointer;">
+                            Watch a short tutorial.
+                        </a>
+                    </p>
                 </div>
-                <br><hr class="info-divider">
+                <hr class="info-divider">
                 <button class="info-btn" onclick="ATON.UI.hideModal()">READY!</button>
             </div>
         `),
     );
+
+    // Aggancia l'evento direttamente sull'elemento prima di mostrare il modal
+    let tutorialBtn = elBody.querySelector("#btn-open-tutorial");
+    if (tutorialBtn) {
+        tutorialBtn.onclick = (e) => {
+            e.preventDefault();
+            ATON.UI.openVideoTutorial();
+        };
+    }
+
     ATON.UI.showModal({
-        header: "Getting Started",
+        header: `<div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; text-align: center;">
+                    <img src="${APP.basePath}/appicon.png" style="height: 30px; width: auto; vertical-align: middle;">
+                    <span>Getting Started</span>
+                 </div>`,
         body: elBody
     });
 };
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//***************************************************************************
+//PAGE VIDEO TUTORIAL
+//***************************************************************************
+ATON.UI.openVideoTutorial = () => {
+    let videoBody = ATON.UI.createContainer();
+    
+    videoBody.append(
+        ATON.UI.elem(`
+            <div style="text-align: center;">
+                <video controls autoplay playsinline style="width: 100%; max-width: 640px; border-radius: 8px;">
+                    <source src="${APP.basePath}/tutorial.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        `)
+    );
+
+    ATON.UI.showModal({
+        header: `<div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; text-align: center;">
+            <img src="${APP.basePath}/appicon.png" style="height: 30px; width: auto; vertical-align: middle;">
+            <span>Tutorial</span>
+        </div>`,
+        body: videoBody
+    });
+};
+
+//***************************************************************************
 //WELCOME PAGE
+//***************************************************************************
 UI.modalWelcome = ()=>{
     let elBody = ATON.UI.createContainer();
 
@@ -184,52 +210,19 @@ UI.modalWelcome = ()=>{
                 <img src='${APP.basePath}/appicon.png' style='width:100px; height:auto'>
                 <br><br>
                 <span style='text-align:left'>
-                    IlluminAI is a Web3D/WebXR application for exploring late medieval illuminated manuscripts in a 3D space. The users will be able to analyze pages searching for figurative miniatures and compare these with other artworks based on their iconography.
+                     IlluminAI is a Web3D/WebXR application for the iconographic exploration of late-medieval illuminated manuscripts. Select one of the clusters, set the filters and start discovering!
                 </span>
             </div>
         `),
     );
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // *****************************************************************
     let separator = ATON.UI.elem(`
         <hr class='filter-modal-separator'>
     `);
     elBody.append(separator);
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // *****************************************************************
     // MENU SCELTA CLUSTER
-    //let dropdownElement = ATON.UI.elem(`
-        //<div id="cluster-dropdown-container" class="dropdown-container">
-            //<label for="aton-dropdown" class="illuminaai-dropdown-label">
-                //Select a Cluster
-            //</label>
-            //<select id="aton-dropdown" class="dropdown-select">
-                //<option value="" selected disabled hidden>Where to start?</option>
-                //<option value="scene0">Cluster 0</option>    
-                //<option value="scene1">Cluster 1</option>
-                //<option value="scene2">Cluster 2</option>
-                //<option value="scene3">Cluster 3</option>
-                //<option value="scene4">Cluster 4</option>
-                //<option value="scene5">Cluster 5</option>
-                //<option value="scene6">Cluster 6</option>
-                //<option value="scene7">Cluster 7</option>
-                //<option value="scene8">Cluster 8</option>
-                //<option value="scene9">Cluster 9</option>
-            //</select>
-        //</div> 
-    //`);
-    
-    //const dropdown = dropdownElement.querySelector('#aton-dropdown');
-
-    //dropdown.addEventListener('change', (event) => {
-        //const selectedValue = event.target.value;
-        //let clusterId = selectedValue.replace("scene", "");
-
-        //APP.changeCluster(clusterId);
-    //});
-
-    //elBody.append(dropdownElement);
-
     let dropdownElement;
-
     let loadedConfig = APP.confdata || {};
     
     let descrElement = document.createElement("p");
@@ -257,27 +250,36 @@ UI.modalWelcome = ()=>{
             descrFromConfig = loadedConfig.clusters[i].descr || "";
         }
 
-        // Formattazione: "Cluster X - Titolo"
-        let clusterLabel = nameFromConfig ? `Cluster ${i} - ${nameFromConfig}` : `Cluster ${i}`;
+        // Formattazione cluter "X - Titolo"
+        let clusterLabel = nameFromConfig ? `${i} - ${nameFromConfig}` : `Cluster ${i}`;
 
         clusterItems.push({
             title: clusterLabel,
             description: descrFromConfig,
+            
             onselect: () => {
                 if (dropdownElement) {
                     // Aggiorna il testo del bottone principale
-                    let btnText = dropdownElement.querySelector('.aton-btn-text');
+                    const btnText = dropdownElement.querySelector(".aton-btn-text");
+                   
                     if (btnText) {
                         btnText.innerText = clusterLabel;
                     }
+
                     // Chiude la tendina dopo la selezione
                     let menu = dropdownElement.querySelector('.aton-dropdown-menu');
-                    if (menu) menu.classList.remove('show');
+                    if (menu) {
+                        menu.classList.remove("show");
+                    }
                 }
-
                 // Aggiorna la descrizione sotto
                 descrElement.innerText = descrFromConfig;
+                
+                // Cambia dataset
                 APP.changeCluster(i.toString());
+                 
+                // Sincronizza nuovamente il menu
+                updateDropdownLabel();
             }
         });
     }
@@ -289,6 +291,7 @@ UI.modalWelcome = ()=>{
         items: clusterItems
     });
 
+    // Disabilita graficamente la prima voce del menu "Where to start"
     let dropdownMenu = dropdownElement.querySelector('.aton-dropdown-menu');
     if (dropdownMenu) {
         // Il primo elemento della lista
@@ -301,8 +304,57 @@ UI.modalWelcome = ()=>{
         }
     }
 
+    // aggiorna il testo menù 
+    function updateDropdownLabel() {
+
+        if (!APP.params || !dropdownElement) return;
+
+        const currentUrlCluster = APP.params.get("c");
+
+        // Nessun cluster selezionato: mantieni il testo iniziale
+        if (currentUrlCluster === null || currentUrlCluster === "") {
+            const btnText = dropdownElement.querySelector(".aton-btn-text");
+
+            if (btnText) {
+                btnText.innerText = "Where to start?";
+            }
+
+            descrElement.innerText = "";
+            return;
+        }
+        const index = parseInt(currentUrlCluster, 10);
+
+        if (Number.isNaN(index)) {
+            return;
+        }
+
+        // Dataset corrente preso da APP.confdata.clusters
+        const currentCluster = loadedConfig.clusters && loadedConfig.clusters[index];
+        
+        // Nome del cluster
+        const label = currentCluster && currentCluster.title
+            ? `${index} - ${currentCluster.title}`
+            : `Cluster ${index}`;
+
+        // Aggiorna il testo del bottone
+        const currentBtnText = dropdownElement.querySelector(".aton-btn-text");
+
+        if (currentBtnText) {
+            currentBtnText.innerText = label;
+        }
+
+        // Aggiorna la descrizione
+        if (currentCluster) {
+            descrElement.innerText = currentCluster.descr || "";
+        } else {
+            descrElement.innerText = "";
+        }
+    }
+    // *****************************************************************
     // Assemblaggio Wrapper e Label
-    let wrapperElement = ATON.UI.createContainer({ classes: "dropdown-wrapper" });
+    let wrapperElement = ATON.UI.createContainer({ 
+        classes: "dropdown-wrapper" 
+    });
     wrapperElement.style.marginBottom = "15px";
 
     let labelElement = document.createElement("label");
@@ -315,39 +367,27 @@ UI.modalWelcome = ()=>{
     wrapperElement.append(dropdownElement);
     wrapperElement.append(descrElement);
 
-    // Impostazione dell'etichetta iniziale basata sull'URL
-    if (APP.params) {
-        let currentUrlCluster = APP.params.get("c") || "0";
-        let index = parseInt(currentUrlCluster);
-
-        // Recupera l'etichetta formattata dall'array clusterItems
-        let initialLabel = clusterItems[index + 1] ? clusterItems[index].title : `Cluster ${currentUrlCluster}`;
-
-        let currentBtnText = wrapperElement.querySelector('.aton-btn-text');
-        if (currentBtnText) {
-            currentBtnText.innerText = initialLabel;
-        }
-    }
+    updateDropdownLabel();
 
     elBody.append(wrapperElement);
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// Tasti VR e AR --------  
-
+    
+    // *****************************************************************
+    // Tasti VR e AR
     let btnVR = ATON.UI.createButtonVR();
     let btnAR = ATON.UI.createButtonAR();
 
-    btnVR.className += " btn-vr-rect";
-    btnAR.className += " btn-ar-rect";
-
+    if (btnVR?.classList) btnVR.classList.add("btn-vr-rect");
+    if (btnAR?.classList) btnAR.classList.add("btn-ar-rect");
+    
     UI._elVR = btnVR;
     UI._elAR = btnAR;
 
     if (UI._elTB) {
-        UI._elTB.push(btnVR);
-        UI._elTB.push(btnAR);
+        if (btnVR) UI._elTB.push(btnVR);
+        if (btnAR) UI._elTB.push(btnAR);
     }
     
-    //affianca i due bottoni
+    //Container affianca i due bottoni
     let buttonsContainer = ATON.UI.elem(`
         <div class='modal-buttons-container'>
             <div id='vr-btn-placeholder'></div>
@@ -355,26 +395,24 @@ UI.modalWelcome = ()=>{
         </div>
     `);
 
-    buttonsContainer.querySelector('#vr-btn-placeholder').append(btnVR);
-    buttonsContainer.querySelector('#ar-btn-placeholder').append(btnAR);
+    // Inserimento nei placeholder con verifica di esistenza
+    if (btnVR) buttonsContainer.querySelector('#vr-btn-placeholder')?.append(btnVR);
+    if (btnAR) buttonsContainer.querySelector('#ar-btn-placeholder')?.append(btnAR);
 
     elBody.append(buttonsContainer);
+    
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //START Button
     let btnStart = ATON.UI.createButton({
         label: "START",
         icon: "",
         tooltip: "Start Exploration",
-        onpress: () => {
-            //console.log("Starting application with cluster:", dropdown.value);
-            ATON.UI.hideModal(); 
-            
-            // Qui logica di inizializzazione della scena 
-            // basata sul cluster (dropdown.value)
-        }
+        onpress: () => ATON.UI.hideModal()
     });
 
-    btnStart.className += " btn-start-rect"; 
+    if (btnStart.classList) {
+        btnStart.classList.add("btn-start-rect");
+    } 
 
     let startContainer = ATON.UI.elem(`
         <div class='start-button-container' style='text-align: center; margin-top: 20px;'>
@@ -391,38 +429,230 @@ UI.modalWelcome = ()=>{
         body: elBody
     });
 };
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//***************************************************************************
+// LIVE FILTER COMPONENT
+//***************************************************************************
+UI.createLiveFilter = function(options = {}) {
+    const baseid  = ATON.Utils.generateID("filter");
+    const inputid = `${baseid}-input`;
+
+    // Elemento Form contenitore
+    const el = document.createElement("form");
+    el.id = baseid;
+    el.classList.add("d-flex");
+    el.setAttribute("role", "search");
+    el.onsubmit = (e) => e.preventDefault(); // Previene il Submit di default
+
+    const placeholder = options.placeholder || "Search";
+    
+    // Input di ricerca
+    const elInput = ATON.UI.elem(
+        `<input class="form-control aton-input" type="search" placeholder="${placeholder}" aria-label="Search" id="${inputid}" spellcheck="false">`
+    );
+
+    if (typeof ATON.UI.registerElementAsComponent === "function") {
+        ATON.UI.registerElementAsComponent(elInput, "input");
+    }
+
+    // Gruppo di input inline con icona di ricerca
+    const elInGroup = document.createElement("div");
+    elInGroup.classList.add("input-group", "aton-inline");
+    
+    const searchIcon = ATON.UI.elem("<span class='input-group-text aton-input'><i class='bi bi-search'></i></span>");
+    elInGroup.append(searchIcon, elInput);
+
+    // Helper per mostrare/nascondere elementi HTML nel DOM
+    const toggleItem = (item, show) => {
+        if (typeof ATON.UI.showElement === "function" && typeof ATON.UI.hideElement === "function") {
+            show ? ATON.UI.showElement(item) : ATON.UI.hideElement(item);
+        } else {
+            item.classList.toggle("d-none", !show);
+        }
+    };
+
+    // *****************************************************************
+    // Gestione Evento Input (Live Search)
+    elInput.oninput = () => {
+        const v = elInput.value.trim().toLowerCase();
+
+        // Invocazione callback custom usata da floating search per debouncing e sync filtri 3D
+        if (typeof options.oninput === "function") {
+            options.oninput(v);
+        }
+
+        if (typeof options.customfilter === "function") {
+            options.customfilter(v);
+            return;
+        }
+
+        // Filtraggio elementi DOM classici
+        if (!options.filterclass) return;
+
+        const filterItems = document.querySelectorAll(`.${options.filterclass}`);
+
+        if (v.length < 3) {
+            filterItems.forEach(item => toggleItem(item, true));
+            return;
+        }    
+
+        filterItems.forEach(item => {
+            const attr = item.getAttribute('data-search-term');
+            const match = attr && attr.toLowerCase().includes(v);
+            toggleItem(item, match);
+        });
+    };
+
+    // Datalist opzionale per autocompletamento
+    if (Array.isArray(options.list)) {
+        const datalistId = `${baseid}-list`;
+        elInput.setAttribute("list", datalistId);
+
+        const elDatalist = ATON.UI.elem(`<datalist id='${datalistId}'></datalist>`);
+        
+        if (typeof ATON.UI.registerElementAsComponent === "function") {
+            ATON.UI.registerElementAsComponent(elDatalist, "datalist");
+        }
+
+        options.list.forEach((val, i) => {
+            const label = (options.listnames && options.listnames[i]) ? options.listnames[i] : val;
+            const opt = document.createElement("option");
+            opt.value = val;
+            if (label !== val) opt.label = label;
+            elDatalist.append(opt);
+        });
+
+        el.append(elDatalist);
+    }
+
+    // Blocco controlli 3D al focus per evitare intercettazione WASD / Frecce
+    elInput.onfocus = () => {
+        if (typeof ATON.UI !== "undefined") ATON.UI._bInput = true;
+        if (typeof options.onfocus === "function") options.onfocus();
+    };
+
+    elInput.onblur = () => {
+        if (typeof ATON.UI !== "undefined") ATON.UI._bInput = false;
+        if (typeof options.onblur === "function") options.onblur();
+    };
+
+    el.append(elInGroup);
+    return el;
+};
+
+//***************************************************************************
 // SEARCH BAR - LIVE FILTER
+//***************************************************************************
 UI.createFloatingSearch = () => {
+    // Evita duplicati se la barra già presente nel DOM
     if (document.querySelector('.search-floating-wrapper')) return;
 
     let searchWrapper = document.createElement('div');
     searchWrapper.className = 'search-floating-wrapper';
+    searchWrapper.setAttribute('role', 'search');
 
+    // Dimensione popup compatto compatto
+    searchWrapper.style.maxWidth = '400px';
+    searchWrapper.style.width = '85%';
+
+    // Funzione di chiusura unificata
+    const closeSearch = () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        if (typeof ATON !== 'undefined' && ATON.UI) {
+            ATON.UI._bInput = false;
+        }
+        searchWrapper.remove();
+    };
+
+    // Chiusura tramite ESC
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') closeSearch();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Timer per il debounce del live filtering
+    let debounceTimer;
+
+    // Helper per l'esecuzione unificata del filtro sul cluster ATON
+    const executeFilter = (queryVal) => {
+        const query = queryVal.trim().toLowerCase();
+        if (!APP.filters) APP.filters = {};
+        APP.filters["search_query"] = query;
+        APP.filters["text"] = query;
+
+        if (typeof applySearchFilterToClusterMain === "function") {
+            applySearchFilterToClusterMain(query);
+        } else if (APP.activeCluster && typeof APP.activeCluster.filter === "function") {
+            APP.activeCluster.filter();
+        }
+    };
+
+    // Creazione del layout interno ATON compreso il pulsante di chiusura ✕
     let searchContainer = ATON.UI.elem(`
-        <div class="search-popup-container">
-            <input type="text" id="search-input" class="search-input-field" placeholder="Search by author, subject..." autocomplete="off">
+        <div class="search-popup-container" style="padding: 4px 8px; display: flex; align-items: center;">
+            <button class="btn-search-close" aria-label="Close Searchbar" style="padding: 4px 8px; font-size: 14px; background: transparent; border: none; cursor: pointer;">✕</button>
+            <input type="text" id="search-input" class="search-input-field" placeholder="Search by subject, source..." autocomplete="off" style="font-size: 1.15rem; padding: 8px 10px; flex: 1; min-width: 0; width: 100%;">
             <div id="search-submit-placeholder"></div>
         </div>
     `);
 
+    // Event listener per la chiusura tramite pulsante ✕
+    const closeBtn = searchContainer.querySelector('.btn-search-close');
+    if (closeBtn) closeBtn.onclick = closeSearch;
+
+    // Gestione dell'invio e chiusura premendo il tasto INVIO dall'input
+    const inputField = searchContainer.querySelector('#search-input');
+    if (inputField) {
+
+        // Integrazione delle flag di focus/blur di UI.createLiveFilter per bloccare i controlli 3D
+        inputField.onfocus = () => {
+            if (typeof ATON !== "undefined" && ATON.UI) ATON.UI._bInput = true;
+        };
+
+        inputField.onblur = () => {
+            if (typeof ATON !== "undefined" && ATON.UI) ATON.UI._bInput = false;
+        };
+
+        // Esegue la ricerca in tempo reale durante la digitazione
+        inputField.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                executeFilter(e.target.value);
+            }, 200); // 200ms debounce
+        });
+
+        // Esegue subito il filtro e chiude la barra
+        inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                clearTimeout(debounceTimer);
+                executeFilter(inputField.value);
+                closeSearch();
+            }
+        });
+    }
+    
+    // *****************************************************************
+    // Creazione del pulsante GO via ATON.UI
     let btnSubmitSearch = ATON.UI.createButton({
         label: "GO",
         icon: "",
         tooltip: "Execute Search",
         onpress: () => {
-            const query = searchContainer.querySelector('#search-input').value.trim().toLowerCase();
-            if (APP.filters) APP.filters["search_query"] = query;
-            
-            // Ora la funzione è globale, verrà trovata senza problemi
-            applySearchFilterToClusterMain(query);
+            clearTimeout(debounceTimer);
+            if (inputField) {
+                executeFilter(inputField.value);
+            }
+            // Chiude la barra alla pressione del tasto GO
+            closeSearch();
         }
     });
 
     let targetDomBtn = btnSubmitSearch.element || btnSubmitSearch.dom || btnSubmitSearch;
     if (targetDomBtn) {
         targetDomBtn.innerHTML = "GO";
+        targetDomBtn.style.padding = '6px 12px';
+        targetDomBtn.style.fontSize = '0.9rem';
     }
 
     if (btnSubmitSearch.classList) {
@@ -431,12 +661,12 @@ UI.createFloatingSearch = () => {
         btnSubmitSearch.node.classList.add("btn-search-submit");
     }
 
-    searchContainer.querySelector('#search-submit-placeholder').append(btnSubmitSearch);
+    searchContainer.querySelector('#search-submit-placeholder').append(targetDomBtn);
     searchWrapper.append(searchContainer);
     document.body.append(searchWrapper);
 
+    // Focus automatico e ripristino ultimo filtro attivo
     setTimeout(() => {
-        const inputField = searchWrapper.querySelector('#search-input');
         if (inputField) {
             inputField.focus();
             if (APP.filters && APP.filters["search_query"]) {
@@ -445,25 +675,25 @@ UI.createFloatingSearch = () => {
         }
     }, 50);
 };
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//***************************************************************************
 // SIDE PANEL - FILTERS
+//***************************************************************************
 UI.openSideFilters = ()=>{
     let elBody = ATON.UI.createContainer();
     
-    //Block 1 - CLASSES <---------
+    //Block 1 - CLASSES
     let elClassesBlock = ATON.UI.createContainer(); 
 
     let titleClasses = document.createElement("h3");
     titleClasses.innerText = "Object Types";
     titleClasses.className = "filter-block-title"; 
-    //elClassesBlock.append(titleClasses);
  
     let elClasses = ATON.UI.createContainer();
 
     elClasses.append(
         ATON.UI.createSwitch({
-            label: "Manuscript Sheets",
+            label: "Manuscript Sheets (P.01)",
             value: APP.filters["P.01_annotation"],
             onchange: (b)=>{
                 APP.filters["P.01_annotation"] = b;
@@ -472,7 +702,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Printed Pages",
-            value: APP.filters["P.02_annotation"],
+            value: APP.filters["P.02_annotation (P.02)"],
             onchange: (b)=>{
                 APP.filters["P.02_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -480,7 +710,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Paintings",
-            value: APP.filters["A.01_annotation"],
+            value: APP.filters["A.01_annotation (A.01)"],
             onchange: (b)=>{
                 APP.filters["A.01_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -488,7 +718,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Engravings",
-            value: APP.filters["A.02_annotation"],
+            value: APP.filters["A.02_annotation (A.02)"],
             onchange: (b)=>{
                 APP.filters["A.02_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -496,7 +726,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Drawings",
-            value: APP.filters["A.03_annotation"],
+            value: APP.filters["A.03_annotation (A.03)"],
             onchange: (b)=>{
                 APP.filters["A.03_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -504,14 +734,14 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Sculpture",
-            value: APP.filters["A.04_annotation"],
+            value: APP.filters["A.04_annotation (A.04)"],
             onchange: (b)=>{
                 APP.filters["A.04_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Stained-Glass Windows",
+            label: "Stained-Glass Windows (A.05)",
             value: APP.filters["A.05_annotation"],
             onchange: (b)=>{
                 APP.filters["A.05_annotation"] = b;
@@ -520,7 +750,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Tapestries",
-            value: APP.filters["A.06_annotation"],
+            value: APP.filters["A.06_annotation (A.06)"],
             onchange: (b)=>{
                 APP.filters["A.06_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -528,7 +758,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Prints",
-            value: APP.filters["A.07_annotation"],
+            value: APP.filters["A.07_annotation (A.07)"],
             onchange: (b)=>{
                 APP.filters["A.07_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -536,7 +766,7 @@ UI.openSideFilters = ()=>{
         }),
         ATON.UI.createSwitch({
             label: "Objects",
-            value: APP.filters["A.08_annotation"],
+            value: APP.filters["A.08_annotation (A.08)"],
             onchange: (b)=>{
                 APP.filters["A.08_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -545,137 +775,140 @@ UI.openSideFilters = ()=>{
     );
     elClassesBlock.append(titleClasses,elClasses);
     elBody.append(elClassesBlock);
-//******************************************************************/
-    //Linea divisoria --- tra blocco 1 e Tag
-    let separator3 = document.createElement("hr");
-    separator3.className = "filter-block-separator";
-    elBody.append(separator3);
-//******************************************************************/
-    // BLOCCO TAGS
-    // Inizializza l'array dei tag nei filtri globali se non esiste
-    if (!APP.filters["tags"]) {
-        APP.filters["tags"] = [];
-    }
-
-    let elTagsBlock = ATON.UI.createContainer();
-
-    // Assegna classe al contenitore del blocco tag
-    let domTagsBlock = elTagsBlock.element || elTagsBlock.dom || elTagsBlock;
-    if (domTagsBlock) {
-        domTagsBlock.className = "filter-tags-block"; 
-    }
-
-    let titleTags = document.createElement("h3");
-    titleTags.innerText = "Filter by Tags";
-    titleTags.className = "filter-block-title";
-    elTagsBlock.append(titleTags);
-
-    //let tagList = [ //<--- adatta
-        //"manuscript", 
-        //"painting", 
-        //"miniature", 
-        //"gold leaf", 
-        //"vellum", 
-        //"restoration", 
-        //"monastery"
-    //];
-
-    // Creazione del componente Tags usando il framework ATON
-    let elTagsComponent = ATON.UI.createTagsComponent({
-        label: "Tags",
-        placeholder: "Type a tag and press Enter...",
-        //list: tagList, 
-        tags: APP.filters["tags"], // Carica i tag già salvati in memoria
-        onaddtag: (k) => {
-            if (!APP.filters["tags"].includes(k)) {
-                APP.filters["tags"].push(k);
-            }
-            if (APP.activeCluster) APP.activeCluster.filter();
-        },
-        onremovetag: (k) => {
-            APP.filters["tags"] = APP.filters["tags"].filter(t => t !== k);
-            if (APP.activeCluster) APP.activeCluster.filter();
-        }
-    });
-
-    elTagsBlock.append(elTagsComponent);
-    elBody.append(elTagsBlock);
-//******************************************************************/
-    //Linea divisoria --- tra blocco 1 e 2
-    let separator = document.createElement("hr");
-    separator.className = "filter-block-separator";
-    elBody.append(separator);
-//******************************************************************/
-    //Blocco 2 - CHRONOLOGY 
-    //Blocco 2.1 - RINGS (Slidebar)
-    if (APP.filters["max_visible_ring"] === undefined) {
-        APP.filters["max_visible_ring"] = 5;
-    }
     
-    let elSliderBlock = ATON.UI.createContainer();
+    //******************************************************************/
+    //Linea divisoria --- tra blocco 1 e 2
+    let separator1 = document.createElement("hr");
+    separator1.className = "filter-block-separator";
+    elBody.append(separator);
+    
+    //******************************************************************/
+    //Blocco 2 - CHRONOLOGY 
+    
+    APP.filters["max_visible_ring"] = 6;
+    
+    let sliderTimeout = null;
+    
+    let elSliderBlock = ATON.UI.createContainer(); // <--- Inizializzazione del blocco principale del contenitore
 
     let titleSlider = document.createElement("h3");
     titleSlider.innerText = "Chronology";
     titleSlider.className = "filter-block-title";
     elSliderBlock.append(titleSlider);
 
-    let sliderTimeout;
+    // Label con il valore corrente selezionato
+    let labelSlider = document.createElement("div");
+    labelSlider.className = "slider-custom-label";
+    labelSlider.innerText = "Max Ring Visible: " + APP.filters["max_visible_ring"];
+    elSliderBlock.append(labelSlider);
 
+    // Contenitore a LARGHEZZA FISSA
     let elSliderContainer = ATON.UI.createContainer();
-    elSliderContainer.append(
-        ATON.UI.createSlider({
-            label: "Max Ring Visible",
-            min: 0,
-            max: 5,
-            value: APP.filters["max_visible_ring"],
-            step: 1,
-            ticks: [0, 1, 2, 3, 4, 5],
-            onchange: (v) => {
+    let containerDom = elSliderContainer.element || elSliderContainer.dom || elSliderContainer;
 
-                let currentRing = Math.round(parseFloat(v));
-                
-                // Forza il pallino a saltare sulla tacca esatta nel DOM
-                let domPanel = elBody.element || elBody.dom || elBody;
-                if (domPanel) {
-                    let rangeInput = domPanel.querySelector("input[type='range']");
-                    if (rangeInput && parseInt(rangeInput.value) !== currentRing) {
-                        rangeInput.value = currentRing;
-                    }
-                }
+    if (containerDom && containerDom.style) {
+        containerDom.style.width = "100%";
+        containerDom.style.maxWidth = "260px"; // Blocca la larghezza massima
+        containerDom.style.margin = "0 auto";  // Centra il blocco nel pannello
+        containerDom.style.position = "relative";
+        containerDom.style.paddingBottom = "10px";
+    }
 
-                if (APP.filters["max_visible_ring"] === currentRing) return;
-                
-                APP.filters["max_visible_ring"] = currentRing;
-                
-                clearTimeout(sliderTimeout);
-                sliderTimeout = setTimeout(() => {
-                    if (APP.activeCluster) {
-                        APP.activeCluster.filter();
-                    }
-                }, 100);
+    // Valore normalizzato per l'inizializzazione dello slider
+    let initialNormalizedValue = 1.0;
+
+    // Funzione centralizzata per aggiornare la UI e i filtri
+    function updateRingFilter(rawValue) {
+        let normVal = parseFloat(rawValue);
+        let realRingValue = Math.round(normVal * 6);
+        
+        // AGGIORNAMENTO ISTANTANEO DEL TESTO
+        labelSlider.innerText = "Max Ring Visible: " + realRingValue;
+
+        if (APP.filters["max_visible_ring"] === realRingValue) return;
+
+        APP.filters["max_visible_ring"] = realRingValue;
+
+        // Debounce per applicare il filtro 3D senza rallentare l'interfaccia (0 e 1)
+        if (sliderTimeout) clearTimeout(sliderTimeout);
+        sliderTimeout = setTimeout(() => {
+            if (APP.activeCluster?.filter) {
+                APP.activeCluster.filter();
             }
-        })
-    );
+        }, 100);
+    }
 
-    // UPDATE DEL DOM - risolve Bug di Persistenza
-    // Forza lo slider a spostarsi sul valore in memoria
-    setTimeout(() => {
-        let domPanel = elSliderContainer.element || elSliderContainer.dom || elSliderContainer;
-        if (domPanel) {
-            let rangeInput = domPanel.querySelector("input[type='range']");
-            if (rangeInput) {
-    
-                rangeInput.value = APP.filters["max_visible_ring"];
-                
-                rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
-            }
+    let sliderComponent = ATON.UI.createSlider({
+        min: 0,
+        max: 1,
+        step: 0.2,
+        value: initialNormalizedValue,
+        onchange: (v) => {
+            updateRingFilter(v);
         }
-    }, 50);
+    });
 
+    elSliderContainer.append(sliderComponent);
+
+    //  COLLEGAMENTO EVENTO IN TEMPO REALE SUL DOM NATIVO
+    setTimeout(() => {
+        let sliderDom = sliderComponent.element || sliderComponent.dom || sliderComponent;
+        let rangeInput = sliderDom.querySelector ? sliderDom.querySelector("input[type='range']") : null;
+    
+        if (rangeInput) {
+            rangeInput.setAttribute("min", "0");
+            rangeInput.setAttribute("max", "1");
+            rangeInput.setAttribute("step", (1 / 6).toString());
+        
+            // Forziamo il valore dell'input nativo a 1.0 (corrisponde a posizione 6)
+            rangeInput.value = "1";
+        
+            // Sincronizza anche eventuali metodi interni di ATON se presenti
+            if (typeof sliderComponent.setValue === "function") {
+                sliderComponent.setValue(1.0);
+            }
+            
+            // Intercetta il movimento continuo del mouse/touch
+            rangeInput.addEventListener("input", (e) => {
+                updateRingFilter(e.target.value);
+            });
+        }
+    }, 0);
+
+    // Generazione Tacche e Numeri
+    let ticksContainer = document.createElement("div");
+    ticksContainer.style.position = "relative";
+    ticksContainer.style.width = "100%";
+    ticksContainer.style.height = "24px";
+    ticksContainer.style.marginTop = "6px";
+
+    for (let i = 0; i <= 6; i++) {
+        let tick = document.createElement("div");
+        tick.style.position = "absolute";
+        let percent = (i / 6) * 100;
+        
+        tick.style.left = percent + "%";
+        tick.style.transform = "translateX(-50%)";
+        tick.style.textAlign = "center";
+        tick.style.fontSize = "11px";
+        tick.style.color = "#888";
+        tick.style.userSelect = "none";
+
+        tick.innerHTML = `<span style="display:block; width:1px; height:4px; background:#888; margin:0 auto 2px auto;"></span>${i}`;
+        //tick.innerText = i;
+        ticksContainer.appendChild(tick);
+    }
+
+    elSliderContainer.append(ticksContainer);
     elSliderBlock.append(elSliderContainer);
     elBody.append(elSliderBlock);
-//******************************************************************/ 
-    //Blocco 2.2 - CENTURY (Filter - comprimibile)
+   
+    if (typeof elBody !== "undefined" && elBody.append) {
+        elBody.append(elSliderBlock);
+    }
+    
+    //******************************************************************/ 
+    //Blocco 2.2 - CENTURY
     let collapsibleWrapper = document.createElement("details");
     collapsibleWrapper.className = "filter-collapsible";
 
@@ -685,6 +918,7 @@ UI.openSideFilters = ()=>{
     collapsibleWrapper.append(titleCenturies);
 
     let elCenturies = ATON.UI.createContainer();
+    
     elCenturies.append(
         ATON.UI.createSwitch({
             label: "IX Century",
@@ -786,92 +1020,157 @@ UI.openSideFilters = ()=>{
 
     collapsibleWrapper.append(elCenturies);
     elBody.append(collapsibleWrapper);
-//******************************************************************/
+    
+    //******************************************************************/
     //Linea divisoria --- tra blocco 2 e reset
     let separator2 = document.createElement("hr");
     separator2.className = "filter-block-separator";
     elBody.append(separator2);
-//******************************************************************/
+    
+    //******************************************************************/
     // BUTTONS BLOCK (CONFIRM & RESET)
-    // Buttons Container
     let elResetBlock = ATON.UI.createContainer();
     elResetBlock.style.padding = "20px 0px";
     elResetBlock.style.textAlign = "center";
     
-    //Confirm Button
+    // Confirm Button
     let btnConfirm = ATON.UI.createButton({
+        label: "CLOSE",
         classes: "illuminai-confirm-btn",
-        onpress: () => {
-            ATON.UI.hideSidePanel();
-        }
+        onpress: () => ATON.UI.hideSidePanel()
     });
-
+    
     let elConfirm = btnConfirm.element || btnConfirm.dom || btnConfirm;
     if (elConfirm) {
         elConfirm.innerText = "CLOSE";
         elConfirm.style.marginBottom = "12px"; // Aggiunge margine sotto per distanziarlo da Reset
     }
-    
     elResetBlock.append(btnConfirm);
-    // --------------------------------------------------------
-    //Reset Button
+
+    // Reset Button
     let btnReset = ATON.UI.createButton({
+        label: "RESET FILTERS",
         classes: "illuminai-reset-btn", 
         onpress: () => {
+            // RIMOZIONE / CANCELLAZIONE ETICHETTE SLICES 3D
+            if (typeof APP.clearClusterLabels === "function") {
+                APP.clearClusterLabels();
+            }
+            
+            // RESET TOOLBAR 3D & PANNELLI ASSOCIATI
+            if (APP._itemToolbar) {
+                APP._itemToolbar.visible = false; // <--- Nasconde la toolbar 3D dalla scena ATON
+            }
+
+            //  Chiude il pannello INFO HTML se aperto
+           if (typeof APP.closeInfoPanel === "function") {
+                APP.closeInfoPanel();
+            } else {
+                let panelElem = document.getElementById("info-panel-html");
+                if (panelElem) {
+                    panelElem.style.display = "none";
+                    panelElem._targetItemID = null;
+                }
+                APP._infoPanelVisible = false;
+            }
+
+            // CHIUSURA ED ELIMINAZIONE BARRA DI RICERCA FLUTTUANTE ---------
+            const searchWrapper = document.querySelector('.search-floating-wrapper');
+            if (searchWrapper) {
+                // Ripristina l'intercettazione dell'input per i comandi 3D WASD
+                if (typeof ATON !== 'undefined' && ATON.UI) {
+                    ATON.UI._bInput = false;
+                }
+                searchWrapper.remove();
+            }
+
+            // Pulisce lo stato dei pulsanti 3D e scarica le Activation Masks degli oggetti
+            if (APP.activeCluster?.items) {
+                APP.activeCluster.items.forEach(item => {
+                    if (item.node?.classList) {
+                        item.node.classList.remove('search-highlight');
+                    }
+                    
+                    // Disattiva e scarica eventuale maschera attiva (AMask)
+                    if (item._activeAMaskIndex !== undefined) {
+                        if (typeof item.unloadActivationMask === "function") {
+                            item.unloadActivationMask();
+                        } else {
+                            item.traverse((child) => {
+                                if (child.isMesh && child.material?.uniforms?.tAMask) {
+                                    child.material.uniforms.tAMask.value = APP._emptyMaskTex;
+                                    child.material.needsUpdate = true;
+                                }
+                            });
+                        }
+                        item._activeAMaskIndex = undefined;
+                    }
+                
+                });
+            }
+
+            // Ripristina il colore originale dei pulsanti nella toolbar 3D a Bianco/Giallo
+            if (APP.ACTMAPS) {
+                const COLOR_YELLOW = new THREE.Color(0xc3ac3c);
+                const COLOR_WHITE  = new THREE.Color(0xffffff);
+
+                for (let i = 0; i < APP.ACTMAPS.length; i++) {
+                    let A = APP.ACTMAPS[i];
+                    let btn = ATON.getUINode("btn-" + A);
+                    if (btn) {
+                        let isInfo = (A.toLowerCase() === "info_annotation");
+                        btn.setBaseColor(isInfo ? COLOR_YELLOW : COLOR_WHITE);
+                    }
+                }
+            }
+
+            if (window.ThreeMeshUI) ThreeMeshUI.update();
+
+            // RESET FILTRI APPLICATIVI
             let keysToReset = [
                 "P.01_annotation", "P.02_annotation", "A.01_annotation", "A.02_annotation", 
                 "A.03_annotation", "A.04_annotation", "A.05_annotation", "A.06_annotation", 
                 "A.07_annotation", "A.08_annotation", "8", "9", "10", "11", "12", "13", 
                 "14", "15", "16", "17", "18", "19"
             ];
-            keysToReset.forEach(key => {
-                APP.filters[key] = false; // Forza lo stato disattivato iniziale
-            });
-            APP.filters["max_visible_ring"] = 5;
             
-            //Reset barra di ricarca
-            let searchInput = document.getElementById("search-input");
-            if (searchInput) {
-                searchInput.value = ""; 
-            }
-            //APP.currentSearchQuery = ""; <---- se app memorizza stringa di ricerca in una variabile globale
-            if (APP.activeCluster && APP.activeCluster.items) {
-                APP.activeCluster.items.forEach(item => {
-                    if (item.node && item.node.classList) {
-                        item.node.classList.remove('search-highlight');
-                    }
+            if (APP.filters) {
+                keysToReset.forEach(key => {
+                    APP.filters[key] = false;
                 });
+            
+                // RESET COMPLETO RICERCA TESTUALE e SLIDER
+                APP.filters["search_query"] = "";
+                APP.filters["text"] = "";
+                APP.filters["max_visible_ring"] = 6;
             }
-            
-            let domElement = elBody.element || elBody.dom || elBody; // Reset visivo componenti nel DOM
-            
-            if (domElement) {
-                // Spegne i checkbox/switch del pannello
-                let checkboxes = domElement.querySelectorAll("input[type='checkbox']");
-                checkboxes.forEach(cb => {
-                    cb.checked = false;
-                });
 
-                // Trova lo slider e lo riporta a 5
-                let sliders = domElement.querySelectorAll("input[type='range']");
-                sliders.forEach(sl => {
-                    sl.value = 5;
-                    //sl.dispatchEvent(new Event('input'));
-                });
+            // Reset visivo dell'input di ricerca fluttuante
+            let searchInput = document.getElementById("search-input") || document.querySelector('.search-floating-wrapper input');
+            if (searchInput) searchInput.value = "";
+
+            // Reset visivo del pannello
+            if (elBody && elBody.querySelectorAll) {
+                let checkboxes = elBody.querySelectorAll("input[type='checkbox']");
+                checkboxes.forEach(cb => { cb.checked = false; });
+
+                let chips = elBody.querySelectorAll('.aton-chip, [class*="chip"]');
+                chips.forEach(chip => chip.remove());
                 
-                // Rimuove i chip
-                let domTags = elTagsBlock.element || elTagsBlock.dom || elTagsBlock;
-                if (domTags && typeof domTags.querySelectorAll === "function") {
-                    let chips = domTags.querySelectorAll('.aton-chip, [class*="chip"]');
-                    chips.forEach(chip => chip.remove());
-                    
-                    let tagInput = domTags.querySelector('input[type="text"]');
-                    if (tagInput) tagInput.value = "";
-                }
+                // RESET VISIVO DELLO SLIDER NEL DOM
+                let sliders = elBody.querySelectorAll("input[type='range']");
+                sliders.forEach(sl => { 
+                    sl.value = 1; // Posiziona il cursore a 0
+                    sl.dispatchEvent(new Event('input', { bubbles: true })); // Notifica eventuali event listener
+                });
+
+                labelSlider.innerText = "Max Ring Visible: 6";
             }
 
-            // Aggiorna la scena tridimensionale
-            if (APP.activeCluster) {
+           // AGGIORNAMENTO COMPLETO SCENA 3D / CLUSTER
+            if (typeof applySearchFilterToClusterMain === "function") {
+                applySearchFilterToClusterMain("");
+            } else if (APP.activeCluster && typeof APP.activeCluster.filter === "function") {
                 APP.activeCluster.filter();
             }
         }
@@ -884,44 +1183,11 @@ UI.openSideFilters = ()=>{
 
     elResetBlock.append(btnReset);
     elBody.append(elResetBlock);
-//******************************************************************/ 
+
     ATON.UI.showSidePanel({
         header: "Filters",
         body: elBody
-    });
-//******************************************************************/ 
-//******************************************************************/ 
-// funzionamento SLIDER 
-   let domPanel = elBody.element || elBody.dom || elBody;
-    if (domPanel) {
-        let rangeInput = domPanel.querySelector("input[type='range']");
-        if (rangeInput) {
-            // Genera ID univoco per evitare conflitti se riapri la sidebar
-            let datalistId = "ring-steps-list";
-            
-            // Rimuove eventuali datalist vecchie rimaste appese
-            let oldList = domPanel.querySelector("#" + datalistId);
-            if (oldList) oldList.remove();
-
-            let datalist = document.createElement("datalist");
-            datalist.id = datalistId;
-        
-            for (let i = 0; i <= 5; i++) {
-                let option = document.createElement("option");
-                option.value = i;
-                option.label = i;
-                datalist.appendChild(option);
-            }
-        
-            rangeInput.parentNode.appendChild(datalist);
-
-            rangeInput.setAttribute("list", datalistId);
-            rangeInput.setAttribute("min", "0");
-            rangeInput.setAttribute("max", "5");
-            rangeInput.setAttribute("step", "1");
-            //rangeInput.step = "1";
-        }
-    }
+    }); 
 };
 
 export default UI;
