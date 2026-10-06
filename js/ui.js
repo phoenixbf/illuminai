@@ -220,6 +220,7 @@ UI.modalWelcome = ()=>{
         <hr class='filter-modal-separator'>
     `);
     elBody.append(separator);
+    
     // *****************************************************************
     // MENU SCELTA CLUSTER
     let dropdownElement;
