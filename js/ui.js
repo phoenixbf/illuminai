@@ -788,7 +788,7 @@ UI.openSideFilters = ()=>{
     //Linea divisoria --- tra blocco 1 e 2
     let separator1 = document.createElement("hr");
     separator1.className = "filter-block-separator";
-    elBody.append(separator);
+    elBody.append(separator1);
     
     //******************************************************************/
     //Blocco 2 - CHRONOLOGY 
