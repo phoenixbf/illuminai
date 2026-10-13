@@ -709,40 +709,40 @@ UI.openSideFilters = ()=>{
             }
         }),
         ATON.UI.createSwitch({
-            label: "Printed Pages",
-            value: APP.filters["P.02_annotation (P.02)"],
+            label: "Printed Pages (P.02)",
+            value: APP.filters["P.02_annotation"],
             onchange: (b)=>{
                 APP.filters["P.02_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Paintings",
-            value: APP.filters["A.01_annotation (A.01)"],
+            label: "Paintings (A.01)",
+            value: APP.filters["A.01_annotation"],
             onchange: (b)=>{
                 APP.filters["A.01_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Engravings",
-            value: APP.filters["A.02_annotation (A.02)"],
+            label: "Engravings (A.02)",
+            value: APP.filters["A.02_annotation"],
             onchange: (b)=>{
                 APP.filters["A.02_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Drawings",
-            value: APP.filters["A.03_annotation (A.03)"],
+            label: "Drawings (A.03)",
+            value: APP.filters["A.03_annotation"],
             onchange: (b)=>{
                 APP.filters["A.03_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Sculpture",
-            value: APP.filters["A.04_annotation (A.04)"],
+            label: "Sculpture (A.04)",
+            value: APP.filters["A.04_annotation"],
             onchange: (b)=>{
                 APP.filters["A.04_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
@@ -757,24 +757,24 @@ UI.openSideFilters = ()=>{
             }
         }),
         ATON.UI.createSwitch({
-            label: "Tapestries",
-            value: APP.filters["A.06_annotation (A.06)"],
+            label: "Tapestries (A.06)",
+            value: APP.filters["A.06_annotation"],
             onchange: (b)=>{
                 APP.filters["A.06_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Prints",
-            value: APP.filters["A.07_annotation (A.07)"],
+            label: "Prints (A.07)",
+            value: APP.filters["A.07_annotation"],
             onchange: (b)=>{
                 APP.filters["A.07_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
             }
         }),
         ATON.UI.createSwitch({
-            label: "Objects",
-            value: APP.filters["A.08_annotation (A.08)"],
+            label: "Objects (A.08)",
+            value: APP.filters["A.08_annotation"],
             onchange: (b)=>{
                 APP.filters["A.08_annotation"] = b;
                 if (APP.activeCluster) APP.activeCluster.filter();
