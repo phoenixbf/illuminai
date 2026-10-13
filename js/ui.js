@@ -110,9 +110,10 @@ UI.createButtonFullscreen = (options = {}) => {
     }
     return btn;
 };
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // INFO PAGE
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 UI.modalInfo = ()=>{
     let elBody = ATON.UI.createContainer();
 
@@ -215,6 +216,7 @@ UI.modalWelcome = ()=>{
             </div>
         `),
     );
+    
     // *****************************************************************
     let separator = ATON.UI.elem(`
         <hr class='filter-modal-separator'>
@@ -669,9 +671,14 @@ UI.createFloatingSearch = () => {
     // Focus automatico e ripristino ultimo filtro attivo
     setTimeout(() => {
         if (inputField) {
+            
             inputField.focus();
+            /*
             if (APP.filters && APP.filters["search_query"]) {
                 inputField.value = APP.filters["search_query"];
+            }*/
+            if (APP.filters && (APP.filters["text"] || APP.filters["search_query"])) {
+                inputField.value = APP.filters["text"] || APP.filters["search_query"];
             }
         }
     }, 50);
@@ -1106,7 +1113,6 @@ UI.openSideFilters = ()=>{
                         }
                         item._activeAMaskIndex = undefined;
                     }
-                
                 });
             }
 
