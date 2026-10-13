@@ -169,18 +169,38 @@ filter() {
             let filterValue = APP.filters[f];
 
              // GESTIONE FILTRO TESTUALE (LIVE FILTER)
-            if (f === "text") {
+            if (f === "text" || f === "search_query") {
                 if (filterValue && filterValue.length >= 3) {
                     // Cerca nei campi rilevanti dell'oggetto o dell'item
                     const searchTerm = filterValue.toLowerCase();
+                    
                     const title = (data.title || data.name || data.id || "").toString().toLowerCase();
-                    const path = (data.path || "").toLowerCase();
+                    const path = (data.path || "").toString().toLowerCase();
+                    const subject = (data.subject || "").toString().toLowerCase();
+                    const source = (data.source || "").toString().toLowerCase();
+                    const description = (data.description || "").toString().toLowerCase();
+                    const original = (data.original || "").toString().toLowerCase();
 
+                    // Verifica la presenza della stringa su TUTTI i campi espressi
+                    const matchesSearch = 
+                        title.includes(searchTerm)       ||
+                        path.includes(searchTerm)        ||
+                        subject.includes(searchTerm)     ||
+                        source.includes(searchTerm)      ||
+                        description.includes(searchTerm) ||
+                        original.includes(searchTerm);
+
+                    // Se non c'è corrispondenza in nessuno dei campi, nasconde l'elemento
+                    if (!matchesSearch) {
+                        keepVisible = false;
+                        break;
+                    }
+                    /*
                     // Se non trova corrispondenze, nasconde l'elemento
                     if (!title.includes(searchTerm) && !path.includes(searchTerm)) {
                         keepVisible = false;
                         break;
-                    }
+                    }*/
                 }
             }
 
