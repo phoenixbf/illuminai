@@ -530,12 +530,12 @@ UI.createLiveFilter = function(options = {}) {
 
     // Blocco controlli 3D al focus per evitare intercettazione WASD / Frecce
     elInput.onfocus = () => {
-        if (typeof ATON.UI !== "undefined") ATON.UI._bInput = true;
+        if (typeof ATON.UI !== "undefined" && ATON.UI) ATON.UI._bInput = true;
         if (typeof options.onfocus === "function") options.onfocus();
     };
 
     elInput.onblur = () => {
-        if (typeof ATON.UI !== "undefined") ATON.UI._bInput = false;
+        if (typeof ATON.UI !== "undefined" && ATON.UI) ATON.UI._bInput = false;
         if (typeof options.onblur === "function") options.onblur();
     };
 
@@ -553,8 +553,6 @@ UI.createFloatingSearch = () => {
     let searchWrapper = document.createElement('div');
     searchWrapper.className = 'search-floating-wrapper';
     searchWrapper.setAttribute('role', 'search');
-
-    // Dimensione popup compatto compatto
     searchWrapper.style.maxWidth = '400px';
     searchWrapper.style.width = '85%';
 
@@ -579,14 +577,16 @@ UI.createFloatingSearch = () => {
     // Helper per l'esecuzione unificata del filtro sul cluster ATON
     const executeFilter = (queryVal) => {
         const query = queryVal.trim().toLowerCase();
-        if (!APP.filters) APP.filters = {};
-        APP.filters["search_query"] = query;
-        APP.filters["text"] = query;
+        if (typeof APP !== "undefined") {
+            if (!APP.filters) APP.filters = {};
+            APP.filters["search_query"] = query;
+            APP.filters["text"] = query;
 
-        if (typeof applySearchFilterToClusterMain === "function") {
-            applySearchFilterToClusterMain(query);
-        } else if (APP.activeCluster && typeof APP.activeCluster.filter === "function") {
-            APP.activeCluster.filter();
+            if (typeof applySearchFilterToClusterMain === "function") {
+                applySearchFilterToClusterMain(query);
+            } else if (APP.activeCluster && typeof APP.activeCluster.filter === "function") {
+                APP.activeCluster.filter();
+            }
         }
     };
 
@@ -674,11 +674,11 @@ UI.createFloatingSearch = () => {
             
             inputField.focus();
             /*
-            if (APP.filters && APP.filters["search_query"]) {
-                inputField.value = APP.filters["search_query"];
-            }*/
             if (APP.filters && (APP.filters["text"] || APP.filters["search_query"])) {
                 inputField.value = APP.filters["text"] || APP.filters["search_query"];
+            }*/
+            if (typeof APP !== "undefined" && APP.filters) {
+                inputField.value = APP.filters["text"] || APP.filters["search_query"] || "";
             }
         }
     }, 50);
