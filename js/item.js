@@ -127,12 +127,14 @@ class Item extends ATON.Node {
         this.load(APP.ITEM_RES_BASE, false);
         this._bInspection = false;
     
-        if (typeof ATON.Nav.setFirstPersonControl === "function") {
-            ATON.Nav.setFirstPersonControl();
-        }
+        //if (typeof ATON.Nav.setFirstPersonControl === "function") {
+        ATON.Nav.setFirstPersonControl();
+        //}
 
         if (APP._itemToolbar)   this._setNodeVisible(APP._itemToolbar, false);
         if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
+
+        //ATON.FX.togglePass(ATON.FX.PASS_DOF, false);
     }
 
     arrangeForInspection() {
@@ -147,24 +149,22 @@ class Item extends ATON.Node {
             index = APP.inspectedItems.length - 1;
         }
 
-        if (eye && dir) {
-            // Parametri per il posizionamento a grappolo
-            const depthOffset = index * 0.03;  // Avanza verso l'osservatore
-            const sideOffset  = index * 0.05;  // Spostamento laterale sull'asse X local/view
-            const heightOffset = index * 0.02; // Minima elevazione verso l'alto
-            
-            // Raggio base modulato dalla profondità
-            const currentRad = APP.ITEM_INSPECT_RAD - depthOffset;
+        // Parametri per il posizionamento a grappolo
+        const depthOffset = index * 0.03;  // Avanza verso l'osservatore
+        const sideOffset  = index * 0.05;  // Spostamento laterale sull'asse X local/view
+        const heightOffset = index * 0.02; // Minima elevazione verso l'alto
+        
+        // Raggio base modulato dalla profondità
+        const currentRad = APP.ITEM_INSPECT_RAD - depthOffset;
 
-            // Calcolo vettori di vista per lo scostamento laterale (Right Vector)
-            let up = new THREE.Vector3(0, 1, 0);
-            let right = new THREE.Vector3().crossVectors(dir, up).normalize();
+        // Calcolo vettori di vista per lo scostamento laterale (Right Vector)
+        let up = new THREE.Vector3(0, 1, 0);
+        let right = new THREE.Vector3().crossVectors(dir, up).normalize();
 
-            // Calcolo posizione base lungo la direzione di vista
-            this.position.x = eye.x + (dir.x * currentRad) + (right.x * sideOffset);
-            this.position.y = eye.y + (dir.y * currentRad) + heightOffset;
-            this.position.z = eye.z + (dir.z * currentRad) + (right.z * sideOffset);
-        }
+        // Calcolo posizione base lungo la direzione di vista
+        this.position.x = eye.x + (dir.x * currentRad) + (right.x * sideOffset);
+        this.position.y = eye.y + (dir.y * currentRad) + heightOffset;
+        this.position.z = eye.z + (dir.z * currentRad) + (right.z * sideOffset);
     
         if (APP.activeCluster) {
             this.position.y -= APP.activeCluster.position.y;
@@ -178,17 +178,26 @@ class Item extends ATON.Node {
 
         this.setScale(APP.ITEM_SCALE * 2.0);
         this._bInspection = true;
-
+/*
         // Configurazione controlli e toolbar
         if (typeof APP.setAllLabelsVisible === "function") APP.setAllLabelsVisible(false);
         if (typeof ATON.Nav.setOrbitControl === "function") ATON.Nav.setOrbitControl();
         if (typeof ATON.Nav.setPivot === "function") ATON.Nav.setPivot(this.position);
         if (typeof ATON.Nav.enableZoom === "function") ATON.Nav.enableZoom(true);
-    
+*/
+        let wp = new THREE.Vector3();
+        this.getWorldPosition(wp);
+
+        ATON.Nav.setOrbitControl();
+        ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.1 );
+
         APP.setupToolbarForItem(this);
         if (APP._itemToolbar) this._setNodeVisible(APP._itemToolbar, true);
         APP.setupInfoPanelForItem(this);
         if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
+
+        //ATON.FX.togglePass(ATON.FX.PASS_DOF, true);
+        //ATON.FX.setDOFfocus(currentRad);
     }
 
     load(res, bInspection){

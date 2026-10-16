@@ -87,10 +87,10 @@
 ############################################################################ */
 .aton-poweredby {
     position: fixed;
-    bottom: 10px;
+    bottom: 2px;
+    left: 2px !important;
     right: auto !important;
-    left: 20px !important;
-    font-size: 12px;
+    font-size: x-small;
     font-family: sans-serif;
 }
 
