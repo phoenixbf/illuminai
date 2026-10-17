@@ -219,9 +219,10 @@ APP.setup = ()=>{
         opacity: 0.3
     });
 
-    if (ATON.SUI && typeof ATON.SUI.showSelector === "function") {
-        ATON.SUI.showSelector(false); 
-    }
+
+    ATON.SUI.showSelector(false);
+
+    ATON.Nav.toggleLocomotionValidator(false);
 };
 
 APP.realizeBaseCluster = (size)=>{
