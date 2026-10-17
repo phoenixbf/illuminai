@@ -229,6 +229,15 @@
     display: none;
 }
 
+/* forza il cursore pointer ed evita il cursore testo */
+.cluster-dropdown-container .aton-dropdown-menu .dropdown-item,
+.cluster-dropdown-container .aton-dropdown-menu li,
+.cluster-dropdown-container .aton-dropdown-menu a {
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-user-select: none;
+}
+
 /* ############################################################################ */
 /* VR and AR Bottoms *********************/
 /*.filter-modal-separator {
