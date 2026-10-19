@@ -238,6 +238,7 @@ APP.realizeBaseCluster = (size)=>{
 
     ATON.Utils.loadTexture(APP.pathResAssets+ "base-cluster.png", (tex)=>{
         APP.matBaseCluster.map = tex;
+        APP.matBaseCluster.map.colorSpace = ATON._stdEncoding;
         APP.matBaseCluster.needsUpdate = true;
     });
 

@@ -228,7 +228,9 @@ class Item extends ATON.Node {
                     if (mesh.material.uniforms.tBase.value) {
                         mesh.material.uniforms.tBase.value.dispose();
                     }
+                    
                     mesh.material.uniforms.tBase.value = tex;
+
                     mesh.material.needsUpdate = true;
                 } else {
                     // Se lo stato è cambiato durante il download, svuota la Risorsa
@@ -256,6 +258,7 @@ class Item extends ATON.Node {
                 if (currentTex && currentTex !== APP._emptyMaskTex) {
                     currentTex.dispose();
                 }
+                
                 uniforms.tAMask.value = tex;
                 this.panel._mediamesh.material.needsUpdate = true;
             } else {
