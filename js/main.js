@@ -381,6 +381,7 @@ APP.setupCategoryScrollUI = () => {
 // CREAZIONE E GESTIONE LABEL SLICES
 //***************************************************************************
 // Mesh 3D orientabile
+/*
 APP.createTextMesh = (text) => {
     let canvas = document.createElement('canvas');
     canvas.width = 512;
@@ -414,7 +415,8 @@ APP.createTextMesh = (text) => {
     let geom = new THREE.PlaneGeometry(0.75, 0.1875);
     return new THREE.Mesh(geom, mat);
 };
-
+*/
+/*
 // Funzione di pulizia con gestione smaltimento risorse WebGL
 APP.clearClusterLabels = () => {
     APP.clusterLabelNodes.forEach(node => {
@@ -459,10 +461,129 @@ APP.updateClusterLabels = (clusterId) => {
         APP.clusterLabelNodes.push(labelNode);
     });
 };
+*/
+
+// Funzione di pulizia con gestione smaltimento risorse WebGL
+APP.clearClusterLabels = () => {
+    APP.clusterLabelNodes.forEach(node => {
+        APP.disposeNodeResources(node);
+        if (typeof node.detachFromParent === 'function') {
+            node.detachFromParent();
+        } else if (typeof node.detachFromRoot === 'function') {
+            node.detachFromRoot();
+        } else if (node.parent) {
+            node.parent.remove(node);
+        }
+    });
+    APP.clusterLabelNodes = [];
+};
+
+// Posizionamento vicino al bordo del baseCluster
+APP.updateClusterLabels = (clusterId) => {
+    APP.clearClusterLabels(); 
+
+    const clusterData = (APP.confdata && APP.confdata.clusters && APP.confdata.clusters[clusterId]) 
+        ? APP.confdata.clusters[clusterId] 
+        : null;
+
+    const labels = (clusterData && Array.isArray(clusterData.slice)) 
+        ? clusterData.slice 
+        : ["Spicchio 1", "Spicchio 2", "Spicchio 3", "Spicchio 4", "Spicchio 5", "Spicchio 6"];
+
+    const NUM_SLICES = APP.CLUSTER_NUM_SLICES || 6;
+    //const radius = 2;
+    //const y = 0.15; 
+    const radius = 1;
+    const y = 0.25;
+
+    // Stile Slice: Sfondo Grigio Scuro / Testo Bianco
+    const sliceBgColor   = new THREE.Color(0x888888); // Grigio scuro
+    const sliceTextColor = new THREE.Color(0xffffff); // Bianco
+    const borderColor  = new THREE.Color(0xffffff); // Contorno bianco
+
+    labels.forEach((labelText, sliceIndex) => {
+        let a = (sliceIndex / NUM_SLICES) * Math.PI * 2.0;
+        let x = radius * Math.cos(a);
+        let z = radius * Math.sin(a);
+
+        const nodeID = `cluster_label_${clusterId}_${sliceIndex}`;
+
+        let labelNode = new ATON.SUI.Label(nodeID, 0.65, 0.1575);
+
+        labelNode
+            .setText(labelText)
+            .setBaseColor(sliceBgColor)
+            .setTextColor(sliceTextColor)
+            .setBackgroundOpacity(1.0);
+        
+        // Aumento dimensione testo (default 0.03 -> 0.045)
+        labelNode.uiText.set({ 
+            fontSize: 0.045 
+        });
+
+        // Aggiunta contorno bianco sul contenitore ThreeMeshUI
+        labelNode.container.set({ 
+            borderWidth: 0.005, // Spessore del bordo
+            borderColor: borderColor, // Colore del bordo
+            //borderRadius: 0.01
+        });
+
+        labelNode.attachToRoot();
+
+        // POSIZIONAMENTO ED INCLINAZIONE A 45 GRADI
+        labelNode
+            .setPosition(x, y, z)
+            .orientToLocation(0, y, 0); // Orientamento verso l'asse centrale Y
+    
+        labelNode.rotateX(-Math.PI * 0.25); // Inclinazione dell'etichetta di 45°
+        
+        // FORZATURA MATERIALI PER IMPEDIRE CAMBI DI COLORE
+        labelNode.traverse((child) => {
+            if (child.isMesh && child.material) {
+                let mats = Array.isArray(child.material) ? child.material : [child.material];
+
+                mats.forEach(mat => {
+                    // Rimuove la trasparenza dal background (elimina l'effetto di blending/sorting)
+                    if (child === labelNode.container || child.parent === labelNode.container) {
+                        mat.transparent = false;
+                        mat.depthWrite = true;
+                    }
+                    // Disattiva illuminazione e tone mapping
+                    mat.lights = false;
+                    mat.toneMapped = false;
+                    // Imposta il rendering a singolo lato per evitare sovrapposizioni tra faccia frontale e retro
+                    mat.side = THREE.FrontSide;
+                    mat.needsUpdate = true;
+                });
+            }
+        }); 
+        APP.clusterLabelNodes.push(labelNode);
+    });
+    
+    //if (window.ThreeMeshUI) ThreeMeshUI.update();
+    // Esegui update prima e riforza i materiali se ThreeMeshUI li ha ricreati durante update()
+    if (window.ThreeMeshUI) {
+        ThreeMeshUI.update();
+
+        // Riapplica la disattivazione trasparenza dopo che ThreeMeshUI ha ricostruito le geometrie
+       APP.clusterLabelNodes.forEach(labelNode => {
+            labelNode.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    let mats = Array.isArray(child.material) ? child.material : [child.material];
+                    mats.forEach(mat => {
+                        mat.toneMapped = false;
+                        mat.lights = false;
+                    });
+                }
+            });
+        });
+    }
+};
 
 // *****************************************************************
 // CREAZIONE E GESTIONE LABEL LIVELLI CATEGORIES
 // Pulizia e smaltimento risorse GPU per le etichette dei livelli
+/*
 APP.clearCategoryLabels = () => {
     APP.catLabelNodes.forEach(node => {
         APP.disposeNodeResources(node);
@@ -503,6 +624,77 @@ APP.updateCategoryLabels = () => {
 
         APP.catLabelNodes.push(labelNode);
     });
+};
+*/
+
+// Pulizia e smaltimento risorse GPU per le etichette dei livelli
+APP.clearCategoryLabels = () => {
+    APP.catLabelNodes.forEach(node => {
+        APP.disposeNodeResources(node);
+        if (typeof node.detachFromParent === 'function') {
+            node.detachFromParent();
+        } else if (typeof node.detachFromRoot === 'function') {
+            node.detachFromRoot();
+        } else if (node.parent) {
+            node.parent.remove(node);
+        }
+    });
+    APP.catLabelNodes = [];
+};
+
+// Genera le 10 etichette corrispondenti ai livelli verticali
+APP.updateCategoryLabels = () => {
+    APP.clearCategoryLabels();
+
+    if (!APP.CATS_LIST || APP.CATS_LIST.length === 0) return;
+
+    // Posizionamento etichetta
+    const radius = 2.1; 
+    const angle = 0; 
+    const x = radius * Math.cos(angle);
+    const z = radius * Math.sin(angle);
+    const currentY = APP.activeCluster ? APP.activeCluster.position.y : 0;
+    const topOffset = APP.CAT_HEIGHT - 0.2; // Posiziona la label nella parte alta
+
+    // Definiamo i colori personalizzati per le Categorie (es. Blu scuro con testo Giallo)
+    const catBgColor   = new THREE.Color(0x777777); // Blu scuro 0x3388ff
+    const catTextColor = new THREE.Color(0xffffff); // scritta bianca
+    const borderColor  = new THREE.Color(0xffffff); // Contorno bianco
+    const catOpacity   = 0.6;
+
+    APP.CATS_LIST.forEach((catName, c) => {
+        let y = (c * APP.CAT_HEIGHT) + topOffset + currentY;
+        const nodeID = `cat_label_${c}`;
+
+        let labelNode = new ATON.SUI.Label(nodeID, 0.65, 0.1575);
+
+        // Personalizzazione tramite i metodi della classe Label (Fluent API)
+        labelNode
+            .setText(catName)
+            .setBaseColor(catBgColor)
+            .setTextColor(catTextColor)
+            .setBackgroundOpacity(catOpacity);
+
+        // Aumento dimensione testo
+        labelNode.uiText.set({ 
+            fontSize: 0.045 
+        });
+
+        // Aggiunta contorno bianco
+        labelNode.container.set({ 
+            borderWidth: 0.005,
+            borderColor: borderColor,
+            borderRadius: 0.03 // Arrotonda gli angoli
+        });
+
+        
+        labelNode.attachToRoot();
+        labelNode.setPosition(x, y, z).orientToLocation(0, y, 0);
+
+        APP.catLabelNodes.push(labelNode);
+    });
+
+    if (window.ThreeMeshUI) ThreeMeshUI.update();
 };
 
 //***************************************************************************
