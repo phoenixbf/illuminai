@@ -1066,8 +1066,8 @@ UI.openSideFilters = ()=>{
             }
             
             // RESET TOOLBAR 3D & PANNELLI ASSOCIATI
-            if (APP._itemToolbar) {
-                APP._itemToolbar.visible = false; // <--- Nasconde la toolbar 3D dalla scena ATON
+            if (APP._itemInspectionBase) {
+                APP._itemInspectionBase.visible = false; // <--- Nasconde la toolbar 3D dalla scena ATON
             }
 
             //  Chiude il pannello INFO HTML se aperto

@@ -709,8 +709,8 @@ APP.changeCluster = (clusterId) => {
         APP._itemInfoPanel.visible = false;
         APP._itemInfoPanel._targetItemID = null;
     }
-    if (APP._itemToolbar) {
-        APP._itemToolbar.visible = false;
+    if (APP._itemInspectionBase) {
+        APP._itemInspectionBase.visible = false;
     }
     
     // Rimuove vecchio cluster
@@ -846,7 +846,7 @@ APP.matBaseItem = new THREE.ShaderMaterial({
 APP.setupToolbarForItem = (I) => {
     // Sposta l'uscita anticipata all'inizio se l'oggetto I non è valido
     if (!I) {
-        if (APP._itemToolbar) APP._itemToolbar.visible = false;
+        if (APP._itemInspectionBase) APP._itemInspectionBase.visible = false;
         return;
     }
 
@@ -855,13 +855,30 @@ APP.setupToolbarForItem = (I) => {
     const COLOR_WHITE  = new THREE.Color(0xffffff);
     const COLOR_BLACK  = new THREE.Color(0x222222);
 
-    if (!APP._itemToolbar) {
-        // Fallback per nodi UI di ATON
-        APP._itemToolbar = typeof ATON.createUINode === "function" 
-            ? ATON.createUINode("itemToolbar-root") 
-            : ATON.createSceneNode("itemToolbar-root");
-        
-        APP._itemToolbar.attachToRoot();
+    if (!APP._itemInspectionBase) {
+        APP._itemInspectionBase = ATON.createUINode();
+        APP._itemInspectionBase.attachToRoot();
+
+        let suiPlateHalo = new ATON.SUI.MediaPanel();
+        suiPlateHalo.attachTo(APP._itemInspectionBase);
+        suiPlateHalo.position.z -= 0.01;
+        suiPlateHalo.setScale(0.5);
+        suiPlateHalo.load(APP.pathResAssets + "ins-plate.png",()=>{
+            let matPH = suiPlateHalo.getPanelMaterial();
+            matPH.transparent = true;
+            matPH.depthWrite  = false;
+            //matPH.blending = THREE.MultiplyBlending;
+            //matPH.premultipliedAlpha = true;
+            //matPH.map.colorSpace = ATON._stdEncoding;
+
+            suiPlateHalo.disablePicking();
+        });
+
+        APP._itemToolbar = ATON.createUINode("itemToolbar-root");
+        APP._itemToolbar.attachTo(APP._itemInspectionBase);
+
+        const offsetVerticale = 0.03;
+        APP._itemToolbar.position.y += offsetVerticale;
 
         const bScale = APP.ITEM_SCALE * 3.0;
 
@@ -887,11 +904,11 @@ APP.setupToolbarForItem = (I) => {
         }
     }
 
-    APP._itemToolbar.visible = true;
+    APP._itemInspectionBase.visible = true;
 
     for (let i = 0; i < APP.ACTMAPS.length; i++) {
         let A = APP.ACTMAPS[i];
-        let btn = typeof ATON.getUINode === "function" ? ATON.getUINode("btn-" + A) : null;
+        let btn = ATON.getUINode("btn-" + A);
 
         if (!btn) continue;
 
@@ -946,21 +963,19 @@ APP.setupToolbarForItem = (I) => {
                 }
                 if (window.ThreeMeshUI) ThreeMeshUI.update();
             };
+
         } else {
             btn.setBaseColor(COLOR_BLACK);
             btn.onSelect = null;
         }
     }
-
-    const offsetVerticale = 0.03;
-    APP._itemToolbar.position.copy(I.position);
-    APP._itemToolbar.position.y += offsetVerticale;
+    
+    APP._itemInspectionBase.position.copy(I.position);
+    APP._itemInspectionBase.rotation.copy(I.rotation);
 
     if (APP.activeCluster) {
-        APP._itemToolbar.position.y += APP.activeCluster.position.y;
+        APP._itemInspectionBase.position.y += APP.activeCluster.position.y;
     }
-
-    APP._itemToolbar.rotation.copy(I.rotation);
 
     if (window.ThreeMeshUI) ThreeMeshUI.update();
 };

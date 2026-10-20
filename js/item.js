@@ -131,7 +131,7 @@ class Item extends ATON.Node {
         ATON.Nav.setFirstPersonControl();
         //}
 
-        if (APP._itemToolbar)   this._setNodeVisible(APP._itemToolbar, false);
+        if (APP._itemInspectionBase) this._setNodeVisible(APP._itemInspectionBase, false);
         if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, false);
@@ -192,7 +192,7 @@ class Item extends ATON.Node {
         ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.1 );
 
         APP.setupToolbarForItem(this);
-        if (APP._itemToolbar) this._setNodeVisible(APP._itemToolbar, true);
+        if (APP._itemInspectionBase) this._setNodeVisible(APP._itemInspectionBase, true);
         APP.setupInfoPanelForItem(this);
         if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
 
