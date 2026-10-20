@@ -465,14 +465,17 @@ APP.updateClusterLabels = (clusterId) => {
 
 // Funzione di pulizia con gestione smaltimento risorse WebGL
 APP.clearClusterLabels = () => {
-    APP.clusterLabelNodes.forEach(node => {
-        APP.disposeNodeResources(node);
-        if (typeof node.detachFromParent === 'function') {
-            node.detachFromParent();
-        } else if (typeof node.detachFromRoot === 'function') {
-            node.detachFromRoot();
-        } else if (node.parent) {
-            node.parent.remove(node);
+	if (!APP.clusterLabelNodes || APP.clusterLabelNodes.length === 0) return;
+    
+	APP.clusterLabelNodes.forEach(node => {
+        if (typeof labelNode.destroy === 'function') {
+            labelNode.destroy();
+        } else if (typeof labelNode.detachFromRoot === 'function') {
+            labelNode.detachFromRoot();
+        }
+
+        if (typeof APP.disposeNodeResources === 'function') {
+            APP.disposeNodeResources(labelNode);
         }
     });
     APP.clusterLabelNodes = [];
@@ -497,10 +500,13 @@ APP.updateClusterLabels = (clusterId) => {
     const y = 0.25;
 
     // Stile Slice: Sfondo Grigio Scuro / Testo Bianco
-    const sliceBgColor   = new THREE.Color(0x888888); // Grigio scuro
-    const sliceTextColor = new THREE.Color(0xffffff); // Bianco
-    const borderColor  = new THREE.Color(0xffffff); // Contorno bianco
+    const sliceBgColor = ATON.MatHub?.colors?.gray || new THREE.Color(0x888888);
+    const sliceTextColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
+    const borderColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
 
+	const labelWidth  = 0.65;
+    const labelHeight = 0.1575;
+	
     labels.forEach((labelText, sliceIndex) => {
         let a = (sliceIndex / NUM_SLICES) * Math.PI * 2.0;
         let x = radius * Math.cos(a);
@@ -508,7 +514,7 @@ APP.updateClusterLabels = (clusterId) => {
 
         const nodeID = `cluster_label_${clusterId}_${sliceIndex}`;
 
-        let labelNode = new ATON.SUI.Label(nodeID, 0.65, 0.1575);
+        const labelNode = new ATON.SUI.Label(nodeID, labelWidth, labelHeight);
 
         labelNode
             .setText(labelText)
@@ -528,10 +534,9 @@ APP.updateClusterLabels = (clusterId) => {
             //borderRadius: 0.01
         });
 
-        labelNode.attachToRoot();
-
         // POSIZIONAMENTO ED INCLINAZIONE A 45 GRADI
         labelNode
+			.attachToRoot()
             .setPosition(x, y, z)
             .orientToLocation(0, y, 0); // Orientamento verso l'asse centrale Y
     
@@ -560,7 +565,6 @@ APP.updateClusterLabels = (clusterId) => {
         APP.clusterLabelNodes.push(labelNode);
     });
     
-    //if (window.ThreeMeshUI) ThreeMeshUI.update();
     // Esegui update prima e riforza i materiali se ThreeMeshUI li ha ricreati durante update()
     if (window.ThreeMeshUI) {
         ThreeMeshUI.update();
@@ -629,14 +633,19 @@ APP.updateCategoryLabels = () => {
 
 // Pulizia e smaltimento risorse GPU per le etichette dei livelli
 APP.clearCategoryLabels = () => {
-    APP.catLabelNodes.forEach(node => {
-        APP.disposeNodeResources(node);
-        if (typeof node.detachFromParent === 'function') {
-            node.detachFromParent();
-        } else if (typeof node.detachFromRoot === 'function') {
-            node.detachFromRoot();
-        } else if (node.parent) {
-            node.parent.remove(node);
+	if (!APP.catLabelNodes || APP.catLabelNodes.length === 0) return; 
+    
+	APP.catLabelNodes.forEach(node => {
+     	// Rimuove il nodo dal punto di origine della scena ATON
+        if (typeof labelNode.destroy === 'function') {
+            labelNode.destroy();
+        } else if (typeof labelNode.detachFromRoot === 'function') {
+            labelNode.detachFromRoot();
+        }
+
+        // Smaltimento specifico delle risorse GPU dell'App
+        if (typeof APP.disposeNodeResources === 'function') {
+            APP.disposeNodeResources(labelNode);
         }
     });
     APP.catLabelNodes = [];
@@ -656,17 +665,20 @@ APP.updateCategoryLabels = () => {
     const currentY = APP.activeCluster ? APP.activeCluster.position.y : 0;
     const topOffset = APP.CAT_HEIGHT - 0.2; // Posiziona la label nella parte alta
 
-    // Definiamo i colori personalizzati per le Categorie (es. Blu scuro con testo Giallo)
-    const catBgColor   = new THREE.Color(0x777777); // Blu scuro 0x3388ff
-    const catTextColor = new THREE.Color(0xffffff); // scritta bianca
-    const borderColor  = new THREE.Color(0xffffff); // Contorno bianco
-    const catOpacity   = 0.6;
+    // Definisce i colori personalizzati per le Categorie (es. Blu scuro con testo Giallo)
+    const catBgColor = ATON.MatHub?.colors?.gray || new THREE.Color(0x777777);
+    const catTextColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
+    const borderColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
+    const catOpacity = 0.6;
+
+	const labelWidth  = 0.65;
+    const labelHeight = 0.1575;
 
     APP.CATS_LIST.forEach((catName, c) => {
         let y = (c * APP.CAT_HEIGHT) + topOffset + currentY;
         const nodeID = `cat_label_${c}`;
 
-        let labelNode = new ATON.SUI.Label(nodeID, 0.65, 0.1575);
+        const labelNode = new ATON.SUI.Label(nodeID, labelWidth, labelHeight);
 
         // Personalizzazione tramite i metodi della classe Label (Fluent API)
         labelNode
@@ -687,14 +699,20 @@ APP.updateCategoryLabels = () => {
             borderRadius: 0.03 // Arrotonda gli angoli
         });
 
-        
         labelNode.attachToRoot();
         labelNode.setPosition(x, y, z).orientToLocation(0, y, 0);
 
-        APP.catLabelNodes.push(labelNode);
+		labelNode
+            .attachToRoot()
+            .setPosition(x, y, z)
+            .orientToLocation(0, y, 0);
+        
+		APP.catLabelNodes.push(labelNode);
     });
 
-    if (window.ThreeMeshUI) ThreeMeshUI.update();
+    if (window.ThreeMeshUI) {
+        ThreeMeshUI.update();
+    }
 };
 
 //***************************************************************************
