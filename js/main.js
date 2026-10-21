@@ -120,6 +120,7 @@ APP.db        = {};
 APP.activeClusterID = undefined;
 APP.activeCluster   = undefined;
 
+APP.inspectedItems = [];
 
 //APP.clusterLabelNodes = []; // Inizializzazione nodi per etichette spicchi
 //APP.catLabelNodes     = []; // Registro nodi etichetta dei livelli categorie
@@ -301,6 +302,8 @@ APP.setupEvents = ()=>{
     });
 
     ATON.on("MouseWheel", d =>{
+        if (APP.inspectedItems.length > 0) return;
+        
         APP.shiftActiveCluster(d * 0.005);
     });
 	/*
@@ -966,6 +969,7 @@ APP.setupToolbarForItem = (I) => {
         }
 
         APP._itemInspectionGroup.setRenderOrder(10);
+        APP._itemToolbar.setRenderOrder(11);
     }
 
     APP._itemInspectionGroup.visible = true;

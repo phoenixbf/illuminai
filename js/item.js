@@ -127,9 +127,9 @@ class Item extends ATON.Node {
         this.load(APP.ITEM_RES_BASE, false);
         this._bInspection = false;
     
-        //if (typeof ATON.Nav.setFirstPersonControl === "function") {
-        ATON.Nav.setFirstPersonControl();
-        //}
+        if (!ATON.XR._bPresenting){
+            ATON.Nav.setFirstPersonControl();
+        }
 
         if (APP._itemInspectionGroup) this._setNodeVisible(APP._itemInspectionGroup, false);
         if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
@@ -142,9 +142,8 @@ class Item extends ATON.Node {
         let dir = ATON.Nav.getCurrentDirection();
     
         // Registra l'oggetto tra quelli in ispezione
-        if (!APP.inspectedItems) APP.inspectedItems = [];
         let index = APP.inspectedItems.indexOf(this);
-        if (index === -1) {
+        if (index < 0){
             APP.inspectedItems.push(this);
             index = APP.inspectedItems.length - 1;
         }
@@ -162,10 +161,16 @@ class Item extends ATON.Node {
         let right = new THREE.Vector3().crossVectors(dir, up).normalize();
 
         // Calcolo posizione base lungo la direzione di vista
+/*
         this.position.x = eye.x + (dir.x * currentRad) + (right.x * sideOffset);
         this.position.y = eye.y + (dir.y * currentRad) + heightOffset;
         this.position.z = eye.z + (dir.z * currentRad) + (right.z * sideOffset);
-    
+*/
+        let idist = 0.5;
+        this.position.x = eye.x + (dir.x * idist);
+        this.position.y = eye.y + (dir.y * idist);
+        this.position.z = eye.z + (dir.z * idist);
+
         if (APP.activeCluster) {
             this.position.y -= APP.activeCluster.position.y;
         }
@@ -188,8 +193,10 @@ class Item extends ATON.Node {
         let wp = new THREE.Vector3();
         this.getWorldPosition(wp);
 
-        ATON.Nav.setOrbitControl();
-        ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.1 );
+        if (!ATON.XR._bPresenting){
+            ATON.Nav.setOrbitControl();
+            ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.1 );
+        }
 
         APP.setupToolbarForItem(this);
         if (APP._itemInspectionGroup) this._setNodeVisible(APP._itemInspectionGroup, true);
