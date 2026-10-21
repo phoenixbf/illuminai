@@ -1047,7 +1047,7 @@ APP.setupInfoPanelForItem = (I) => {
 
     if (I.data) {
         if (I.data.original) htmlContent += `<div class="field-row"><strong>ID:</strong> <span>${I.data.original}</span></div>`;
-        if (I.data.century) htmlContent += `<div class="field-row"><strong>Century:</strong> <span>${I.data.century}</span></div>`;
+        if (I.data.when) htmlContent += `<div class="field-row"><strong>Century:</strong> <span>${I.data.when}</span></div>`;
         if (I.data.subject) htmlContent += `<div class="field-row"><strong>Subject:</strong> <span>${I.data.subject}</span></div>`;
         if (I.data.source) htmlContent += `<div class="field-row"><strong>Source:</strong> <span>${I.data.source}</span></div>`;
         if (I.data.description) htmlContent += `<div class="field-desc">${I.data.description}</div>`;
