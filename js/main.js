@@ -251,6 +251,8 @@ APP.realizeBaseCluster = (size)=>{
     APP.baseCluster.add(new THREE.Mesh(g, APP.matBaseCluster));
     APP.baseCluster.enablePicking();
 
+    APP.baseCluster.renderOrder = -1;
+
 
     APP.clusterLabelNodes = ATON.createSceneNode();
     APP.catLabelNodes     = ATON.createSceneNode();
