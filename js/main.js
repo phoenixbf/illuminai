@@ -49,12 +49,12 @@ APP.updateClusterScroll = () => {
         APP.activeCluster.position.y += deltaY;
 
         // Shift sincronizzato delle etichette Categorie
-        if (Array.isArray(APP.catLabelNodes)) {
-            APP.catLabelNodes.forEach(node => { 
-                node.position.y += deltaY; 
-            });
-        }
-
+        APP.catLabelNodes.position.y += deltaY; 
+/*
+        APP.catLabelNodes.children.forEach(node => { 
+            node.position.y += deltaY; 
+        });
+*/
         if (window.ThreeMeshUI) ThreeMeshUI.update();
         requestAnimationFrame(APP.updateClusterScroll);
     } else {
@@ -62,12 +62,14 @@ APP.updateClusterScroll = () => {
         const finalDelta = APP._targetClusterY - APP.activeCluster.position.y;
         APP.activeCluster.position.y = APP._targetClusterY;
 
+        APP.catLabelNodes.position.y += finalDelta;
+/*
         if (Array.isArray(APP.catLabelNodes)) {
             APP.catLabelNodes.forEach(node => { 
                 node.position.y += finalDelta; 
             });
         }
-
+*/
         APP._isScrolling = false;
         if (window.ThreeMeshUI) ThreeMeshUI.update();
     }
@@ -118,9 +120,10 @@ APP.db        = {};
 APP.activeClusterID = undefined;
 APP.activeCluster   = undefined;
 
-APP.clusterLabelNodes = APP.clusterLabelNodes || []; // Inizializzazione nodi per etichette spicchi
-APP.catLabelNodes = APP.catLabelNodes || []; // Registro nodi etichetta dei livelli categorie
-APP.scrollButtonNodes = APP.scrollButtonNodes || [];
+
+//APP.clusterLabelNodes = []; // Inizializzazione nodi per etichette spicchi
+//APP.catLabelNodes     = []; // Registro nodi etichetta dei livelli categorie
+APP.scrollButtonNodes = [];
 
 // Fallback texture vuota pre-allocata per il reset delle maschere
 const emptyData = new Uint8Array([0, 0, 0, 0]);
@@ -247,6 +250,16 @@ APP.realizeBaseCluster = (size)=>{
         .attachToRoot();
     APP.baseCluster.add(new THREE.Mesh(g, APP.matBaseCluster));
     APP.baseCluster.enablePicking();
+
+
+    APP.clusterLabelNodes = ATON.createSceneNode();
+    APP.catLabelNodes     = ATON.createSceneNode();
+
+    APP.clusterLabelNodes.attachTo(APP.baseCluster);
+    APP.catLabelNodes.attachTo(APP.baseCluster);
+
+    APP.clusterLabelNodes.rotateY(-Math.PI / APP.CLUSTER_NUM_SLICES);
+    APP.clusterLabelNodes.position.y = 0.07;
 };
 
 APP.setupScene = ()=>{
@@ -254,9 +267,11 @@ APP.setupScene = ()=>{
     ATON.setMainPanorama(APP.pathResAssets + "4k.jpeg");
 
     ATON._bqScene = true;
+
     APP.realizeBaseCluster(4.0); // diameter in meters
 };
 
+// ALL CSV are ready
 APP.onReadyDB = ()=>{
     let C = APP.params.get("c");
     if (C !== undefined && C !== null){
@@ -470,21 +485,23 @@ APP.updateClusterLabels = (clusterId) => {
 
 // Funzione di pulizia con gestione smaltimento risorse WebGL
 APP.clearClusterLabels = () => {
-	if (!APP.clusterLabelNodes || APP.clusterLabelNodes.length === 0) return;
-    
-    // FIXME: Non corretta
-	APP.clusterLabelNodes.forEach(node => {
-        if (typeof labelNode.destroy === 'function') {
-            labelNode.destroy();
-        } else if (typeof labelNode.detachFromRoot === 'function') {
-            labelNode.detachFromRoot();
-        }
+    if (!APP.clusterLabelNodes) return;
 
-        if (typeof APP.disposeNodeResources === 'function') {
-            APP.disposeNodeResources(labelNode);
+    APP.clusterLabelNodes.removeChildren();
+
+/*
+    APP.clusterLabelNodes.forEach(node => {
+        APP.disposeNodeResources(node);
+        if (typeof node.detachFromParent === 'function') {
+            node.detachFromParent();
+        } else if (typeof node.detachFromRoot === 'function') {
+            node.detachFromRoot();
+        } else if (node.parent) {
+            node.parent.remove(node);
         }
     });
-    APP.clusterLabelNodes = [];
+*/
+    //APP.clusterLabelNodes = [];
 };
 
 // Posizionamento vicino al bordo del baseCluster
@@ -503,7 +520,7 @@ APP.updateClusterLabels = (clusterId) => {
     //const radius = 2;
     //const y = 0.15; 
     const radius = 1;
-    const y = 0.25;
+    const y = 0.0; //0.25;
 
     // Stile Slice: Sfondo Grigio Scuro / Testo Bianco
     const sliceBgColor = ATON.MatHub?.colors?.gray || new THREE.Color(0x888888);
@@ -567,10 +584,15 @@ APP.updateClusterLabels = (clusterId) => {
                     mat.needsUpdate = true;
                 });
             }
-        }); 
-        APP.clusterLabelNodes.push(labelNode);
+        });
+
+        labelNode.attachTo( APP.clusterLabelNodes );
+        //APP.clusterLabelNodes.push(labelNode);
     });
-    
+
+    ThreeMeshUI.update();
+    return;
+
     // Esegui update prima e riforza i materiali se ThreeMeshUI li ha ricreati durante update()
     if (window.ThreeMeshUI) {
         ThreeMeshUI.update();
@@ -639,9 +661,11 @@ APP.updateCategoryLabels = () => {
 
 // Pulizia e smaltimento risorse GPU per le etichette dei livelli
 APP.clearCategoryLabels = () => {
-	if (!APP.catLabelNodes || APP.catLabelNodes.length === 0) return; 
-    
-	APP.catLabelNodes.forEach(node => {
+	if (!APP.catLabelNodes) return;
+
+    APP.catLabelNodes.removeChildren();
+/*
+	APP.catLabelNodes.forEach(labelNode => {
      	// Rimuove il nodo dal punto di origine della scena ATON
         if (typeof labelNode.destroy === 'function') {
             labelNode.destroy();
@@ -654,7 +678,8 @@ APP.clearCategoryLabels = () => {
             APP.disposeNodeResources(labelNode);
         }
     });
-    APP.catLabelNodes = [];
+*/
+    //APP.catLabelNodes = [];
 };
 
 // Genera le 10 etichette corrispondenti ai livelli verticali
@@ -713,7 +738,8 @@ APP.updateCategoryLabels = () => {
             .setPosition(x, y, z)
             .orientToLocation(0, y, 0);
         
-		APP.catLabelNodes.push(labelNode);
+		labelNode.attachTo(APP.catLabelNodes);
+        //APP.catLabelNodes.push(labelNode);
     });
 
     if (window.ThreeMeshUI) {
@@ -789,11 +815,12 @@ APP.shiftActiveCluster = (h)=>{
     if (h === undefined || h === null) {
         APP._targetClusterY = 0;
 
-        if (Array.isArray(APP.clusterLabelNodes)) {
-            APP.clusterLabelNodes.forEach(node => {
-                node.setPosition(node.position.x, 0.15, node.position.z);
-            });
-        }
+        //APP.clusterLabelNodes.position.y = 0.15;
+/*
+        APP.clusterLabelNodes.children.forEach(node => {
+            node.setPosition(node.position.x, 0.15, node.position.z);
+        });
+*/
     } else { // Incremento target con limite
         let newTargetY = APP._targetClusterY + h;
 
