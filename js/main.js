@@ -299,6 +299,10 @@ APP.setupEvents = ()=>{
         if (k==='ArrowUp')   APP.shiftActiveCluster(0.05);
         if (k==='ArrowDown') APP.shiftActiveCluster(-0.05);
     });
+
+    ATON.on("MouseWheel", d =>{
+        APP.shiftActiveCluster(d * 0.005);
+    });
 	/*
     ATON.on("Tap", ()=>{
         //
