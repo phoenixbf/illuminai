@@ -591,6 +591,8 @@ APP.updateClusterLabels = (clusterId) => {
             }
         });
 
+        labelNode.setRenderOrder(2);
+
         labelNode.attachTo( APP.clusterLabelNodes );
         //APP.clusterLabelNodes.push(labelNode);
     });
@@ -959,9 +961,7 @@ APP.setupToolbarForItem = (I) => {
             b.attachTo(APP._itemToolbar);
         }
 
-        APP._itemInspectionGroup.traverse(o =>{
-            if (o.isMesh) o.renderOrder = 10;
-        });
+        APP._itemInspectionGroup.setRenderOrder(10);
     }
 
     APP._itemInspectionGroup.visible = true;
