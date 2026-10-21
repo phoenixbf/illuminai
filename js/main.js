@@ -251,7 +251,7 @@ APP.realizeBaseCluster = (size)=>{
     APP.baseCluster.add(new THREE.Mesh(g, APP.matBaseCluster));
     APP.baseCluster.enablePicking();
 
-    APP.baseCluster.renderOrder = -1;
+    //APP.baseCluster.renderOrder = -1;
 
 
     APP.clusterLabelNodes = ATON.createSceneNode();
@@ -766,8 +766,8 @@ APP.changeCluster = (clusterId) => {
         APP._itemInfoPanel.visible = false;
         APP._itemInfoPanel._targetItemID = null;
     }
-    if (APP._itemInspectionBase) {
-        APP._itemInspectionBase.visible = false;
+    if (APP._itemInspectionGroup) {
+        APP._itemInspectionGroup.visible = false;
     }
     
     // Rimuove vecchio cluster
@@ -902,7 +902,7 @@ APP.matBaseItem = new THREE.ShaderMaterial({
 APP.setupToolbarForItem = (I) => {
     // Sposta l'uscita anticipata all'inizio se l'oggetto I non è valido
     if (!I) {
-        if (APP._itemInspectionBase) APP._itemInspectionBase.visible = false;
+        if (APP._itemInspectionGroup) APP._itemInspectionGroup.visible = false;
         return;
     }
 
@@ -911,12 +911,12 @@ APP.setupToolbarForItem = (I) => {
     const COLOR_WHITE  = new THREE.Color(0xffffff);
     const COLOR_BLACK  = new THREE.Color(0x222222);
 
-    if (!APP._itemInspectionBase) {
-        APP._itemInspectionBase = ATON.createUINode();
-        APP._itemInspectionBase.attachToRoot();
+    if (!APP._itemInspectionGroup) {
+        APP._itemInspectionGroup = ATON.createUINode();
+        APP._itemInspectionGroup.attachToRoot();
 
         let suiPlateHalo = new ATON.SUI.MediaPanel();
-        suiPlateHalo.attachTo(APP._itemInspectionBase);
+        suiPlateHalo.attachTo(APP._itemInspectionGroup);
         suiPlateHalo.position.z -= 0.01;
         suiPlateHalo.setScale(0.5);
         suiPlateHalo.load(APP.pathResAssets + "ins-plate.png",()=>{
@@ -931,7 +931,7 @@ APP.setupToolbarForItem = (I) => {
         });
 
         APP._itemToolbar = ATON.createUINode("itemToolbar-root");
-        APP._itemToolbar.attachTo(APP._itemInspectionBase);
+        APP._itemToolbar.attachTo(APP._itemInspectionGroup);
 
         const offsetVerticale = 0.03;
         APP._itemToolbar.position.y += offsetVerticale;
@@ -958,9 +958,13 @@ APP.setupToolbarForItem = (I) => {
 
             b.attachTo(APP._itemToolbar);
         }
+
+        APP._itemInspectionGroup.traverse(o =>{
+            if (o.isMesh) o.renderOrder = 10;
+        });
     }
 
-    APP._itemInspectionBase.visible = true;
+    APP._itemInspectionGroup.visible = true;
 
     for (let i = 0; i < APP.ACTMAPS.length; i++) {
         let A = APP.ACTMAPS[i];
@@ -1026,11 +1030,11 @@ APP.setupToolbarForItem = (I) => {
         }
     }
     
-    APP._itemInspectionBase.position.copy(I.position);
-    APP._itemInspectionBase.rotation.copy(I.rotation);
+    APP._itemInspectionGroup.position.copy(I.position);
+    APP._itemInspectionGroup.rotation.copy(I.rotation);
 
     if (APP.activeCluster) {
-        APP._itemInspectionBase.position.y += APP.activeCluster.position.y;
+        APP._itemInspectionGroup.position.y += APP.activeCluster.position.y;
     }
 
     if (window.ThreeMeshUI) ThreeMeshUI.update();
