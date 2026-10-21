@@ -257,15 +257,20 @@ APP.setupScene = ()=>{
     APP.realizeBaseCluster(4.0); // diameter in meters
 };
 
+APP.onReadyDB = ()=>{
+    let C = APP.params.get("c");
+    if (C !== undefined && C !== null){
+        APP.changeCluster(C);
+        return;
+    }
+}
+
 APP.setupEvents = ()=>{
-    ATON.on("APP_DB_READY", () => {
-        if (typeof APP.onReadyDB === "function") {
-            APP.onReadyDB();
-        }
-    });
+    ATON.on("APP_DB_READY", APP.onReadyDB );
 
     ATON.on("APP_ConfigLoaded", () => {
         APP.UI.setup();
+
         APP.UI.modalWelcome();
         APP.setupCategoryScrollUI();
     });
@@ -467,6 +472,7 @@ APP.updateClusterLabels = (clusterId) => {
 APP.clearClusterLabels = () => {
 	if (!APP.clusterLabelNodes || APP.clusterLabelNodes.length === 0) return;
     
+    // FIXME: Non corretta
 	APP.clusterLabelNodes.forEach(node => {
         if (typeof labelNode.destroy === 'function') {
             labelNode.destroy();
@@ -722,6 +728,8 @@ APP.changeCluster = (clusterId) => {
     const id = parseInt(clusterId);
 	if (isNaN(id)) return;
 
+    ATON.UI.hideModal();
+
 	// Nasconde ed azzera i pannelli UI fluttuanti 3D per evitare residui
     if (APP._itemInfoPanel) {
         APP._itemInfoPanel.visible = false;
@@ -766,9 +774,7 @@ APP.changeCluster = (clusterId) => {
     APP.shiftActiveCluster(); // Chiamata senza argomenti per forzare il reset a Y=0
 
     // Aggiorna parametro URL
-    if (APP.params && typeof APP.params.set === 'function') {
-        APP.params.set("c", id);
-    }
+    APP.params.set("c", id);
 };
 
 APP.shiftActiveCluster = (h)=>{
