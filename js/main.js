@@ -288,6 +288,9 @@ APP.setupEvents = ()=>{
     ATON.on("APP_ConfigLoaded", () => {
         APP.UI.setup();
 
+        let C = APP.params.get("c");
+        if (C !== undefined && C !== null) return;
+
         APP.UI.modalWelcome();
         APP.setupCategoryScrollUI();
     });
