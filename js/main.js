@@ -1174,7 +1174,7 @@ APP.toggleInfoPanel = (selectedItem) => {
 APP.update = ()=>{
     
     if (ATON.XR._bPresenting){
-        let pV = ATON.XR.getAxisValue(ATON.XR.HAND_PRIMARY);
+        let pV = ATON.XR.getAxisValue(ATON.XR.HAND_SECONDARY);
         let s = pV.y;
 
         if (Math.abs(s)>0.1) APP.shiftActiveCluster(s * 0.02);
