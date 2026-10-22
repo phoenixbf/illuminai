@@ -309,7 +309,7 @@ APP.setupEvents = ()=>{
     ATON.on("MouseWheel", d =>{
         if (APP.inspectedItems.length > 0) return;
         
-        APP.shiftActiveCluster(d * 0.005);
+        if (!ATON.XR._bPresenting) APP.shiftActiveCluster(d * 0.005);
     });
 	/*
     ATON.on("Tap", ()=>{
@@ -774,9 +774,7 @@ APP.updateCategoryLabels = () => {
         //APP.catLabelNodes.push(labelNode);
     });
 
-    if (window.ThreeMeshUI) {
-        ThreeMeshUI.update();
-    }
+    ThreeMeshUI.update();
 };
 
 //***************************************************************************
@@ -1177,8 +1175,9 @@ APP.update = ()=>{
     
     if (ATON.XR._bPresenting){
         let pV = ATON.XR.getAxisValue(ATON.XR.HAND_PRIMARY);
+        let s = pV.y;
 
-        APP.shiftActiveCluster(pV.y * 0.02);
+        if (Math.abs(s)>0.1) APP.shiftActiveCluster(s * 0.02);
     }
 
     APP.updateClusterScroll();
