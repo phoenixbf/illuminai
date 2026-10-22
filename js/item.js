@@ -115,11 +115,7 @@ class Item extends ATON.Node {
         let clusterY = APP.activeCluster ? APP.activeCluster.position.y : 0;
         let targetLook = new THREE.Vector3(0, this._origLoc.y + clusterY, 0);
     
-        if (typeof this.orientToLocation === "function") {
-            this.orientToLocation(0, targetLook.y, 0);
-        } else if (typeof this.lookAt === "function") {
-            this.lookAt(targetLook);
-        }
+        this.orientToLocation(0, targetLook.y, 0);
     
         this.unloadActivationMask();
         this._activeAMaskIndex = undefined;
@@ -128,11 +124,21 @@ class Item extends ATON.Node {
         this._bInspection = false;
     
         if (!ATON.XR._bPresenting){
-            ATON.Nav.setFirstPersonControl();
+            if (APP.inspectedItems.length > 0){
+                let eye = ATON.Nav.getCurrentEyeLocation();
+                let lastItem = APP.inspectedItems[APP.inspectedItems.length-1];
+
+                let wp = new THREE.Vector3();
+                lastItem.getWorldPosition(wp);
+
+                ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.3 );
+            }
+
+            else ATON.Nav.setFirstPersonControl();
         }
 
-        if (APP._itemInspectionGroup) this._setNodeVisible(APP._itemInspectionGroup, false);
-        if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
+        if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false); // _setNodeVisible(APP._itemInspectionGroup, false);
+        if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); // this._setNodeVisible(APP._itemInfoPanel, false);
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, false);
     }
@@ -140,7 +146,10 @@ class Item extends ATON.Node {
     arrangeForInspection() {
         let eye = ATON.Nav.getCurrentEyeLocation();
         let dir = ATON.Nav.getCurrentDirection();
-    
+
+        // Inspection BB
+        let iBB = APP.getInspectionBB();
+
         // Registra l'oggetto tra quelli in ispezione
         let index = APP.inspectedItems.indexOf(this);
         if (index < 0){
@@ -166,20 +175,43 @@ class Item extends ATON.Node {
         this.position.y = eye.y + (dir.y * currentRad) + heightOffset;
         this.position.z = eye.z + (dir.z * currentRad) + (right.z * sideOffset);
 */
-        let idist = 0.5;
-        this.position.x = eye.x + (dir.x * idist);
-        this.position.y = eye.y + (dir.y * idist);
-        this.position.z = eye.z + (dir.z * idist);
+        this.position.x = eye.x + (dir.x * APP.ITEM_INSPECT_RAD);
+        this.position.y = eye.y + (dir.y * APP.ITEM_INSPECT_RAD);
+        this.position.z = eye.z + (dir.z * APP.ITEM_INSPECT_RAD);
+
+        if (iBB){
+            let iC = new THREE.Vector3();
+            iBB.getCenter(iC);
+
+            iC.x -= this.position.x;
+            iC.y -= this.position.y;
+            iC.z -= this.position.z;
+
+            let dd = iC.length();
+
+            //if (iBB.containsPoint(this.position)){
+            if (dd < APP.ITEM_INSPECT_RAD){
+                //iC = iC.normalize();
+                //iC = iC.multiplyScalar(-0.2); // APP.ITEM_SCALE
+
+                iC.x = this._origLoc.x - this.position.x;
+                iC.y = this._origLoc.y - this.position.y;
+                iC.z = this._origLoc.z - this.position.z;
+                
+                iC = iC.normalize();
+                iC = iC.multiplyScalar(0.2);
+
+                this.position.x += iC.x;
+                this.position.y += iC.y;
+                this.position.z += iC.z;
+            }
+        }
 
         if (APP.activeCluster) {
             this.position.y -= APP.activeCluster.position.y;
         }
 
-        if (typeof this.orientToCamera === "function") {
-            this.orientToCamera();
-        } else if (eye) {
-            this.lookAt(new THREE.Vector3(eye.x, eye.y, eye.z));
-        }
+        this.orientToCamera();
 
         this.setScale(APP.ITEM_SCALE * 2.0);
         this._bInspection = true;
@@ -195,13 +227,14 @@ class Item extends ATON.Node {
 
         if (!ATON.XR._bPresenting){
             ATON.Nav.setOrbitControl();
-            ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.1 );
+            ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.3 );
         }
 
         APP.setupToolbarForItem(this);
-        if (APP._itemInspectionGroup) this._setNodeVisible(APP._itemInspectionGroup, true);
+        
+        if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(true); // _setNodeVisible(APP._itemInspectionGroup, true);
         APP.setupInfoPanelForItem(this);
-        if (APP._itemInfoPanel) this._setNodeVisible(APP._itemInfoPanel, false);
+        if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); //_setNodeVisible(APP._itemInfoPanel, false);
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, true);
         //ATON.FX.setDOFfocus(currentRad);

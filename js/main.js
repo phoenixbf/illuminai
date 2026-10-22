@@ -55,8 +55,8 @@ APP.updateClusterScroll = () => {
             node.position.y += deltaY; 
         });
 */
-        if (window.ThreeMeshUI) ThreeMeshUI.update();
-        requestAnimationFrame(APP.updateClusterScroll);
+        //if (window.ThreeMeshUI) ThreeMeshUI.update();
+        //requestAnimationFrame(APP.updateClusterScroll);
     } else {
         // Allineamento finale al target
         const finalDelta = APP._targetClusterY - APP.activeCluster.position.y;
@@ -71,7 +71,7 @@ APP.updateClusterScroll = () => {
         }
 */
         APP._isScrolling = false;
-        if (window.ThreeMeshUI) ThreeMeshUI.update();
+        //if (window.ThreeMeshUI) ThreeMeshUI.update();
     }
 };
 // *****************************************************************
@@ -250,7 +250,8 @@ APP.realizeBaseCluster = (size)=>{
         .rotateY(Math.PI / APP.CLUSTER_NUM_SLICES)
         .attachToRoot();
     APP.baseCluster.add(new THREE.Mesh(g, APP.matBaseCluster));
-    APP.baseCluster.enablePicking();
+    
+    //APP.baseCluster.enablePicking();
 
     //APP.baseCluster.renderOrder = -1;
 
@@ -263,6 +264,10 @@ APP.realizeBaseCluster = (size)=>{
 
     APP.clusterLabelNodes.rotateY(-Math.PI / APP.CLUSTER_NUM_SLICES);
     APP.clusterLabelNodes.position.y = 0.07;
+
+    APP.baseCluster.traverse(o => {
+        o.raycast = ATON.Utils.VOID_CAST;
+    });
 };
 
 APP.setupScene = ()=>{
@@ -311,6 +316,19 @@ APP.setupEvents = ()=>{
         //
     });
 	*/
+};
+
+APP.getInspectionBB = ()=>{
+    if (APP.inspectedItems.length < 1) return undefined;
+
+    let BB = new THREE.Box3();
+
+    for (let i in APP.inspectedItems){
+        let I = APP.inspectedItems[i];
+        BB.expandByObject(I);
+    }
+
+    return BB;
 };
 
 //***************************************************************************
@@ -847,7 +865,7 @@ APP.shiftActiveCluster = (h)=>{
     // Avvia il loop di lerp se non è attivo
     if (!APP._isScrolling) {
         APP._isScrolling = true;
-        requestAnimationFrame(APP.updateClusterScroll);
+        //requestAnimationFrame(APP.updateClusterScroll);
     }
 };
 
@@ -1150,4 +1168,19 @@ APP.toggleInfoPanel = (selectedItem) => {
         }
         APP.openInfoPanel();
     }
+};
+
+/*
+    MAIN Update routine
+==============================*/
+APP.update = ()=>{
+    
+    if (ATON.XR._bPresenting){
+        let pV = ATON.XR.getAxisValue(ATON.XR.HAND_PRIMARY);
+
+        APP.shiftActiveCluster(pV.y * 0.02);
+    }
+
+    APP.updateClusterScroll();
+    
 };
