@@ -554,13 +554,13 @@ APP.updateClusterLabels = (clusterId) => {
     const NUM_SLICES = APP.CLUSTER_NUM_SLICES || 6;
     //const radius = 2;
     //const y = 0.15; 
-    const radius = 1;
+    const radius = 0.8; //1;
     const y = 0.0; //0.25;
 
-    // Stile Slice: Sfondo Grigio Scuro / Testo Bianco
-    const sliceBgColor = ATON.MatHub?.colors?.gray || new THREE.Color(0x888888);
-    const sliceTextColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
-    const borderColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
+    // Stile Slice: Sfondo scuro / Testo Bianco
+    const sliceBgColor   = new THREE.Color(0.1,0.1,0.1); //ATON.MatHub.colors.black;
+    const sliceTextColor = ATON.MatHub.colors.white;
+    const borderColor    = ATON.MatHub.colors.white;
 
 	const labelWidth  = 0.65;
     const labelHeight = 0.1575;
@@ -578,7 +578,7 @@ APP.updateClusterLabels = (clusterId) => {
             .setText(labelText)
             .setBaseColor(sliceBgColor)
             .setTextColor(sliceTextColor)
-            .setBackgroundOpacity(1.0);
+            .setBackgroundOpacity(0.5);
         
         // Aumento dimensione testo (default 0.03 -> 0.045)
         labelNode.uiText.set({ 
@@ -594,12 +594,22 @@ APP.updateClusterLabels = (clusterId) => {
 
         // POSIZIONAMENTO ED INCLINAZIONE A 45 GRADI
         labelNode
-			.attachToRoot()
             .setPosition(x, y, z)
             .orientToLocation(0, y, 0); // Orientamento verso l'asse centrale Y
     
         labelNode.rotateX(-Math.PI * 0.25); // Inclinazione dell'etichetta di 45°
+
+        labelNode.traverse(o =>{
+            if (o.material){
+                o.material.depthWrite = true;
+                o.material.transparent = false;
+                o.material.toneMapped = false;
+
+                o.material.needsUpdate = true;
+            }
+        });
         
+/*
         // FORZATURA MATERIALI PER IMPEDIRE CAMBI DI COLORE
         labelNode.traverse((child) => {
             if (child.isMesh && child.material) {
@@ -620,11 +630,12 @@ APP.updateClusterLabels = (clusterId) => {
                 });
             }
         });
-
-        labelNode.setRenderOrder(2);
+*/
 
         labelNode.attachTo( APP.clusterLabelNodes );
         //APP.clusterLabelNodes.push(labelNode);
+
+        labelNode.setRenderOrder(5);
     });
 
     ThreeMeshUI.update();
