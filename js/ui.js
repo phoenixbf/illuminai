@@ -279,7 +279,7 @@ UI.modalWelcome = ()=>{
                 descrElement.innerText = descrFromConfig;
                 
                 // Cambia dataset
-                APP.changeCluster(i.toString());
+                APP.changeCluster(i);
                  
                 // Sincronizza nuovamente il menu
                 updateDropdownLabel();

@@ -128,17 +128,21 @@ class Item extends ATON.Node {
                 let eye = ATON.Nav.getCurrentEyeLocation();
                 let lastItem = APP.inspectedItems[APP.inspectedItems.length-1];
 
+                APP.setupToolbarForItem(lastItem);
+
                 let wp = new THREE.Vector3();
                 lastItem.getWorldPosition(wp);
 
                 ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.3 );
             }
 
-            else ATON.Nav.setFirstPersonControl();
-        }
+            else {
+                ATON.Nav.setFirstPersonControl();
 
-        if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false); // _setNodeVisible(APP._itemInspectionGroup, false);
-        if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); // this._setNodeVisible(APP._itemInfoPanel, false);
+                if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false); // _setNodeVisible(APP._itemInspectionGroup, false);
+                if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); // this._setNodeVisible(APP._itemInfoPanel, false);
+            }
+        }
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, false);
     }
@@ -237,7 +241,7 @@ class Item extends ATON.Node {
         if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); //_setNodeVisible(APP._itemInfoPanel, false);
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, true);
-        //ATON.FX.setDOFfocus(currentRad);
+        //ATON.FX.setDOFfocus( APP.ITEM_INSPECT_RAD );
     }
 
     load(res, bInspection){

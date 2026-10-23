@@ -227,6 +227,11 @@ APP.setup = ()=>{
     ATON.SUI.showSelector(false);
 
     ATON.Nav.toggleLocomotionValidator(false);
+/*
+    ATON.FX.togglePass(ATON.FX.PASS_BLOOM, true);
+    ATON.FX.setBloomThreshold(0.4);
+    ATON.FX.setBloomStrength(0.2);
+*/
 };
 
 APP.realizeBaseCluster = (size)=>{
@@ -797,6 +802,7 @@ APP.changeCluster = (clusterId) => {
     
     // Rimuove vecchio cluster
     if (APP.activeCluster) {
+/*
         // Se il cluster o i suoi oggetti dispongono di un metodo di pulizia/dispose risorse
         if (typeof APP.activeCluster.dispose === 'function') {
             APP.activeCluster.dispose();
@@ -809,6 +815,9 @@ APP.changeCluster = (clusterId) => {
         } else if (APP.activeCluster.parent) {
             APP.activeCluster.parent.remove(APP.activeCluster);
         }
+*/
+        APP.activeCluster.removeChildren();
+
         APP.activeCluster = undefined;
     }
 
@@ -927,7 +936,7 @@ APP.matBaseItem = new THREE.ShaderMaterial({
 APP.setupToolbarForItem = (I) => {
     // Sposta l'uscita anticipata all'inizio se l'oggetto I non è valido
     if (!I) {
-        if (APP._itemInspectionGroup) APP._itemInspectionGroup.visible = false;
+        if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false);
         return;
     }
 

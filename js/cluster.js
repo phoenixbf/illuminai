@@ -111,7 +111,8 @@ realize(){
         let z = r * Math.sin(a);
 
         // Local
-        const randRad = Math.random() * 0.3 * (r+0.5);
+        const spread = 0.3;
+        const randRad = Math.random() * spread * (r+0.5);
         const vRand   = new THREE.Vector3();
         vRand.randomDirection();
         vRand.multiplyScalar(randRad);
