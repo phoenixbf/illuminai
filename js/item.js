@@ -123,25 +123,23 @@ class Item extends ATON.Node {
         this.load(APP.ITEM_RES_BASE, false);
         this._bInspection = false;
     
-        if (!ATON.XR._bPresenting){
-            if (APP.inspectedItems.length > 0){
-                let eye = ATON.Nav.getCurrentEyeLocation();
-                let lastItem = APP.inspectedItems[APP.inspectedItems.length-1];
+        if (APP.inspectedItems.length > 0){
+            let eye = ATON.Nav.getCurrentEyeLocation();
+            let lastItem = APP.inspectedItems[APP.inspectedItems.length-1];
 
-                APP.setupToolbarForItem(lastItem);
+            APP.setupToolbarForItem(lastItem);
 
-                let wp = new THREE.Vector3();
-                lastItem.getWorldPosition(wp);
+            let wp = new THREE.Vector3();
+            lastItem.getWorldPosition(wp);
 
-                ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.3 );
-            }
+            if (!ATON.XR._bPresenting) ATON.Nav.requestPOV( new ATON.POV().setPosition(eye).setTarget(wp), 0.3 );
+        }
 
-            else {
-                ATON.Nav.setFirstPersonControl();
+        else {
+            if (!ATON.XR._bPresenting) ATON.Nav.setFirstPersonControl();
 
-                if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false); // _setNodeVisible(APP._itemInspectionGroup, false);
-                if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); // this._setNodeVisible(APP._itemInfoPanel, false);
-            }
+            if (APP._itemInspectionGroup) APP._itemInspectionGroup.toggle(false); // _setNodeVisible(APP._itemInspectionGroup, false);
+            if (APP._itemInfoPanel) APP._itemInfoPanel.toggle(false); // this._setNodeVisible(APP._itemInfoPanel, false);
         }
 
         //ATON.FX.togglePass(ATON.FX.PASS_DOF, false);
