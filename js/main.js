@@ -372,12 +372,10 @@ APP.setupCategoryScrollUI = () => {
     // Impostazione posizione e orientamento
     APP._catScrollUI.setPosition(x, y, z);
     
-    if (typeof APP._catScrollUI.orientToLocation === "function") {
-        APP._catScrollUI.orientToLocation(0, y, 0); // Orientato verso l'asse central Y
-    }
+    APP._catScrollUI.orientToLocation(0, y, 0); // Orientato verso l'asse central Y
 
     // Scale e step di scorrimento
-    const btnScale = APP.ITEM_SCALE * 9.5; 
+    const btnScale = 2.0; //APP.ITEM_SCALE * 9.5; 
     const stepY = APP.CAT_HEIGHT; // Usa il passo esatto dell'altezza categoria per lo scorrimento
 
     // *****************************************************************
@@ -745,10 +743,10 @@ APP.updateCategoryLabels = () => {
     const topOffset = APP.CAT_HEIGHT - 0.2; // Posiziona la label nella parte alta
 
     // Definisce i colori personalizzati per le Categorie (es. Blu scuro con testo Giallo)
-    const catBgColor = ATON.MatHub?.colors?.gray || new THREE.Color(0x777777);
-    const catTextColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
-    const borderColor = ATON.MatHub?.colors?.white || new THREE.Color(0xffffff);
-    const catOpacity = 0.6;
+    const catBgColor = ATON.MatHub.colors.black;
+    const catTextColor = ATON.MatHub.colors.white;
+    const borderColor = ATON.MatHub.colors.white;
+    const catOpacity = 0.1;
 
 	const labelWidth  = 0.65;
     const labelHeight = 0.1575;
@@ -1192,6 +1190,7 @@ APP.toggleInfoPanel = (selectedItem) => {
     MAIN Update routine
 ==============================*/
 APP.update = ()=>{
+    let dir = ATON.Nav.getCurrentDirection();
     
     if (ATON.XR._bPresenting){
         let pV = ATON.XR.getAxisValue(ATON.XR.HAND_SECONDARY);
@@ -1202,4 +1201,17 @@ APP.update = ()=>{
 
     APP.updateClusterScroll();
     
+    // Exp. always in front
+    return;
+    if (APP._catScrollUI){
+        let xzdir = dir.clone();
+        xzdir.y = 0.0;
+
+        xzdir = xzdir.normalize();
+
+        APP._catScrollUI.position.x = xzdir.x * 2.5;
+        APP._catScrollUI.position.z = xzdir.z * 2.5;
+
+        APP._catScrollUI.orientToLocation(0, APP.CAT_HEIGHT * 0.5, 0);
+    }
 };

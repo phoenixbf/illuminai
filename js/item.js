@@ -22,7 +22,7 @@ class Item extends ATON.Node {
         this.setData( APP.db[db][id] );
 
         this.panel = new ATON.SUI.MediaPanel("panel-"+id);
-        this.panel.setTitle( id );
+        //this.panel.setTitle( ATON.Utils.removeFileExtension(id) );
 
         this.panel.attachTo(this);
         this.panel.enablePicking();
