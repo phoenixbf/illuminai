@@ -350,9 +350,7 @@ APP.setupCategoryScrollUI = () => {
     }
 
     // Creazione del nodo UI
-    APP._catScrollUI = typeof ATON.createUINode === "function" 
-        ? ATON.createUINode("cat-scroll-ui-root") 
-        : ATON.createSceneNode("cat-scroll-ui-root");
+    APP._catScrollUI = ATON.createUINode("cat-scroll-ui-root");
     
     APP._catScrollUI.attachToRoot(); // <- IMP! ANCORATO ALLA RADICE
     
@@ -383,9 +381,7 @@ APP.setupCategoryScrollUI = () => {
     
     // Pulsante Scroll SU
     let btnUp = new ATON.SUI.Button("btn-scroll-cat-up");
-    if (typeof btnUp.setIcon === "function") {
-        btnUp.setIcon(APP.pathResIcons + "scroll-up.png");
-    }
+    btnUp.setIcon(APP.pathResIcons + "scroll-up.png");
     btnUp.setScale(btnScale);
     btnUp.position.set(0, 0.28, 0);
     btnUp.setBaseColor(new THREE.Color(0x3388ff));
@@ -401,9 +397,8 @@ APP.setupCategoryScrollUI = () => {
     let btnReset1 = new ATON.SUI.Button("btn-scroll-cat-reset");
     btnReset1.setScale(btnScale * 0.85);
     btnReset1.position.set(0, 0.0, 0);
-    if (typeof btnReset1.setIcon === "function") {
-        btnReset1.setIcon(APP.pathResIcons + "home.png");
-    }
+    //btnReset1.setIcon(APP.pathResIcons + "home.png");
+    btnReset1.setIcon(ATON.UI.PATH_RES_ICONS + "cancel.png");
     btnReset1.setBaseColor(new THREE.Color(0xC0C0C0)); //0xffffff
 
     btnReset1.onHover = () => btnReset1.setScale(btnScale * 1.0);
@@ -415,9 +410,8 @@ APP.setupCategoryScrollUI = () => {
 
     // Pulsante Scroll GIÙ
     let btnDown = new ATON.SUI.Button("btn-scroll-cat-down");
-    if (typeof btnDown.setIcon === "function") {
-        btnDown.setIcon(APP.pathResIcons + "scroll-down.png");
-    }
+    btnDown.setIcon(APP.pathResIcons + "scroll-down.png");
+
     btnDown.setScale(btnScale);
     btnDown.position.set(0, -0.28, 0);
     btnDown.setBaseColor(new THREE.Color(0x3388ff));
